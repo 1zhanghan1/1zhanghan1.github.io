@@ -290,20 +290,74 @@
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43681637/article/details/112789911?utm_term=vscode%E4%B8%8B%E8%BD%BD%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F&amp;utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~sobaiduweb~default-0-112789911&amp;spm=3001.4430">使用国内镜像方法</a></p>
 <p>同时可以在FileZilla中设置VSCode为默认编辑器。</p>
 <p>依次点击上方编辑-&gt;设置-&gt;文件编辑-&gt;使用自定义编辑器（选择VSCode的url）-&gt;总是使用默认编辑器。</p>
-<h1 id="安装Anacanda"><a href="#安装Anacanda" class="headerlink" title="安装Anacanda"></a>安装Anacanda</h1><p>在本地下载Anacanda的Linux版本，然后通过FZ上传到云服务器。</p>
-<p>切换到安装包的目录，使用<code>sh 文件名</code>来执行安装，安装完成后重启，命令行开端会有（base）字样代表进入了conda环境。</p>
-<h1 id="安装Pytorch框架"><a href="#安装Pytorch框架" class="headerlink" title="安装Pytorch框架"></a>安装Pytorch框架</h1><p>创建虚拟环境</p>
+<h1 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h1><p>安装需要的软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+<p>设置yum源，使用阿里云镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+<p>查看仓库中docker的所有版本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list docker-ce --showduplicates | sort -r</span><br></pre></td></tr></table></figure>
+<p><img src="/2021/08/05/%E9%98%BF%E9%87%8C%E4%BA%91%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86Linux/12.png" alt="12"></p>
+<p>默认安装最新稳定版</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install docker-ce</span><br></pre></td></tr></table></figure>
+<p>启动并加入开机启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br><span class="line">systemctl enable docker</span><br></pre></td></tr></table></figure>
+<h1 id="docker下安装Anacanda"><a href="#docker下安装Anacanda" class="headerlink" title="docker下安装Anacanda"></a>docker下安装Anacanda</h1><p>搜索可安装的版本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search anaconda</span><br></pre></td></tr></table></figure>
+<p><img src="/2021/08/05/%E9%98%BF%E9%87%8C%E4%BA%91%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86Linux/13.png" alt="13"></p>
+<p>安装第一个</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull continuumio/anaconda3</span><br></pre></td></tr></table></figure>
+<p>镜像名太长不方便运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker tag continuumio/anaconda3:latest anaconda3:latest</span><br><span class="line">删除原镜像</span><br><span class="line">docker rmi continuumio/anaconda3</span><br></pre></td></tr></table></figure>
+<p>创建虚拟环境</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create -n pytorch python=3.8</span><br></pre></td></tr></table></figure>
 <p> 此时</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda activate pytorch #进入环境</span><br><span class="line">conda deactivate #退出环境</span><br></pre></td></tr></table></figure>
-<h2 id="添加清华镜像"><a href="#添加清华镜像" class="headerlink" title="添加清华镜像"></a>添加清华镜像</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda config --set show_channel_urls yes #生成.condarc文件</span><br></pre></td></tr></table></figure>
-<p>在FZ中将该文件改成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">channels:</span><br><span class="line">  - defaults</span><br><span class="line">show_channel_urls: true</span><br><span class="line">default_channels:</span><br><span class="line">  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main</span><br><span class="line">  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r</span><br><span class="line">  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2</span><br><span class="line">custom_channels:</span><br><span class="line">  conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span><br><span class="line">  msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span><br><span class="line">  bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span><br><span class="line">  menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span><br><span class="line">  pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span><br><span class="line">  simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span><br></pre></td></tr></table></figure>
-<p>然后在终端中输入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda clean -i</span><br></pre></td></tr></table></figure>
-<p>清除索引缓存</p>
-<p><a target="_blank" rel="noopener" href="https://mirror.tuna.tsinghua.edu.cn/help/anaconda/">清华镜像使用帮助</a></p>
-<h2 id="下载pytorch"><a href="#下载pytorch" class="headerlink" title="下载pytorch"></a>下载pytorch</h2><p>去pytorch官网上找到安装命令</p>
+<h1 id="设置一直运行anaconda镜像"><a href="#设置一直运行anaconda镜像" class="headerlink" title="设置一直运行anaconda镜像"></a>设置一直运行anaconda镜像</h1><p>docker将镜像放在容器中启动是有很多方式的，根据run后面的参数来确定。</p>
+<p>主要是两种：</p>
+<p><code>-it</code>：交互式容器，退出后关闭。</p>
+<p><code>-id</code>：守护容器，保持运行。</p>
+<p>我们运行anaconda，还要安装一些扩展包，肯定不希望安装、使用完毕退出后数据被清空，希望容器一直启动。可以将anaconda放在守护容器中保持运行。</p>
+<p>查看运行的容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+<p><img src="/2021/08/05/%E9%98%BF%E9%87%8C%E4%BA%91%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86Linux/14.png" alt="14"></p>
+<p>进入运行中的容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it 3fc8dc247e8c bash</span><br></pre></td></tr></table></figure>
+<p>退出:</p>
+<p>保持运行：连续按Ctrl+p，Ctrl+q</p>
+<p>不保持运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+<p>or</p>
+<p>可以将自己配置好的环境打包成镜像。</p>
+<p>先用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+<p>查看当前容器下运行的容器，然后选择要打包的容器进行打包，执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit 容器ID 镜像名称</span><br></pre></td></tr></table></figure>
+<p>然后进行查看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image ls</span><br></pre></td></tr></table></figure>
+<h1 id="为conda配置清华镜像源"><a href="#为conda配置清华镜像源" class="headerlink" title="为conda配置清华镜像源"></a>为conda配置清华镜像源</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/</span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/</span><br><span class="line">#设置搜索时显示通道地址</span><br><span class="line">conda config --set show_channel_urls yes</span><br></pre></td></tr></table></figure>
+<p>显示添加的源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda config --show channels</span><br></pre></td></tr></table></figure>
+<p>删除指定源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda config --remove channels 源名称或链接</span><br></pre></td></tr></table></figure>
+<h1 id="为pip配置国内镜像源"><a href="#为pip配置国内镜像源" class="headerlink" title="为pip配置国内镜像源"></a>为pip配置国内镜像源</h1><p>临时使用</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install numpy -i https://mirrors.aliyun.com/pypi/simple/</span><br></pre></td></tr></table></figure>
+<p>国内常用源镜像地址：</p>
+<p>清华：<a target="_blank" rel="noopener" href="https://pypi.tuna.tsinghua.edu.cn/simple">https://pypi.tuna.tsinghua.edu.cn/simple</a></p>
+<p>阿里云：<a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/pypi/simple/">https://mirrors.aliyun.com/pypi/simple/</a></p>
+<p>中国科技大学: <a target="_blank" rel="noopener" href="https://pypi.mirrors.ustc.edu.cn/simple/">https://pypi.mirrors.ustc.edu.cn/simple/</a></p>
+<p>华中理工大学：<a target="_blank" rel="noopener" href="https://pypi.hustunique.com/">https://pypi.hustunique.com/</a></p>
+<p>山东理工大学：<a target="_blank" rel="noopener" href="https://pypi.sdutlinux.org/">https://pypi.sdutlinux.org/</a> </p>
+<p>豆瓣：<a target="_blank" rel="noopener" href="https://pypi.douban.com/simple/">https://pypi.douban.com/simple/</a></p>
+<p>永久配置：</p>
+<p>Linux系统：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/.pip</span><br><span class="line">cd ~/.pip</span><br><span class="line">vim pip.conf</span><br></pre></td></tr></table></figure>
+<p>内容为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[global]  </span><br><span class="line">index-url = https://mirrors.aliyun.com/pypi/simple/</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/anglemanyi/article/details/112647242">参考地址</a></p>
+<p>进入pytorch环境，安装spyder</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install spyder</span><br></pre></td></tr></table></figure>
+<h1 id="安装Pytorch框架"><a href="#安装Pytorch框架" class="headerlink" title="安装Pytorch框架"></a>安装Pytorch框架</h1><h2 id="下载pytorch"><a href="#下载pytorch" class="headerlink" title="下载pytorch"></a>下载pytorch</h2><p>去pytorch官网上找到安装命令</p>
 <p><img src="/2021/08/05/%E9%98%BF%E9%87%8C%E4%BA%91%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86Linux/11.png" alt="11"></p>
 
         </div>
