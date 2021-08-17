@@ -285,7 +285,7 @@
 <p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/10.png" alt="10"></p>
 <p> 以检测单个目标为例，具体的实现步骤是：</p>
 <p>首先把$p_c\le0.6$的输出抛弃，然后在剩余的单元格中选择$p_c$最大的，取出与这个单元格交并比大于等于0.5的单元格，然后在剩下的单元格中继续这个操作。</p>
-<p>如果要检测多个目标，应该在每个目标上执行非极大值一直这个算法。</p>
+<p>如果要检测多个目标，应该在每个目标上执行非极大值抑制这个算法。</p>
 <h2 id="anchor-box"><a href="#anchor-box" class="headerlink" title="anchor box"></a>anchor box</h2><p>anchor box可以让一个方格检测出多个目标。</p>
 <p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/11.png" alt="11"></p>
 <p>对于多个目标重叠在一个方格里的情况以前的检测器就无法检测了。这时可以使用多个anchor box，来检测多个重叠的目标。</p>
@@ -302,9 +302,9 @@
 <h2 id="R-CNN"><a href="#R-CNN" class="headerlink" title="R-CNN"></a>R-CNN</h2><p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/16.png" alt="16"></p>
 <p>基于滑动窗口实现目标检测需要输入很多图块，RNN的基本思想是先使用图像分割算法找到候选区域，将这些候选区域输入到神经网络中。</p>
 <p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/17.png" alt="17"></p>
-<p>在RNN的基础上有许多改进的算法。</p>
-<p>Fast RNN是在RNN的基础上使用滑动窗口的卷积实现。</p>
-<p>Faster RNN使用卷积神经网络来选取候选块。</p>
+<p>在R-CNN的基础上有许多改进的算法。</p>
+<p>Fast R-CNN是在R-CNN的基础上使用滑动窗口的卷积实现。</p>
+<p>Faster R-CNN使用卷积神经网络来选取候选块。</p>
 
         </div>
 
@@ -355,6 +355,8 @@
             </div>
         </section>
         <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/08/14/%E6%95%B0%E6%A8%A1%E7%AE%97%E6%B3%95-1/">数模算法-1</a>
             
             
             <a class="next" rel="next" href="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/">docker内搭建卷积神经网络实现MNIST数字分类</a>
