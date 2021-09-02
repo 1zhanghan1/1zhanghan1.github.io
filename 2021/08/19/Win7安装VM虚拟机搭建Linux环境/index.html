@@ -13,7 +13,7 @@
 
 
 
-<title>yolov3 | Hexo</title>
+<title>Win7安装VM虚拟机搭建Linux环境 | Hexo</title>
 
 
 
@@ -234,7 +234,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">yolov3</h1>
+            <h1 class="post-title">Win7安装VM虚拟机搭建Linux环境</h1>
             
                 <div class="post-meta">
                     
@@ -243,7 +243,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">August 17, 2021&nbsp;&nbsp;11:40:50</a>
+                        Date: <a href="#">August 19, 2021&nbsp;&nbsp;10:32:01</a>
                         </span>
                     
                     
@@ -252,21 +252,20 @@
         </header>
 
         <div class="post-content">
-            <p>YOLO是目标检测框架中性能比较优秀的一类，所以我把YOLO作为第一个学习的目标。在YOLO家族中也有很多版本，先选v3这个版本开始学，学通透了，其他的应该就能触类旁通了。</p>
-<h1 id="YOLOv3"><a href="#YOLOv3" class="headerlink" title="YOLOv3"></a>YOLOv3</h1><p>首先YOLOv3采用了全卷积层，即没有使用全连接层，并且使用了大量的残差块来确保网络深度足够的同时也不会出现梯度消失的问题。</p>
+            <p>g</p>
+<p>由于阿里云的云服务器安装桌面化软件总是出现各种各样的问题，而且高性能计算实验要求要在docker下安装软件，索性下载个虚拟机，特此记录。</p>
+<p><a target="_blank" rel="noopener" href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.4-2249910.exe">VMware10.0下载地址</a></p>
+<p><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/centos/7.9.2009/isos/x86_64/">清华大学开源软件镜像站-centos7.9</a></p>
+<p>安装过程参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ErnestW/article/details/88919689?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162933395216780264075959%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162933395216780264075959&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-4-88919689.first_rank_v2_pc_rank_v29&amp;utm_term=win7%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85centos&amp;spm=1018.2226.3001.4187">WIN10系统安装虚拟机以及CenOS7</a></p>
+<h1 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h1><p>由于默认使用的是用户权限，需要将用户添加到sudoers文件中才能使用sudo命令。</p>
+<p>具体过程参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dwight/p/linux-sudo-command.html">cnetos7下普通用户不能使用sudo命令解决方案</a></p>
+<p>然后与阿里云配置的那篇文章一样安装docker，不过所有命令前都要添加sudo。</p>
+<p>docker运行之后每条命令也要加sudo，可以通过将用户天啊及到docker用户组将sudo去掉。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo groupadd docker #添加docker用户组</span><br><span class="line"></span><br><span class="line">sudo gpasswd -a $USER docker #将登陆用户加入到docker用户组中</span><br><span class="line"></span><br><span class="line">newgrp docker #更新用户组</span><br></pre></td></tr></table></figure>
 <p>参考文章：</p>
-<p><a target="_blank" rel="noopener" href="https://blog.paperspace.com/how-to-implement-a-yolo-v3-object-detector-from-scratch-in-pytorch-part-3/">从0到1实现YOLOv3</a></p>
-<p>这篇文章读取配置文件创建网络模型，然后再载入训练数据。配置文件按照前向传播的顺序记录网络结构，并且在设计残差块的相加和yolo外部网络的叠加操作时都引入空模型进行规范化。但是配置文件应该有点错误，在开头的网络信息中输入的维度不是608而应该是416。</p>
-<p><img src="/2021/08/17/yolov3/1.png" alt="1"></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44791964/article/details/105310627">睿智的目标检测26——Pytorch搭建yolo3目标检测平台</a></p>
-<p>并且还有配套视频<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Hp4y1y788">Pytorch 搭建自己的YOLO3目标检测平台（Bubbliiiing 深度学习 教程）</a></p>
-<p>这篇文章的想法是根据yolov3的模型，手动创建一个网络模型，因为yolov3中的残差块相似度很高，基本都在重复利用，所以手动实现起来并不是非常繁琐。在外部网络的传播中所用的结构也很类似，堆叠时可以在forward函数中手动进行。</p>
-<p><img src="/2021/08/17/yolov3/2.jpg" alt="2"></p>
-<p>这就是yolov3网络的一个基本模型，主干网络是Darknet-53。</p>
-<p>这幅图最下中间的数据有些错误，输出维度应该是$batch_size \times 13\times 13\times 512$。</p>
-<hr>
-<p>现在刚刚搭建起模型，并且详细分析模型，特此记录，还需努力。</p>
-<p>目前跟着第一篇文章实现一次这个模型，然后再根据自己的理解像第二篇文章一样，自己实现模型。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011337602/article/details/104541261">docker 权限问题</a></p>
 
         </div>
 
@@ -281,7 +280,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2021/08/17/yolov3/">http://example.com/2021/08/17/yolov3/</a></span>
+                        <span><a href="http://example.com/2021/08/19/Win7%E5%AE%89%E8%A3%85VM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%90%AD%E5%BB%BALinux%E7%8E%AF%E5%A2%83/">http://example.com/2021/08/19/Win7%E5%AE%89%E8%A3%85VM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%90%AD%E5%BB%BALinux%E7%8E%AF%E5%A2%83/</a></span>
                     </p>
                 
                 
@@ -304,10 +303,6 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
-                    
-                        <a href="/tags/YOLO/"># YOLO</a>
-                    
-                        
                 </span>
             </div>
             <div>
@@ -318,10 +313,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2021/08/19/Win7%E5%AE%89%E8%A3%85VM%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%90%AD%E5%BB%BALinux%E7%8E%AF%E5%A2%83/">Win7安装VM虚拟机搭建Linux环境</a>
             
-            
-            <a class="next" rel="next" href="/2021/08/14/%E6%95%B0%E6%A8%A1%E7%AE%97%E6%B3%95-1/">数模算法-1</a>
+            <a class="next" rel="next" href="/2021/08/17/yolov3/">yolov3</a>
             
         </section>
 
