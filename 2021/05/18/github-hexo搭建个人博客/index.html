@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>github+hexo搭建个人博客 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">github+hexo搭建个人博客</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">May 18, 2021&nbsp;&nbsp;9:53:05</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>准研究生一枚，导师要求在暑假学习一些课程并且要在github上维护一个自己的博客来记录自己的学习感悟。新手入坑，好多东西不明所以，搞了好久才把博客搭了起来，特此记录方法。<strong>顺便熟悉一下markdown语法</strong>。</p>
+<h2 id="特别说明"><a href="#特别说明" class="headerlink" title="特别说明"></a>特别说明</h2><p>本人用的系统是windows7旗舰版，踩了一个<strong>大雷</strong>，曾经一度想放弃！</p>
+<h1 id="正文开始啦"><a href="#正文开始啦" class="headerlink" title="正文开始啦"></a>正文开始啦</h1><h2 id="一、准备阶段"><a href="#一、准备阶段" class="headerlink" title="一、准备阶段"></a>一、准备阶段</h2><ol>
+<li><h3 id="申请github账号"><a href="#申请github账号" class="headerlink" title="申请github账号"></a>申请github账号</h3><p>首先要有一个github账号吧，申请账号的过程就不多赘述了，过程比较简单。唯一需要说明的是，github网站打开的速度略微有点玄学，我的搜狗浏览器根本打不开，不过用google浏览器就很正常了。</p>
+</li>
+<li><h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="新建仓库"></a>新建仓库</h3><p>申请完github账号后就要new一个repository了，但是每个github账号只能有一个个人页面吧，所以存放个人博客的仓库名字是有要求的（应该是这样吧，我是这样理解的），仓库的名字必须是github账号名.github.io，比如我的github名字是1zhanghan1，所以我的仓库名就要是1zhanghan1.github.io。这个时候，github pages是默认开启的，就不用再做什么操作了。（这里又有一个大雷，后面细说）</p>
+</li>
+<li><h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><p>然后要下载git了。</p>
+<p><a target="_blank" rel="noopener" href="https://git-scm.com/downloads/">下载地址</a></p>
+<p>选择适合自己系统的版本就好。下载完成后，点开安装程序一路next就可以了。</p>
+<p>安装完成后，打开cmd命令行输入</p>
+<p><code>git --version</code></p>
+<p>出现版本号就是安装成功了。我的是这样的</p>
+<p><img src="/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/git-version.png"></p>
+</li>
+<li><h3 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h3><p>由于我要用hexo搭建我的博客，所以还需要安装node.js，就这，我踩了个大雷。我找到的所有的教程都是直接去官网上下载最新版的，然后我就照着做了，结果。。。安装程序一打开是这样的</p>
+<img src="/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/nodejs-error.png" style="zoom:50%;">
+
+<p>百度一查，版本太高。</p>
+<p>无奈之下，只能自己去找以前的版本。后面找了个12.16.x版本的，结果在后面安装hexo时又版本太低。。。终于，在CSDN找到一个老哥，也是遇到这个问题，他用的是13.14.0版本的。原文链接:</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhangxiaodui/article/details/115209448">https://blog.csdn.net/zhangxiaodui/article/details/115209448</a></p>
+<p>node.js历史版本链接:</p>
+<p><a target="_blank" rel="noopener" href="https://nodejs.org/en/download/releases/">https://nodejs.org/en/download/releases/</a></p>
+<p>好吧，这就是官网的历史版本下载链接，我竟愚蠢到没有找到！以后可要好好学英语，对英语的敏感度太低了。</p>
+<p>同样，用cmd命令行输入<code>node -v</code>和<code>npm -v</code>查看版本确认一下，出现版本号就是安装成功了。我的是这样。</p>
+<p><img src="/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/node-version.png" alt="node-version"></p>
+</li>
+</ol>
+<h2 id="二、开始搭建"><a href="#二、开始搭建" class="headerlink" title="二、开始搭建"></a>二、开始搭建</h2><ol>
+<li><h3 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h3><p>从这里开始就是搭建博客啦。我用的是hexo框架，所以要先安装hexo。</p>
+<p>首先在电脑上一个特定的地方（不会忘记的地方）新建一个文件夹，名字任意，例如我的文件夹名是Hexo，鼠标右键选择Git Bash here，会出来一个窗口。输入</p>
+<p><code>npm install hexo-cli -g</code></p>
+<p>等待安装完成，然后输入</p>
+<p><code>hexo -v</code></p>
+<p>检查版本，显示版本号就ok了。我是这样的。</p>
+<p><img src="/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/hexo-version.png"></p>
+</li>
+<li><h3 id="hexo配置"><a href="#hexo配置" class="headerlink" title="hexo配置"></a>hexo配置</h3><p>在git bash窗口，输入</p>
+<p><code>hexo init</code></p>
+<p>等待初始化完成，完成后Hexo文件夹下就会出现很多文件。然后输入</p>
+<p><code>hexo g</code> 或者 <code>hexo generate</code>生成静态文件</p>
+<p>hexo文件夹下又多了一个public文件夹，这个文件夹就是博客的文件夹</p>
+<p>再输入</p>
+<p><code>hexo s</code> 或者 <code>hexo server</code> 启动本地服务器</p>
+<p>之后，就可以在默认的地址 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a>查看自己的博客了 </p>
+<p>按Ctrl+C可以关闭本地预览功能，就可以继续输入代码了</p>
+</li>
+<li><h3 id="配置github的SSH"><a href="#配置github的SSH" class="headerlink" title="配置github的SSH"></a>配置github的SSH</h3><p>完成上述步骤后只能在本地看到自己的博客，这显然不是我们想要的。我们需要把自己的博客上传到github仓库才行，这就需要配置SSH KEY。</p>
+<p>在git bash框中输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;github的用户名&quot;</span><br><span class="line">git config --global user.email &quot;github的邮箱&quot;</span><br></pre></td></tr></table></figure>
+
+<p>比如，我输入的是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;1zhanghan1&quot;</span><br><span class="line">git config --global user.email &quot;85809694@qq.com&quot;</span><br></pre></td></tr></table></figure>
+
+<p>再创建ssh key</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;github的邮箱&quot;</span><br></pre></td></tr></table></figure>
+
+<p>然后会有几个问题，第一个是存储的位置，直接回车就是选择默认位置，后两个是设置ssh密码，回车就是不设置密码。所以只要三个回车就OK了。</p>
+<p>成功了的话就可以在默认的位置找到一个.ssh的文件夹，这是个隐藏的文件夹，需要设置显示隐藏文件夹才能看到。点开这个文件夹，会有一个名字是id_rsa.pub的文件，.pub是文件的扩展名，选择用记事本打开，复制里面的所有东西。然后找到github的Settings</p>
+<img src="/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/findSetting.png" style="zoom: 67%;">
+
+<p>选择SSH and GPG keys，点击New SSH key,在Key一栏粘贴刚刚复制的所有东西，Title任意。</p>
+<img src="/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/newsshkey.png" style="zoom:67%;">
+
+<p>再点击Add SSH key就OK了，这时候邮箱应该就会收到一个绑定SSH的提醒邮件了。</p>
+<p>在git bash窗口输入</p>
+<p><code>ssh -T git@github.com</code></p>
+<p>检查有没有成功。成功的话是这样子的</p>
+<p><img src="/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/sshOK.png"></p>
+<p>（起初看到这句提示后半句时，我还以为出现了什么错误，又搞了好久。。。。）</p>
+<p>这一步应该就是让github识别你的电脑，类似于授权的感觉。。。</p>
+</li>
+<li><h3 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h3><p>好了，终于来到最后一步了。</p>
+<p>打开Hexo文件夹下的_config.yml文件，最后有deploy一栏，本来只有</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type: &#x27;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>改成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type:  git</span><br><span class="line">repo:  git@github.com:1zhanghan1/1zhanghan1.github.io.git</span><br><span class="line">branch:  master</span><br></pre></td></tr></table></figure>
+
+<p><strong>大雷警告！！！</strong></p>
+<p><strong>repo和branch的冒号后必须有两个空格！</strong>type的冒号后好像可以只有一个空格，但是我写成两个空格也没事。</p>
+<p><strong>隐藏雷！！！</strong></p>
+<p>现在github的仓库的默认分支都是main，我找到的教程在branch后写的都是master，因为之前github仓库的默认分支是master，所以这里写main也可以。用master会自动创建一个分支，然后你的博客文件都会上传到这个分支上，导致显示空白。这里也困扰我好久。。。还好之前看了莫烦python的git教程，对分支有了一些了解。这里用master也可以，不过后面要进行一下小设置。</p>
+<p><strong>还有一个很重要的地方。</strong></p>
+<p>repo后的内容其实是github仓库的SSH公钥。比如我的</p>
+<p><img src="/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/repositorySSH.png"></p>
+<p>我也是偶然发现，然后豁然开朗。:laughing:</p>
+<p>下面开始部署了。</p>
+<p>首先要先安装一个插件，在git bash窗口中输入</p>
+<p><code>npm install hexo-deployer-git --save</code></p>
+<p>等待安装成功后，依次输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>其中</p>
+<p> hexo clean是清除public文件夹</p>
+<p>hexo g是生成public文件加，g是generate的缩写，不缩写也行</p>
+<p>hexo d是部署，d是deploy的缩写，不缩写也行</p>
+<p>部署时可能要输入github的账号的密码。</p>
+<p>成功的话，最后会显示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO Deploy done: git</span><br></pre></td></tr></table></figure>
+
+<p>如果上面_config.yml文件选择的branch是master的话，还需要设置一下github pages 的source。</p>
+<p>点开仓库的settings找到Pages选项，将里面的Source设置为Branch：master /root</p>
+<p><img src="/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/githubpagesSet.png"></p>
+<p>如果上面_config.yml文件选择的branch是main的话就不用设置这步。</p>
+<p>最后要做的就是耐心等待啦，因为部署到github的服务器，所以可能要等待一段时间才能看到。</p>
+<p>直接访问<code>https://github用户名.github.io</code>就可以看到我们的博客啦。</p>
+</li>
+<li><h3 id="hexo主题"><a href="#hexo主题" class="headerlink" title="hexo主题"></a>hexo主题</h3><p>刚搭建好的博客用的是hexo的默认主题landscape，看上去丑丑的，那不得换一个好点的吗？</p>
+<p>直接上网址：</p>
+<p><a target="_blank" rel="noopener" href="https://hexo.io/themes/">https://hexo.io/themes/</a></p>
+<p>里面有许多大佬的开源主题，点开可以预览，而且每个主题都注有下载和配置方法。我用的是Chic，比较喜欢它的暗色。</p>
+</li>
+</ol>
+<h2 id="三、开始写博客"><a href="#三、开始写博客" class="headerlink" title="三、开始写博客"></a>三、开始写博客</h2><p>还是在原来的git bash窗口</p>
+<p><code>hexo new &quot;文章名&quot;</code></p>
+<p>就可以新建一个文章了。存储地址在Hexo/source/_posts。</p>
+<p>文章都是md文件，所以就需要一个markdown编辑器–Typora。直接百度下载安装，没什么好说的。</p>
+<p>（太好用了，完全不需要懂得Markdown语法，只要知道一些快捷键就可以了）</p>
+<p>然而，事情还是被我想得太简单了，图片显示不出来。不过很快就解决了，解决方法网址：</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ea78bdd0551f">https://www.jianshu.com/p/ea78bdd0551f</a></p>
+<p>而且我每次都会在菜单–格式–图像里面设置图片根目录为与文章名同名的文件夹，不知道不设置会怎么样，下次试试。</p>
+<h2 id="四、感谢"><a href="#四、感谢" class="headerlink" title="四、感谢"></a>四、感谢</h2><p>为了搭建这个博客，我查找了好多教程，主要都是知乎上面的教程。附链接~</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/137497835">如何搭建hexo个人博客</a></p>
+</blockquote>
+<p>超详细的教程，而且语言非常简洁，通俗易懂，适合我这样的小白。</p>
+<blockquote>
+<p> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/334815426">我是如何利用Github Pages搭建起我的博客，细数一路的坑</a></p>
+</blockquote>
+<p>这个主要作为上一个的补充，也比较详细。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/123286944">Github+Hexo+matery博客搭建小白教程</a></p>
+</blockquote>
+<p>这个就异常详细了，果然是真的小白教程。我就是在这里发现了那需要打两个空格的错误，救命恩人啊。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/156915260">Hexo博客写文章及基本操作</a></p>
+</blockquote>
+<p>我就是从这里了解了Typera，并且学会使用Typera，确实是非常简单好用，里面有使用频率很高的快捷键，赞!</p>
+<p>总之，感谢以上所有对我有所帮助的大佬，新手慢慢入坑中。。。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">http://example.com/2021/05/18/github-hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2-github-hexo/"># 个人博客,github,hexo</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/05/19/%E8%80%83%E7%A0%94%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/">考研经验分享</a>
+            
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

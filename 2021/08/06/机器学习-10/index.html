@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>机器学习-10 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">机器学习-10</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 6, 2021&nbsp;&nbsp;14:14:50</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="异常检测"><a href="#异常检测" class="headerlink" title="异常检测"></a>异常检测</h1><p>异常检测算法主要用于在大量的数据中检测有没有异常的数据。应用包括飞机引擎是否有异常，用户行为是否异常，计算机集群中有没有状态异常的计算机等等。</p>
+<h2 id="高斯分布（正态分布）"><a href="#高斯分布（正态分布）" class="headerlink" title="高斯分布（正态分布）"></a>高斯分布（正态分布）</h2><p>$X\sim N(\mu,\sigma^2)$<br>$$<br>f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}<br>$$<br>数据量大的数据集都近似为高斯分布。</p>
+<p>参数$\mu,\sigma^2$的估计值为<br>$$<br>\mu=\frac{1}{m}\sum_{i=1}^mx^{(i)},\sigma^2=\frac{1}{m}\sum_{i=1}^m(x^{(i)}-\mu)^2<br>$$<br>在统计学中$\sigma^2$的估计值推导的分母是m-1，在机器学习领域由于数据集数量都比较大，结果相差无几。</p>
+<h2 id="异常检测算法"><a href="#异常检测算法" class="headerlink" title="异常检测算法"></a>异常检测算法</h2><p>假设数据集${x^{(1)},\dots,x^{(m)}}$，每个数据都是n维向量。</p>
+<p>将每个数据的特征近似看做高斯分布，即<br>$$<br>x_1\sim N(\mu_1,\sigma^2_1),\dots,x_n\sim N(\mu_n,\sigma^2_n)<br>$$<br>对于某个数据$x$，计算<br>$$<br>P(x)=P(x_1;\mu_1,\sigma^2_1)\ldots P(x_n;\mu_n,\sigma^2_n)<br>$$<br>若$P(x)&lt;\epsilon$，则就认为这个数据是异常的。</p>
+<p>其实就是将特征之间看做相互独立的分布。</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/anomaly_detection_example.png" alt="anomaly_detection_example"></p>
+<p>在这个例子中，得到的P(x)就是在二维图像上的点的高度。</p>
+<h2 id="评估异常检测系统"><a href="#评估异常检测系统" class="headerlink" title="评估异常检测系统"></a>评估异常检测系统</h2><p>在开发一个异常检测系统之后，需要查看改良效果或者评测系统，就要使用一个数来表示系统的好坏。</p>
+<p>方法是将一部分数据关于有没有异常看做有标签数据，先用无标签数据训练好模型再用游标桥数据去评测。</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/evaluate.png" alt="evaluate"></p>
+<p>例如有10000个无异常数据，和20个有异常数据，使用6000个无异常数据作为训练集，2000个无异常数据和10个有异常数据作为有标签的交叉验证集，2000个无异常数据和10个有异常数据作为测试集。</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/evaluate1.png" alt="evaluate1"></p>
+<p>由于异常的数据可能很少，因此这是一个不对称的误差分析问题。</p>
+<h1 id="异常检测和监督学习"><a href="#异常检测和监督学习" class="headerlink" title="异常检测和监督学习"></a>异常检测和监督学习</h1><p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/compara.png" alt="compara"></p>
+<p>异常检测检测数据集中数量非常少的异常数据（y=1），绝大部分的数据是y=0的。而在监督学习中，数据的正负样本数都很多，有足够的例子去查看不同分类的特征。</p>
+<h1 id="多变量高斯分布"><a href="#多变量高斯分布" class="headerlink" title="多变量高斯分布"></a>多变量高斯分布</h1><p>有些情况下，将每个特征看做不同的高斯分布不能识别出特定的异常。这时将所有特征考虑在内作为一个多变量高斯分布就可以解决这个问题。</p>
+<p>多变量高斯分布:$x\in R^n\ \mu\in R^n\ \Sigma\in R^{n\times n}(协方差矩阵)$<br>$$<br>P(x) =\frac{1}{(\sqrt{2\pi})^n|\Sigma|^{\frac{1}{2}}}e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)}<br>$$<br>估计参数的方法</p>
+<p>训练集：${x^{(1)},\dots,x^{(m)}},x^{(i)}\in R^n$<br>$$<br>\mu = \frac{1}{m}\sum_{i=1}^mx^{(i)}\ \ \ \ \ \ \ \ \Sigma = \frac{1}{m}\sum_{i=1}^m(x^{(i)}-\mu)(x^{(i)}-\mu)^T<br>$$</p>
+<h2 id="使用多变量高斯分布进行异常检测"><a href="#使用多变量高斯分布进行异常检测" class="headerlink" title="使用多变量高斯分布进行异常检测"></a>使用多变量高斯分布进行异常检测</h2><p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/nultivariate_gussian.png" alt="nultivariate_gussian"></p>
+<p>先通过训练集拟合出参数$\mu,\Sigma$，然后将要判断是否异常的数据代入公式计算得到p，如果小于特定的值$\epsilon$，就判定为异常。</p>
+<h2 id="多变量高斯分布和使用原方法的区别"><a href="#多变量高斯分布和使用原方法的区别" class="headerlink" title="多变量高斯分布和使用原方法的区别"></a>多变量高斯分布和使用原方法的区别</h2><p>原方法产生的高斯分布在x轴和y轴上都是高斯分布，而且3D图横截面是关于横纵方向对称的。多变量高斯分布则是任意的，对称轴可以不与x轴或y轴平行。</p>
+<p>他们之间的关系是多变量高斯分布的协方差矩阵$\Sigma$是对角矩阵时，对角线元素是各个特征的方差，多变量高斯分布就变成了原方法。</p>
+<p>这两种方法的使用场景：</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/compara1.png" alt="compara1"></p>
+<p>原方法可能要手动的增加新特征，但是在训练集很小的时候也有作用。多变量高斯分布计算量大，并且要求m&gt;n，确保协方差矩阵是可逆的。另外，协方差矩阵不可逆的原因还有可能是因为有冗余的特征。</p>
+<h1 id="推荐系统"><a href="#推荐系统" class="headerlink" title="推荐系统"></a>推荐系统</h1><p>以推荐电影给用户为例。</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/recomment1.png" alt="recomment1"></p>
+<p>约定符号：</p>
+<p>$n_u:$用户的数量</p>
+<p>$n_m:$电影的数量</p>
+<p>$r(i,j):$用户j对电影i进行了打分为1，没打分为0</p>
+<p>$y^{(i,j)}:$用户j给电影i打的分数</p>
+<h2 id="基于内容的推荐算法"><a href="#基于内容的推荐算法" class="headerlink" title="基于内容的推荐算法"></a>基于内容的推荐算法</h2><p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/content_based.png" alt="content_based"></p>
+<p>利用线性回归的思想。</p>
+<p>根据电影的内容生成电影的特征，例如在上例中每个电影都有romance和action两个特征来代表电影中爱情和动作的指数。然后对每一个用户根据历史评分训练出一个$\theta$。在有一个新的电影时，用新电影的特征向量与用户的$\theta$预测用户可能对这个新电影的评分。</p>
+<p>优化目标为：</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/opt_bojective.png" alt="opt_bojective"></p>
+<p>这里删去了优化目标分母中的m，也可以得到一样的$\theta$。</p>
+<p>总体的优化算法为：</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/opt_algorithm.png" alt="opt_algorithm"></p>
+<h2 id="协同过滤"><a href="#协同过滤" class="headerlink" title="协同过滤"></a>协同过滤</h2><p>在本例中，不能确定特征值是多少，人工来做工作量太大。因此需要一个算法计算各个电影的特征值。</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/cf_1.png" alt="cf_1"></p>
+<p>可以采访几位用户，得知他们的喜好，这样就可以得到他们的$\theta$，如上图，然后再根据他们对电影的评分去训练电影的特征。</p>
+<p>这时，我们的优化目标</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/cf_2.png" alt="cf_2"></p>
+<p>其实就是相当于把$\theta$和$x$调换位置，用$\theta$去训练$x$。</p>
+<p>基础协同过滤算法步骤：</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/cf_3.png" alt="cf_3"></p>
+<p>通过不断地训练$x$再训练$\theta$，循环下去，最终会收敛到一个合适的值。协同的一层含义是所有用户都在帮助算法进行更好的特征学习。</p>
+<h2 id="对协同过滤算法的优化"><a href="#对协同过滤算法的优化" class="headerlink" title="对协同过滤算法的优化"></a>对协同过滤算法的优化</h2><p>在协同过滤算法中既要训练$x$，又要训练$\theta$。</p>
+<p>但是因为需要对$x$进行学习，所以我们不必再硬性要求$x_0=1$，这时$x,\theta\in R^n$。</p>
+<p>训练$\theta$时，给定$x$，代价函数为<br>$$<br>J(\theta^{(1)},\dots,\theta^{(n_u)})=\frac{1}{2}\sum_{j=1}^{n_u}\sum_{i:r(i,j)=1}((\theta^{(j)})^Tx^{(i)}-y^{(i,j)})^2+\frac{\lambda}{2}\sum_{j=1}^{n_u}\sum_{k=1}^{n}(\theta^{(j)}<em>k)^2<br>$$<br>目标是<br>$$<br>min</em>{\theta^{(1)},\dots,\theta^{(n_u)}}J(\theta^{(1)},\dots,\theta^{(n_u)})<br>$$<br>训练$x$时，给定$\theta$，代价函数为<br>$$<br>J(x^{(1)},\dots,x^{(n_m)})=\frac{1}{2}\sum_{i=1}^{n_m}\sum_{j:r(i,j)=1}((\theta^{(j)})^Tx^{(i)}-y^{(i,j)})^2+\frac{\lambda}{2}\sum_{i=1}^{n_m}\sum_{k=1}^{n}(x^{(i)}<em>k)^2<br>$$<br>目标是<br>$$<br>min</em>{x^{(1)},\dots,x^{(n_m)}}J(x^{(1)},\dots,x^{(n_m)})<br>$$<br>现在我们可以将这两步合并，同时训练$x$和$\theta$</p>
+<p>代价函数为<br>$$<br>J(x^{(1)},\dots,x^{(n_m)},\theta^{(1)},\dots,\theta^{(n_u)})=\frac{1}{2}\sum_{(i,j):r(i,j)=1}((\theta^{(j)})^Tx^{(i)}-y^{(i,j)})^2+\frac{\lambda}{2}\sum_{i=1}^{n_m}\sum_{k=1}^{n}(x^{(i)}<em>k)^2+\frac{\lambda}{2}\sum</em>{j=1}^{n_u}\sum_{k=1}^{n}(\theta^{(j)}<em>k)^2<br>$$<br>优化目标是<br>$$<br>min</em>{x^{(1)},\dots,x^{(n_m)},\theta^{(1)},\dots,\theta^{(n_u)}}J(x^{(1)},\dots,x^{(n_m)}，\theta^{(1)},\dots,\theta^{(n_u)})<br>$$</p>
+<h2 id="协同过滤算法的步骤"><a href="#协同过滤算法的步骤" class="headerlink" title="协同过滤算法的步骤"></a>协同过滤算法的步骤</h2><p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/cf_algorithm.png" alt=" "></p>
+<h2 id="向量化实现-低秩矩阵分解"><a href="#向量化实现-低秩矩阵分解" class="headerlink" title="向量化实现:低秩矩阵分解"></a>向量化实现:低秩矩阵分解</h2><p>将每个电影作为一行，每个用户作为一列，得到用户对电影的打分情况。</p>
+<p>上例中的打分情况就可以表示为<br>$$<br>Y=<br>\left[<br>\begin{matrix}<br>5 &amp; 5 &amp; 0 &amp; 0\<br>5 &amp; ? &amp; ? &amp; 0\<br>? &amp; 4 &amp; 0 &amp; ?\<br>0 &amp; 0 &amp; 5 &amp; 4\<br>0 &amp; 0 &amp; 5 &amp; 0<br>\end{matrix}<br>\right]<br>$$<br>若$\theta^{(i)},x^{(i)}$是行向量，那么我们的预测为<br>$$<br>\left[<br>\begin{matrix}<br>(x^{(1)})(\theta^{(1)})^T &amp; (x^{(1)})(\theta^{(2)})^T &amp; \cdots &amp; (x^{(1)})(\theta^{(n_u)})^T\<br>(x^{(2)})(\theta^{(1)})^T &amp; (x^{(2)})(\theta^{(2)})^T &amp; \cdots &amp; (x^{(2)})(\theta^{(n_u)})^T\<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots\<br>(x^{(n_m)})(\theta^{(1)})^T &amp; (x^{(n_m)})(\theta^{(2)})^T &amp; \cdots &amp; (x^{(n_m)})(\theta^{(n_u)})^T<br>\end{matrix}<br>\right]<br>$$<br>又<br>$$<br>X=<br>\left[<br>\begin{matrix}<br>x^{(1)}\<br>x^{(2)}\<br>\vdots \<br>x^{(n_m)}<br>\end{matrix}<br>\right]<br>\ \ \ \ \ \ \<br>\Theta=<br>\left[<br>\begin{matrix}<br>\theta^{(1)}\<br>\theta^{(2)}\<br>\vdots \<br>\theta^{(n_u)}<br>\end{matrix}<br>\right]<br>$$<br>所以预测矩阵可以表示为<br>$$<br>X\Theta^T<br>$$</p>
+<h2 id="识别相关的电影"><a href="#识别相关的电影" class="headerlink" title="识别相关的电影"></a>识别相关的电影</h2><p>通过协同过滤算法得到的电影特征其实很难从人类的角度去直观理解，但这些特征都是电影的一些重要特征，对于判断两部电影是否相关只需对它们的特征进行操作。</p>
+<p>可以计算电影之间特征向量的模，来判断电影是否相关。即$||x^{(i)}-x^{(j)}||$。</p>
+<p>例如，在一个用户购买或观看一部电影后，选择$||x^{(i)}-x^{(j)}||$最小的五部电影进行推荐。</p>
+<h2 id="均值归一化"><a href="#均值归一化" class="headerlink" title="均值归一化"></a>均值归一化</h2><p>如果有一个新用户，还没有评价任何电影，在运行协同过滤算法训练$\theta$时，$r(i,j)$没有为1的项，所以代价函数的第一部分就为0。<br>$$<br>J(x^{(1)},\dots,x^{(n_m)},\theta^{(1)},\dots,\theta^{(n_u)})=\frac{1}{2}\sum_{j=1}^{n_u}\sum_{(i,j):r(i,j)=1}((\theta^{(j)})^Tx^{(i)}-y^{(i,j)})^2+\frac{\lambda}{2}\sum_{i=1}^{n_m}\sum_{k=1}^{n}(x^{(i)}<em>k)^2+\frac{\lambda}{2}\sum</em>{j=1}^{n_u}\sum_{k=1}^{n}(\theta^{(j)}<em>k)^2<br>$$<br>相当于算法在最小化$\frac{\lambda}{2}\sum</em>{j=1}^{n_u}\sum_{k=1}^{n}(\theta^{(j)}_k)^2$</p>
+<p>结果当然全为0。这样的话就预测新用户对所有电影的评价都是0，没有一个是评价较好可以推荐的。</p>
+<p>为了解决这个问题需要进行均值归一化。</p>
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/mean_normalization.png" alt="mean_normalization"></p>
+<p>先计算出所有电影的打分均值，然后将打分减去均值，执行协同过滤后再加上均值。</p>
+<p>本质上是预测新用户对电影的打分为所有用户对电影打分的平均值，根据大众的喜好来对新用户进行推荐。</p>
+<h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><h2 id="异常检测-1"><a href="#异常检测-1" class="headerlink" title="异常检测"></a>异常检测</h2><h3 id="可视化数据"><a href="#可视化数据" class="headerlink" title="可视化数据"></a>可视化数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data = sio.loadmat(<span class="string">&#x27;d:/datasets/ex8/ex8data1.mat&#x27;</span>)</span><br><span class="line">X = data[<span class="string">&#x27;X&#x27;</span>]</span><br><span class="line">X.shape</span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(X[:,<span class="number">0</span>],X[:,<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/ex_1.png" alt="ex_1"></p>
+<h3 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h3><p>**估计$\mu$和$\sigma^2$**：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">estimate_gaussian</span>(<span class="params">X</span>):</span></span><br><span class="line">    <span class="comment">#列方向计算平均值</span></span><br><span class="line">    mu = X.mean(axis=<span class="number">0</span>)</span><br><span class="line">    <span class="comment">#列方向计算方差</span></span><br><span class="line">    sigma2 = X.var(axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> mu,sigma2</span><br></pre></td></tr></table></figure>
+
+<p><strong>画出轮廓图</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mu,sigma2=estimate_gaussian(X)</span><br><span class="line"></span><br><span class="line">xplot = np.linspace(<span class="number">0</span>,<span class="number">25</span>,<span class="number">100</span>)</span><br><span class="line">yplot = np.linspace(<span class="number">0</span>,<span class="number">25</span>,<span class="number">100</span>)</span><br><span class="line"><span class="comment">#坐标矩阵</span></span><br><span class="line">Xplot,Yplot = np.meshgrid(xplot,yplot)</span><br><span class="line"><span class="comment">#计算高斯分布</span></span><br><span class="line">Z = np.exp(-<span class="number">0.5</span>*(((Xplot-mu[<span class="number">0</span>])**<span class="number">2</span>)/sigma2[<span class="number">0</span>]+((Yplot-mu[<span class="number">1</span>])**<span class="number">2</span>)/sigma2[<span class="number">1</span>]))/(<span class="number">2</span>*np.pi*np.sqrt(sigma2[<span class="number">0</span>]*sigma2[<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line"><span class="comment">#轮廓图</span></span><br><span class="line">ax.contour(Xplot,Yplot,Z,[<span class="number">10</span>**(-<span class="number">11</span>),<span class="number">10</span>**(-<span class="number">7</span>),<span class="number">10</span>**(-<span class="number">5</span>),<span class="number">10</span>**(-<span class="number">3</span>),<span class="number">0.1</span>],color=<span class="string">&#x27;k&#x27;</span>)</span><br><span class="line">ax.scatter(X[:,<span class="number">0</span>],X[:,<span class="number">1</span>],c=<span class="string">&#x27;b&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/ex_2.png" alt="ex_2"></p>
+<p><code>Xplot,Yplot = np.meshgrid(xplot,yplot)</code>的作用是将xplot和yplot组成所有可能的坐标，并且把坐标X轴存入Xplot,Y轴存入Yplot，即相应位置构成一个坐标。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/littlehaes/article/details/83543459">meshgrid()的介绍</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42505705/article/details/88771942">contour()的介绍</a></p>
+<p><strong>选择阀值</strong>：</p>
+<p>首先获得验证集，并且计算出高斯分布的概率密度值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Xval = data[<span class="string">&#x27;Xval&#x27;</span>]</span><br><span class="line">yval = data[<span class="string">&#x27;yval&#x27;</span>]</span><br><span class="line">Xval.shape,yval.shape</span><br><span class="line">((<span class="number">307</span>, <span class="number">2</span>), (<span class="number">307</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> stats</span><br><span class="line"></span><br><span class="line">p = np.zeros((X.shape[<span class="number">0</span>],X.shape[<span class="number">1</span>]))</span><br><span class="line">p[:,<span class="number">0</span>] = stats.norm(mu[<span class="number">0</span>],sigma2[<span class="number">0</span>]).pdf(X[:,<span class="number">0</span>])</span><br><span class="line">p[:,<span class="number">1</span>] = stats.norm(mu[<span class="number">1</span>],sigma2[<span class="number">1</span>]).pdf(X[:,<span class="number">1</span>])</span><br><span class="line">p.shape</span><br><span class="line">(<span class="number">307</span>, <span class="number">2</span>)</span><br><span class="line">p_ = np.multiply(p[:,<span class="number">0</span>],p[:,<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">pval = np.zeros((Xval.shape[<span class="number">0</span>],Xval.shape[<span class="number">1</span>]))</span><br><span class="line">pval[:,<span class="number">0</span>] = stats.norm(mu[<span class="number">0</span>],sigma2[<span class="number">0</span>]).pdf(Xval[:,<span class="number">0</span>])</span><br><span class="line">pval[:,<span class="number">1</span>] = stats.norm(mu[<span class="number">1</span>],sigma2[<span class="number">1</span>]).pdf(Xval[:,<span class="number">1</span>])</span><br><span class="line">pval.shape</span><br><span class="line">(<span class="number">307</span>, <span class="number">2</span>)</span><br><span class="line">pval_ = np.multiply(pval[:,<span class="number">0</span>],pval[:,<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+<p><code>scipy.stats.norm(mu,sigma2)</code>是内置的高斯函数方法，<code>pdf()</code>给定自变量算出高斯函数的值。</p>
+<p>定义一个函数在验证集上选择最好的阀值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">select_threshold</span>(<span class="params">pval,yval</span>):</span></span><br><span class="line">    best_epsilon = <span class="number">0</span></span><br><span class="line">    best_f1 = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    step = (pval.<span class="built_in">max</span>()-pval.<span class="built_in">min</span>())/<span class="number">100</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> epsilon <span class="keyword">in</span> np.arange(pval.<span class="built_in">min</span>(),pval.<span class="built_in">max</span>(),step):</span><br><span class="line">        preds = pval &lt; epsilon</span><br><span class="line">        <span class="comment">#预测为1正确的个数，真阳性</span></span><br><span class="line">        tp = np.<span class="built_in">sum</span>([<span class="number">1</span> <span class="keyword">if</span> np.logical_and(a == <span class="number">1</span>, b == <span class="number">1</span>) <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">for</span> (a,b) <span class="keyword">in</span> <span class="built_in">zip</span>(preds,yval)]).astype(<span class="built_in">float</span>)</span><br><span class="line">        <span class="comment">#预测为1错误的个数，假阳性</span></span><br><span class="line">        fp = np.<span class="built_in">sum</span>([<span class="number">1</span> <span class="keyword">if</span> np.logical_and(a == <span class="number">1</span>, b == <span class="number">0</span>) <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">for</span> (a,b) <span class="keyword">in</span> <span class="built_in">zip</span>(preds,yval)]).astype(<span class="built_in">float</span>)</span><br><span class="line">        <span class="comment">#预测为0错误的个数，假阴性</span></span><br><span class="line">        fn = np.<span class="built_in">sum</span>([<span class="number">1</span> <span class="keyword">if</span> np.logical_and(a == <span class="number">0</span>, b == <span class="number">1</span>) <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">for</span> (a,b) <span class="keyword">in</span> <span class="built_in">zip</span>(preds,yval)]).astype(<span class="built_in">float</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#精确度是预测为1正确的数量/预测为1的总数量</span></span><br><span class="line">        precision = tp/(tp+fp)</span><br><span class="line">        <span class="comment">#召回率是预测为1正确的数量/实际为1的总数量</span></span><br><span class="line">        recall = tp/(tp+fn)</span><br><span class="line">        </span><br><span class="line">        f1 = (<span class="number">2</span>*precision*recall)/(precision+recall)</span><br><span class="line">        <span class="keyword">if</span> f1 &gt; best_f1:</span><br><span class="line">            best_f1 = f1</span><br><span class="line">            best_epsilon = epsilon</span><br><span class="line">    <span class="keyword">return</span> best_epsilon,best_f1</span><br></pre></td></tr></table></figure>
+
+<p>可视化异常点</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#选择阀值</span></span><br><span class="line">epsilon,f1 = select_threshold(pval_,yval.ravel())</span><br><span class="line"><span class="comment">#获得异常点的下标</span></span><br><span class="line">outliers = np.where(p_ &lt; epsilon)</span><br><span class="line"></span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line"><span class="comment">#轮廓图</span></span><br><span class="line">ax.contour(Xplot,Yplot,Z,[<span class="number">10</span>**(-<span class="number">11</span>),<span class="number">10</span>**(-<span class="number">7</span>),<span class="number">10</span>**(-<span class="number">5</span>),<span class="number">10</span>**(-<span class="number">3</span>),<span class="number">0.1</span>],color=<span class="string">&#x27;k&#x27;</span>)</span><br><span class="line">ax.scatter(X[:,<span class="number">0</span>],X[:,<span class="number">1</span>],c=<span class="string">&#x27;b&#x27;</span>)</span><br><span class="line">ax.scatter(X[outliers[<span class="number">0</span>],<span class="number">0</span>],X[outliers[<span class="number">0</span>],<span class="number">1</span>],c=<span class="string">&#x27;r&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/ex_3.png" alt="ex_3"></p>
+<p>红色的是异常点。</p>
+<h2 id="协同过滤-1"><a href="#协同过滤-1" class="headerlink" title="协同过滤"></a>协同过滤</h2><h3 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data = sio.loadmat(<span class="string">&#x27;d:/datasets/ex8/ex8_movies.mat&#x27;</span>)</span><br><span class="line">Y = data[<span class="string">&#x27;Y&#x27;</span>]</span><br><span class="line">R = data[<span class="string">&#x27;R&#x27;</span>]</span><br><span class="line">Y.shape,R.shape</span><br><span class="line">((<span class="number">1682</span>, <span class="number">943</span>), (<span class="number">1682</span>, <span class="number">943</span>))</span><br></pre></td></tr></table></figure>
+
+<p>Y是用户对各电影的打分情况，行方向是电影，列方向是用户，$n_m=1682,n_u=943$。</p>
+<p>R是各个用户对电影是否打分的标记矩阵，为1或True是打分了，0或False没打分。</p>
+<h3 id="序列化和逆序列化"><a href="#序列化和逆序列化" class="headerlink" title="序列化和逆序列化"></a>序列化和逆序列化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#序列化</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">serialize</span>(<span class="params">X,theta</span>):</span></span><br><span class="line">    <span class="keyword">return</span> np.concatenate((X.ravel(),theta.ravel()))</span><br><span class="line"></span><br><span class="line"><span class="comment">#逆序列化</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">deserialize</span>(<span class="params">param,n_m,n_u,n</span>):</span></span><br><span class="line">    X = param[:n_m*n].reshape((n_m,n))</span><br><span class="line">    theta = param[n_m*n:].reshape((n_u,n))</span><br><span class="line">    <span class="keyword">return</span> X,theta</span><br></pre></td></tr></table></figure>
+
+<p>序列化是将X和theta连成一个长向量，逆序列化是将长向量分解成X和theta。</p>
+<h3 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">param,Y,R,n,reg</span>):</span></span><br><span class="line">    n_m,n_u = Y.shape</span><br><span class="line">    X,theta = deserialize(param, n_m, n_u, n)</span><br><span class="line">    X,theta,Y,R = np.matrix(X),np.matrix(theta),np.matrix(Y),np.matrix(R)</span><br><span class="line">    </span><br><span class="line">    first = np.power(np.multiply(X*theta.T-Y,R),<span class="number">2</span>)</span><br><span class="line">    regTerm = (reg/<span class="number">2</span>)*np.<span class="built_in">sum</span>(np.power(param,<span class="number">2</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>(np.<span class="built_in">sum</span>(first)/<span class="number">2</span>+regTerm)</span><br></pre></td></tr></table></figure>
+
+<p>param是X和theta组成的长向量，n是电影的特征数量，同时也是每个用户的theta的列数。</p>
+<p>在$X$和$\Theta$中，$x^{(i)},theta^{(i)}$都是行向量，即<br>$$<br>X=<br>\left[<br>\begin{matrix}<br>x^{(1)}\<br>\vdots<br>\end{matrix}<br>\right]<br>\ \ \ \ \ \<br>\Theta=<br>\left[<br>\begin{matrix}<br>\theta^{(1)}\<br>\vdots<br>\end{matrix}<br>\right]<br>$$<br>就可以得到<br>$$<br>X<em>\Theta^T-Y=<br>\left[<br>\begin{matrix}<br>x^{(1)}</em>(\theta^{(1)})^T-y^{(1,1)} &amp;　\cdots \<br>\vdots &amp; \ddots<br>\end{matrix}<br>\right]<br>$$<br>所以在代价函数的第一项$\frac{1}{2}\sum_{(i,j):r(i,j)=1}((\theta^{(j)})^Tx^{(i)}-y^{(i,j)})^2$可以通过将矩阵$X*\Theta^T-Y$元素平方再求和除2得到。</p>
+<p>由于我们没有设置偏置单元，所以正则化项中$\sum_{i=1}^{n_m}\sum_{k=1}^{n}(x^{(i)}<em>k)^2+\sum</em>{j=1}^{n_u}\sum_{k=1}^{n}(\theta^{(j)}_k)^2$，可以直接将长向量param元素平方求和得到。</p>
+<h3 id="梯度"><a href="#梯度" class="headerlink" title="梯度"></a>梯度</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient</span>(<span class="params">param,Y,R,n,reg</span>):</span></span><br><span class="line">    n_m,n_u = Y.shape</span><br><span class="line">    X,theta = deserialize(param, n_m, n_u, n)</span><br><span class="line">    X,theta,Y,R = np.matrix(X),np.matrix(theta),np.matrix(Y),np.matrix(R)</span><br><span class="line">    </span><br><span class="line">    inner = X*theta.T-Y</span><br><span class="line">    partial_X = np.multiply(inner,R)*theta+reg*X</span><br><span class="line">    partial_theta = np.multiply(inner,R).T*X+reg*theta</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> np.concatenate((np.array(partial_X).ravel(),np.array(partial_theta).ravel()))</span><br></pre></td></tr></table></figure>
+
+<p>在求梯度时要将X和theta的梯度分开计算，然后再连接成一个长向量返回。</p>
+<h3 id="训练数据"><a href="#训练数据" class="headerlink" title="训练数据"></a>训练数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#采访一个用户的评分情况</span></span><br><span class="line">ratings = np.zeros((<span class="number">1682</span>,<span class="number">1</span>))</span><br><span class="line">ratings[<span class="number">0</span>] = <span class="number">4</span></span><br><span class="line">ratings[<span class="number">6</span>] = <span class="number">3</span></span><br><span class="line">ratings[<span class="number">11</span>] = <span class="number">5</span></span><br><span class="line">ratings[<span class="number">53</span>] = <span class="number">4</span></span><br><span class="line">ratings[<span class="number">63</span>] = <span class="number">5</span></span><br><span class="line">ratings[<span class="number">65</span>] = <span class="number">3</span></span><br><span class="line">ratings[<span class="number">68</span>] = <span class="number">5</span></span><br><span class="line">ratings[<span class="number">97</span>] = <span class="number">2</span></span><br><span class="line">ratings[<span class="number">182</span>] = <span class="number">4</span></span><br><span class="line">ratings[<span class="number">225</span>] = <span class="number">5</span></span><br><span class="line">ratings[<span class="number">354</span>] = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#将采访的用户作为第一个用户</span></span><br><span class="line">Y = np.append(ratings,Y,axis=<span class="number">1</span>)</span><br><span class="line">Y.shape</span><br><span class="line">(<span class="number">1682</span>, <span class="number">944</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#修改打分标记</span></span><br><span class="line">R = np.append(ratings != <span class="number">0</span>,R,axis=<span class="number">1</span>)</span><br><span class="line">R.shape</span><br><span class="line">(<span class="number">1682</span>, <span class="number">944</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#归一化评分矩阵</span></span><br><span class="line">Y_norm = Y-Y.mean(axis=<span class="number">1</span>).reshape((<span class="number">1682</span>,<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">n_m,n_u = Y.shape</span><br><span class="line"><span class="comment">#10个特征</span></span><br><span class="line">n = <span class="number">10</span></span><br><span class="line">reg = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#随机初始化</span></span><br><span class="line">X = np.random.random((n_m,n))</span><br><span class="line">theta = np.random.random((n_u,n))</span><br><span class="line">param = serialize(X,theta)</span><br><span class="line"></span><br><span class="line">res = opt.minimize(fun=cost,jac=gradient,x0=param,args=(Y_norm,R,n,reg),method=<span class="string">&#x27;TNC&#x27;</span>)</span><br><span class="line">res</span><br><span class="line">fun: <span class="number">68305.32230079509</span></span><br><span class="line">     jac: array([-<span class="number">3.99596453e-05</span>, -<span class="number">4.41260684e-05</span>, -<span class="number">3.67604318e-05</span>, ...,</span><br><span class="line">       -<span class="number">2.21221912e-06</span>, -<span class="number">2.58846038e-07</span>,  <span class="number">1.17097061e-06</span>])</span><br><span class="line"> message: <span class="string">&#x27;Converged (|f_n-f_(n-1)| ~= 0)&#x27;</span></span><br><span class="line">    nfev: <span class="number">1207</span></span><br><span class="line">     nit: <span class="number">39</span></span><br><span class="line">  status: <span class="number">1</span></span><br><span class="line"> success: <span class="literal">True</span></span><br><span class="line">       x: array([ <span class="number">0.41137777</span>, -<span class="number">0.02783866</span>,  <span class="number">0.58016011</span>, ...,  <span class="number">0.19491025</span>,</span><br><span class="line">        <span class="number">1.3003497</span> ,  <span class="number">0.70787838</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">#逆序列化</span></span><br><span class="line">X,theta = deserialize(res.x,n_m,n_u,n)</span><br><span class="line"><span class="comment">#得到预测矩阵</span></span><br><span class="line">pred = np.dot(X,theta.T)</span><br><span class="line"><span class="comment">#将第一个用户的预测评分矩阵加上每个电影的平均分数，得到真正的预测</span></span><br><span class="line">my_preds = pred[:,<span class="number">0</span>]+Y.mean(axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#将评分按降序获得下标</span></span><br><span class="line">idx  =np.argsort(my_preds)[::-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取电影名称</span></span><br><span class="line">file = <span class="built_in">open</span>(<span class="string">&#x27;d:/datasets/ex8/movie_ids.txt&#x27;</span>,encoding=<span class="string">&#x27;gbk&#x27;</span>)</span><br><span class="line">movie_list=[]</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> file:</span><br><span class="line">    tokens = line.strip().split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">    movie_list.append(<span class="string">&#x27; &#x27;</span>.join(tokens[<span class="number">1</span>:]))</span><br><span class="line">    </span><br><span class="line">movie_list = np.array(movie_list)</span><br><span class="line"></span><br><span class="line"><span class="comment">#输出前10个预测评分最高的电影</span></span><br><span class="line"><span class="keyword">for</span> m <span class="keyword">in</span> movie_list[idx][:<span class="number">10</span>]:</span><br><span class="line">    <span class="built_in">print</span>(m)</span><br><span class="line"></span><br><span class="line">Star Wars (<span class="number">1977</span>)</span><br><span class="line">Titanic (<span class="number">1997</span>)</span><br><span class="line">Raiders of the Lost Ark (<span class="number">1981</span>)</span><br><span class="line">Return of the Jedi (<span class="number">1983</span>)</span><br><span class="line">Empire Strikes Back, The (<span class="number">1980</span>)</span><br><span class="line">Braveheart (<span class="number">1995</span>)</span><br><span class="line">Godfather, The (<span class="number">1972</span>)</span><br><span class="line">Shawshank Redemption, The (<span class="number">1994</span>)</span><br><span class="line">Terminator <span class="number">2</span>: Judgment Day (<span class="number">1991</span>)</span><br><span class="line">Good Will Hunting (<span class="number">1997</span>)</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38486203/article/details/80967696">np.argsort()函数介绍</a></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/">http://example.com/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-10/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/machine-learning/"># machine learning</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/08/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-11/">机器学习-11</a>
+            
+            
+            <a class="next" rel="next" href="/2021/08/05/%E9%98%BF%E9%87%8C%E4%BA%91%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86Linux/">阿里云远程管理Linux</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>机器学习-1 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">机器学习-1</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 28, 2021&nbsp;&nbsp;15:48:18</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h1><p>监督学习是给计算机提供包含正确数据的数据集，计算机在数据集的基础上做出预测。</p>
+<h2 id="回归问题"><a href="#回归问题" class="headerlink" title="回归问题"></a>回归问题</h2><p>回归问题是指要预测的值是一个连续的值。应用：预测房价</p>
+<h2 id="分类问题"><a href="#分类问题" class="headerlink" title="分类问题"></a>分类问题</h2><p>分类问题是指要预测的值是一个离散的值。应用：判断账户有没有被攻击</p>
+<h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1><p>同监督学习相比，无监督学习的数据集的数据没有标签或者是标签一样并且不知道有哪些属性。</p>
+<h2 id="聚类问题"><a href="#聚类问题" class="headerlink" title="聚类问题"></a>聚类问题</h2><p>不告诉计算机要干什么，让计算机在数据集上将有相似特征的数据分成一类。应用：新闻分类，社交网络分析，市场用户区分，天文数据分析。</p>
+<hr>
+<h1 id="第一个学习算法：线性回归的梯度下降"><a href="#第一个学习算法：线性回归的梯度下降" class="headerlink" title="第一个学习算法：线性回归的梯度下降"></a>第一个学习算法：线性回归的梯度下降</h1><p>根据以往售房价格预测将要卖的房子价格</p>
+<p>以往售房价格：</p>
+<p><img src="/2021/06/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-1/1.png" alt="1"></p>
+<p>约定符号： </p>
+<p>$m$ = 数据样本个数</p>
+<p>$x^i$ = 第i个输入的值/特征</p>
+<p>$y^i$ = 第i个输出的值/特征</p>
+<p>$(x,y)$ 一个训练样本，$(x^i, y^i)$第i个训练样本</p>
+<h2 id="预测函数"><a href="#预测函数" class="headerlink" title="预测函数"></a>预测函数</h2><p>选择比较简单的线性函数。</p>
+<p>预测函数为：$h_\theta = \theta_0 + \theta_1x$</p>
+<h2 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h2><p>代价函数是在将数据与预测函数相拟合的过程中的一种尺度，来表示预测函数和已知数据的拟合程度。</p>
+<p>这里的想法是选择合适的$\theta_0$和$\theta_1$来尽可能的使数据和预测函数相拟合。</p>
+<p>线性回归中一般要找与数据误差的最小值。</p>
+<p>设置一个代价函数来表示预测函数与数据集的误差程度，使用比较多的是误差平方代价函数。</p>
+<p>对于上面的例子，我们要找的是使$\frac{1}{2m}\sum_{i=1}^{m}{(h_\theta(x^i)-y^i)^2}$最小的$\theta_0,\theta_1$。</p>
+<p>那么我们的代价函数就是<br>$$<br>J(\theta_0,\theta_1) = \frac{1}{2m}\sum_{i=1}^{m}{(h_\theta(x^i)-y^i)^2}<br>$$<br>此处的$\frac{1}{2m}$是为了消除样本数量对结果的影响并且后面一项为二次项，可以在求导后使结果更简洁。</p>
+<p>目标是得到$使得min(J(\theta_0,\theta_1))的\theta_0和\theta_1$</p>
+<h2 id="梯度下降算法"><a href="#梯度下降算法" class="headerlink" title="梯度下降算法"></a>梯度下降算法</h2><p>数学原理是二维函数在梯度方向的方向导数最大，应该有点贪心的思想在里面，任意选择一个起点，每一步都考虑走下降最快的方向，最终得到局部最优解。这是梯度下降算法的一个特点，得到的不一定是全局最优解。</p>
+<p>可以得到$\theta_0$和$\theta_1$的更新方程：<br>$$<br>\theta_j = \theta_j-\alpha\frac{\partial}{\partial\theta_j}J(\theta_0,\theta_1), j=0\ and\ 1<br>$$<br>其中，$\alpha$是学习速率，控制每一步走的“幅度”，恒大于0。$\alpha$太大可能最终不会收敛，$\alpha$太小可能会导致运算复杂。</p>
+<p>以一维方程为例：</p>
+<p><img src="/2021/06/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-1/2.png" alt="2"></p>
+<p>由于梯度一直在改变，所以$\alpha$在不变的情况下，更新方程也可以收敛。</p>
+<p>这里使用减号是因为，如果偏导大于0，那么$\theta$要减小，如果偏导小于0，那么$\theta$要增加。</p>
+<p>但是需要注意的是，从梯度的数学原理来讲，$\theta_0$和$\theta_1$必须要同时变化，计算机中运行的代码总不会是一起执行，所以迭代公式可以分解成以下公式：<br>$$<br>temp0 = \theta_0-\alpha\frac{\partial}{\partial\theta_0}J(\theta_0,\theta_1)\tag{1}<br>$$</p>
+<p>$$<br>temp1 = \theta_1-\alpha\frac{\partial}{\partial\theta_1}J(\theta_0,\theta_1)\tag{2}<br>$$</p>
+<p>$$<br>\theta_0 = temp0\tag{3}<br>$$</p>
+<p>$$<br>\theta_1 = temp_1\tag{4}<br>$$</p>
+<p>总的来讲就是先算出下一步的值再迭代。</p>
+<p>不能把顺序换成（1）、（3）、（2）、（4）。</p>
+<h2 id="线性回归的梯度下降"><a href="#线性回归的梯度下降" class="headerlink" title="线性回归的梯度下降"></a>线性回归的梯度下降</h2><p>在本例的线性回归问题使用梯度下降算法。<br>$$<br>J(\theta_0,\theta_1)=\frac{1}{2m}\sum_{i=1}^{m}(h_\theta(x^i)-y^i)^2=\frac{1}{2m}\sum_{i=1}^{m}(\theta_0+\theta_1x^i-y^i)^2<br>$$</p>
+<p>$$<br>\frac{\partial}{\partial\theta_0}J(\theta_0,\theta_1)=\frac{1}{m}\sum_{i=1}^m(\theta_0+\theta_1x^i-y^i)<br>$$</p>
+<p>$$<br>\frac{\partial}{\partial x}J(\theta_0,\theta_1)=\frac{x^i}{m}\sum_{i=1}^{m}(\theta_0+\theta_1x^i-y^i)<br>$$</p>
+<p>将$J(\theta_0,\theta_1)$代入更新方程得：<br>$$<br>\theta_0=\theta_0-\frac{\alpha}{m}\sum_{i-1}^{m}(\theta_0+\theta_1x^i-y^i)<br>$$</p>
+<p>$$<br>\theta_1=\theta_1-\frac{\alpha x^i}{m}\sum_{i-1}^{m}(\theta_0+\theta_1x^i-y^i)<br>$$</p>
+<p>重复这个过程直至收敛。</p>
+<p>这个算法有时也被称为Batch梯度下降，每梯度下降一次就要遍历整个数据集。</p>
+<h1 id="课后作业"><a href="#课后作业" class="headerlink" title="课后作业"></a>课后作业</h1><p>关于吴恩达老师这门课的所有课后作业以及python实现都是在</p>
+<p><a target="_blank" rel="noopener" href="https://www.heywhale.com/home/column/5dd7524c83b6ff002c786fff">https://www.heywhale.com/home/column/5dd7524c83b6ff002c786fff</a></p>
+<p>找到的，感谢这位大佬。</p>
+<h2 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h2><p>实现在不同规模人口数量的城市，预测小吃店利润。</p>
+<p>数据文件的第一列是城市人口数量，，第二列是该城市小吃店利润。</p>
+<h3 id="引入标准库"><a href="#引入标准库" class="headerlink" title="引入标准库"></a>引入标准库</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+
+<h3 id="读入数据并展示"><a href="#读入数据并展示" class="headerlink" title="读入数据并展示"></a>读入数据并展示</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">path = <span class="string">&#x27;c:/Users/Administrator/.spyder-py3/datasets/ex1/ex1data1.txt&#x27;</span></span><br><span class="line">data = pd.read_csv(path,header=<span class="literal">None</span>,names=[<span class="string">&#x27;Population&#x27;</span>,<span class="string">&#x27;Profit&#x27;</span>])</span><br><span class="line">data.head()  <span class="comment">#显示前五行</span></span><br><span class="line">Population   Profit</span><br><span class="line"><span class="number">0</span>      <span class="number">6.1101</span>  <span class="number">17.5920</span></span><br><span class="line"><span class="number">1</span>      <span class="number">5.5277</span>   <span class="number">9.1302</span></span><br><span class="line"><span class="number">2</span>      <span class="number">8.5186</span>  <span class="number">13.6620</span></span><br><span class="line"><span class="number">3</span>      <span class="number">7.0032</span>  <span class="number">11.8540</span></span><br><span class="line"><span class="number">4</span>      <span class="number">5.8598</span>   <span class="number">6.8233</span></span><br><span class="line"></span><br><span class="line">data.plot(kind=<span class="string">&#x27;scatter&#x27;</span>,x=<span class="string">&#x27;Population&#x27;</span>,y=<span class="string">&#x27;Profit&#x27;</span>,figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/06/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-1/3.png" alt="3"></p>
+<h3 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h3><p>预测函数<br>$$<br>h_\theta(x)=\theta_0+\theta_1x<br>$$<br>代价函数<br>$$<br>J(\theta_0,\theta_1)=\frac{1}{2m}\sum_{i=1}^{m}{(h_\theta(x^i)-y^i)^2}=\frac{1}{2m}\sum_{i=1}^{m}{(\theta_0+\theta_1x^i-y^i)^2}<br>$$<br>更新方程<br>$$<br>\theta_0=\theta_0-\alpha\frac{\partial}{\partial \theta_0}J(\theta_0,\theta_1)=\theta_0-\frac{\alpha}{m}\sum_{i=1}^{m}{(\theta_0+\theta_1x^i-y^i)}<br>$$</p>
+<p>$$<br>\theta_1=\theta_1-\alpha\frac{\partial}{\partial \theta_1}J(\theta_0,\theta_1)=\theta_1-\frac{\alpha}{m}\sum_{i=1}^{m}{(\theta_0+\theta_1x^i-y^i)x^i}<br>$$</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>初始化数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">data.insert(<span class="number">0</span>,<span class="string">&#x27;Ones&#x27;</span>,<span class="number">1</span>)   <span class="comment">#插入全为1的列</span></span><br><span class="line">cols = data.shape[<span class="number">1</span>]  <span class="comment">#列数</span></span><br><span class="line"><span class="comment">#初始化X和y</span></span><br><span class="line">X = data.iloc[:,:-<span class="number">1</span>] <span class="comment">#X是data中除最后一列</span></span><br><span class="line">y = data.iloc[:,cols-<span class="number">1</span>:cols] <span class="comment">#y是data中最后一列</span></span><br><span class="line">X.head()	<span class="comment">#查看数据</span></span><br><span class="line">   Ones  Population</span><br><span class="line"><span class="number">0</span>     <span class="number">1</span>      <span class="number">6.1101</span></span><br><span class="line"><span class="number">1</span>     <span class="number">1</span>      <span class="number">5.5277</span></span><br><span class="line"><span class="number">2</span>     <span class="number">1</span>      <span class="number">8.5186</span></span><br><span class="line"><span class="number">3</span>     <span class="number">1</span>      <span class="number">7.0032</span></span><br><span class="line"><span class="number">4</span>     <span class="number">1</span>      <span class="number">5.8598</span></span><br><span class="line"></span><br><span class="line">y.head()	<span class="comment">#查看数据</span></span><br><span class="line">Profit</span><br><span class="line"><span class="number">0</span>  <span class="number">17.5920</span></span><br><span class="line"><span class="number">1</span>   <span class="number">9.1302</span></span><br><span class="line"><span class="number">2</span>  <span class="number">13.6620</span></span><br><span class="line"><span class="number">3</span>  <span class="number">11.8540</span></span><br><span class="line"><span class="number">4</span>   <span class="number">6.8233</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#转换为矩阵</span></span><br><span class="line">X = np.matrix(X.values)</span><br><span class="line">y = np.matrix(y.values)</span><br><span class="line"><span class="comment">#theta 初始化为0，表示以(0,0)为起点</span></span><br><span class="line">theta = np.matrix(np.array([<span class="number">0</span>,<span class="number">0</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment">#X是矩阵，y和theta是向量，计算代价函数的值</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">computeCost</span>(<span class="params">X,y,theta</span>):</span></span><br><span class="line">    inner = np.power(X*theta.T-y,<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> np.<span class="built_in">sum</span>(inner)/(<span class="number">2</span> * <span class="built_in">len</span>(X))</span><br></pre></td></tr></table></figure>
+
+<p>这里使用了矩阵进行了大量的计算。即<br>$$<br>\left[<br>\begin{matrix}<br>1 &amp; x^1 \<br>1 &amp; x^2 \<br>\vdots &amp; \vdots \<br>1 &amp; x^m<br>\end{matrix}<br>\right]<br>\times<br>\left[<br>\begin{matrix}<br>\theta_0 &amp; \theta_1<br>\end{matrix}<br>\right]^T<br>=<br>\left[<br>\begin{matrix}<br>\theta_0+\theta_1x^1 \<br>\theta_0+\theta_1x^2 \<br>\vdots \<br>\theta_0+\theta_1x^m<br>\end{matrix}<br>\right]<br>$$<br>此时执行<code>computeCost(X,y,theta)</code>得到的值为32.07。</p>
+<p>下面实现梯度下降算法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#alpha是学习率，iters是迭代次数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradientDescent</span>(<span class="params">X,y,theta,alpha,iters</span>):</span></span><br><span class="line">    <span class="comment">#保存每次计算theta的向量</span></span><br><span class="line">    temp = np.matrix(np.zeros(theta.shape))</span><br><span class="line">    <span class="comment">#theta向量的元素个数，方便分开计算</span></span><br><span class="line">    parameters = <span class="built_in">int</span>(theta.ravel().shape[<span class="number">1</span>])</span><br><span class="line">    <span class="comment">#记录代价函数的值，初值全0</span></span><br><span class="line">    cost = np.zeros(iters)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#迭代iters次</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(iters):</span><br><span class="line">        <span class="comment">#公用的代数式</span></span><br><span class="line">        error = (X*theta.T)-y</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#两个theta分开计算</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(parameters):</span><br><span class="line">            <span class="comment">#利用X的第J列，计算theta</span></span><br><span class="line">            term = np.multiply(error,X[:,j])</span><br><span class="line">            temp[<span class="number">0</span>,j] = theta[<span class="number">0</span>,j] - (alpha/<span class="built_in">len</span>(X))*np.<span class="built_in">sum</span>(term)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#迭代</span></span><br><span class="line">        theta = temp</span><br><span class="line">        <span class="comment">#记录</span></span><br><span class="line">        cost[i] = computeCost(X,y,theta)</span><br><span class="line">    <span class="comment">#返回可能收敛的值和代价函数记录</span></span><br><span class="line">    <span class="keyword">return</span> theta,cost</span><br></pre></td></tr></table></figure>
+
+<p>初始化附加变量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alpha = <span class="number">0.01</span></span><br><span class="line">iters = <span class="number">1500</span></span><br></pre></td></tr></table></figure>
+
+<p>运行梯度下降算法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">g, cost = gradientDescent(X, y, theta, alpha, iters)</span><br><span class="line">g</span><br><span class="line">matrix([[-<span class="number">3.63029144</span>,  <span class="number">1.16636235</span>]])</span><br><span class="line"></span><br><span class="line">cost</span><br><span class="line">array([<span class="number">6.73719046</span>, <span class="number">5.93159357</span>, <span class="number">5.90115471</span>, ..., <span class="number">4.48343473</span>, <span class="number">4.48341145</span>,</span><br><span class="line">       <span class="number">4.48338826</span>])</span><br></pre></td></tr></table></figure>
+
+<p>迭代次数有些少，当迭代次数15000时，cost最后的元素相等，都是4.47697138</p>
+<p>进行预测</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">predict1 = [<span class="number">1</span>,<span class="number">3.5</span>]*g.T</span><br><span class="line">[[<span class="number">0.45197679</span>]]</span><br><span class="line"></span><br><span class="line">predict2 = [<span class="number">1</span>,<span class="number">7</span>]*g.T</span><br><span class="line">[[<span class="number">4.53424501</span>]]</span><br></pre></td></tr></table></figure>
+
+<p>画出预测图像和原有数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">x = np.linspace(data.Population.<span class="built_in">min</span>(), data.Population.<span class="built_in">max</span>(), <span class="number">100</span>)</span><br><span class="line">f = g[<span class="number">0</span>, <span class="number">0</span>] + (g[<span class="number">0</span>, <span class="number">1</span>] * x)</span><br><span class="line"></span><br><span class="line">fig, ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.plot(x, f, <span class="string">&#x27;r&#x27;</span>, label=<span class="string">&#x27;Prediction&#x27;</span>)</span><br><span class="line">ax.scatter(data.Population, data.Profit, label=<span class="string">&#x27;Traning Data&#x27;</span>)</span><br><span class="line">ax.legend(loc=<span class="number">2</span>)</span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;Population&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;Profit&#x27;</span>)</span><br><span class="line">ax.set_title(<span class="string">&#x27;Predicted Profit vs. Population Size&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>图像</p>
+<p><img src="/2021/06/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-1/4.png" alt="4"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/06/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-1/">http://example.com/2021/06/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-1/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/machine-leaning/"># machine leaning</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/06/30/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-2/">机器学习-2</a>
+            
+            
+            <a class="next" rel="next" href="/2021/06/27/python%E6%97%A5%E8%AE%B0-4/">python日记-4</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

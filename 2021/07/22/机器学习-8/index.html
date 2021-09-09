@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>机器学习-8 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">机器学习-8</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">July 22, 2021&nbsp;&nbsp;11:32:26</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>这篇文章主要内容是关于SVM的课后练习。</p>
+<p>所有导入的扩展包名称默认与前几篇文章相同。</p>
+<p>首先是在一个二维的数据集上使用SVM。</p>
+<h1 id="数据集1"><a href="#数据集1" class="headerlink" title="数据集1"></a>数据集1</h1><h2 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">data1 = sio.loadmat(<span class="string">&#x27;d:/datasets/ex6/ex6data1.mat&#x27;</span>)</span><br><span class="line">pd.DataFrame(data1[<span class="string">&#x27;X&#x27;</span>],columns=[<span class="string">&#x27;X1&#x27;</span>,<span class="string">&#x27;X2&#x27;</span>])</span><br><span class="line">data[<span class="string">&#x27;y&#x27;</span>] = data1[<span class="string">&#x27;y&#x27;</span>]</span><br><span class="line">data.head()</span><br><span class="line">       X1      X2  y</span><br><span class="line"><span class="number">0</span>  <span class="number">1.9643</span>  <span class="number">4.5957</span>  <span class="number">1</span></span><br><span class="line"><span class="number">1</span>  <span class="number">2.2753</span>  <span class="number">3.8589</span>  <span class="number">1</span></span><br><span class="line"><span class="number">2</span>  <span class="number">2.9781</span>  <span class="number">4.5651</span>  <span class="number">1</span></span><br><span class="line"><span class="number">3</span>  <span class="number">2.9320</span>  <span class="number">3.5519</span>  <span class="number">1</span></span><br><span class="line"><span class="number">4</span>  <span class="number">3.5772</span>  <span class="number">2.8560</span>  <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h2><p>为了以后方便展示原始数据，定义一个展示原始数据的函数，参数是DataFrame类型的原始数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_init_data</span>(<span class="params">data,fig,ax</span>):</span></span><br><span class="line">    positive = data[data[<span class="string">&#x27;y&#x27;</span>].isin([<span class="number">1</span>])]</span><br><span class="line">    negative = data[data[<span class="string">&#x27;y&#x27;</span>].isin([<span class="number">0</span>])]</span><br><span class="line">    </span><br><span class="line">    ax.scatter(positive[<span class="string">&#x27;X1&#x27;</span>],positive[<span class="string">&#x27;X2&#x27;</span>],s=<span class="number">50</span>,c=<span class="string">&#x27;b&#x27;</span>,marker=<span class="string">&#x27;o&#x27;</span>,label=<span class="string">&#x27;positive&#x27;</span>)</span><br><span class="line">    ax.scatter(negative[<span class="string">&#x27;X1&#x27;</span>],negative[<span class="string">&#x27;X2&#x27;</span>],s=<span class="number">50</span>,c=<span class="string">&#x27;r&#x27;</span>,marker=<span class="string">&#x27;x&#x27;</span>,label=<span class="string">&#x27;negative&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>画出当前数据集的图像</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">plot_init_data(data,fig,ax)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/init_data_1.png" alt="init_data_1"></p>
+<p>不考虑异常点，数据样本是线性可分离的。使用线性SVM训练边界。</p>
+<h2 id="使用SVM"><a href="#使用SVM" class="headerlink" title="使用SVM"></a>使用SVM</h2><p>先设置C=1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> svm</span><br><span class="line"></span><br><span class="line">svc = svm.LinearSVC(C=<span class="number">1</span>,loss=<span class="string">&#x27;hinge&#x27;</span>,max_iter=<span class="number">1000</span>)</span><br><span class="line"><span class="comment">#使用训练集训练参数</span></span><br><span class="line">svc.fit(data[[<span class="string">&#x27;X1&#x27;</span>,<span class="string">&#x27;X2&#x27;</span>]],data[<span class="string">&#x27;y&#x27;</span>])</span><br><span class="line"><span class="comment">#查看训练结果在训练集上的准确率</span></span><br><span class="line">svc.score(data[[<span class="string">&#x27;X1&#x27;</span>,<span class="string">&#x27;X2&#x27;</span>]],data[<span class="string">&#x27;y&#x27;</span>])</span><br><span class="line"><span class="number">0.9803921568627451</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="可视化分类边界"><a href="#可视化分类边界" class="headerlink" title="可视化分类边界"></a>可视化分类边界</h2><p>同样为了方便可视化分类边界，设置一个具有普适性的可视化决策边界的函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_decision_boundary</span>(<span class="params">svc,x1min,x1max,x2min,x2max,diff</span>):</span></span><br><span class="line">    x1 = np.linspace(x1min,x1max,<span class="number">1000</span>)</span><br><span class="line">    x2 = np.linspace(x2min,x2max,<span class="number">1000</span>)</span><br><span class="line">    </span><br><span class="line">    cord = [(a,b) <span class="keyword">for</span> a <span class="keyword">in</span> x1 <span class="keyword">for</span> b <span class="keyword">in</span> x2]</span><br><span class="line">    x1_cord,x2_cord = <span class="built_in">zip</span>(*cord)</span><br><span class="line">    cords = pd.DataFrame(&#123;<span class="string">&#x27;x1&#x27;</span>:x1_cord,<span class="string">&#x27;x2&#x27;</span>:x2_cord&#125;)</span><br><span class="line">    cords[<span class="string">&#x27;val&#x27;</span>] = svc.decision_function(cords[[<span class="string">&#x27;x1&#x27;</span>,<span class="string">&#x27;x2&#x27;</span>]])</span><br><span class="line">    </span><br><span class="line">    decision = cords[np.<span class="built_in">abs</span>(cords[<span class="string">&#x27;val&#x27;</span>]) &lt; diff]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> decision.x1,decision.x2</span><br></pre></td></tr></table></figure>
+
+<p>然后画出本例的决策边界。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x1,x2 = find_decision_boundary(svc,<span class="number">0</span>,<span class="number">4</span>,<span class="number">1.5</span>,<span class="number">5</span>,<span class="number">2</span>*<span class="number">10</span>**(-<span class="number">3</span>))</span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(x1,x2,c=<span class="string">&#x27;y&#x27;</span>,s=<span class="number">10</span>,label=<span class="string">&#x27;decision boundary&#x27;</span>)</span><br><span class="line">plot_init_data(data,fig,ax)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/boundary_1.png" alt="boundary_1"></p>
+<h2 id="修改C的值"><a href="#修改C的值" class="headerlink" title="修改C的值"></a>修改C的值</h2><p>设置C=100，查看边界。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">svc2 = svm.LinearSVC(C=<span class="number">100</span>,loss=<span class="string">&#x27;hinge&#x27;</span>,max_iter=<span class="number">1000</span>)</span><br><span class="line">svc2.fit(data[[<span class="string">&#x27;X1&#x27;</span>,<span class="string">&#x27;X2&#x27;</span>]],data[<span class="string">&#x27;y&#x27;</span>])</span><br><span class="line">svc2.score(data[[<span class="string">&#x27;X1&#x27;</span>,<span class="string">&#x27;X2&#x27;</span>]],data[<span class="string">&#x27;y&#x27;</span>])</span><br><span class="line"><span class="number">0.9411764705882353</span></span><br><span class="line"></span><br><span class="line">x1,x2 = find_decision_boundary(svc2,<span class="number">0</span>,<span class="number">4</span>,<span class="number">1.5</span>,<span class="number">5</span>,<span class="number">2</span>*<span class="number">10</span>**(-<span class="number">3</span>))</span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(x1,x2,c=<span class="string">&#x27;y&#x27;</span>,s=<span class="number">10</span>,label=<span class="string">&#x27;decision boundary&#x27;</span>)</span><br><span class="line">plot_init_data(data,fig,ax)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/boundary_1_c100.png" alt="boundary_1_c100"></p>
+<p>可以看到SVM对异常点就更加敏感，尽量降低偏差。</p>
+<h1 id="使用高斯核函数的SVM"><a href="#使用高斯核函数的SVM" class="headerlink" title="使用高斯核函数的SVM"></a>使用高斯核函数的SVM</h1><p>python的sklearn.svm.SVC嵌入了各种各样的核函数。函数原型是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sklearn.svm.SVC(C=<span class="number">1.0</span>, kernel=<span class="string">&#x27;rbf&#x27;</span>, degree=<span class="number">3</span>, gamma=<span class="string">&#x27;auto&#x27;</span>, coef0=<span class="number">0.0</span>, shrinking=<span class="literal">True</span>, probability=<span class="literal">False</span>,tol=<span class="number">0.001</span>, cache_size=<span class="number">200</span>, class_weight=<span class="literal">None</span>, verbose=<span class="literal">False</span>, max_iter=-<span class="number">1</span>, decision_function_shape=<span class="literal">None</span>,random_state=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+<p>主要参数：</p>
+<ul>
+<li>C：惩罚参数</li>
+<li>kernel：核函数，默认是rbf（高斯核函数），可以是linear，poly，rbf，sigmoid，precomputed。</li>
+<li>degree：多项式poly函数的维度，默认是3，选择其他核函数时会被忽略。</li>
+<li>gamma：rbf，poly，sigmoid核函数的参数。默认auto代表$\frac{1}{m}$。</li>
+<li>coef0：核函数的常数项。对于poly和sigmoid有用。</li>
+<li>probability：是否采用概率估计。</li>
+<li>tol：停止训练的误差值大小。</li>
+<li>max_iter：最大迭代次数。-1为无限制。</li>
+</ul>
+<p>来源：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/crawer-1/p/8870700.html">在路上-UP 博客园</a></p>
+<h2 id="数据集2"><a href="#数据集2" class="headerlink" title="数据集2"></a>数据集2</h2><p>在数据集2上使用高斯核函数的SVM拟合非线性模型。</p>
+<h3 id="获取数据以及可视化"><a href="#获取数据以及可视化" class="headerlink" title="获取数据以及可视化"></a>获取数据以及可视化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">data2 = sio.loadmat(<span class="string">&#x27;d:/datasets/ex6/ex6data2.mat&#x27;</span>)</span><br><span class="line">data = pd.DataFrame(data2[<span class="string">&#x27;X&#x27;</span>],columns=[<span class="string">&#x27;X1&#x27;</span>,<span class="string">&#x27;X2&#x27;</span>])</span><br><span class="line">data[<span class="string">&#x27;y&#x27;</span>] = data2[<span class="string">&#x27;y&#x27;</span>]</span><br><span class="line">data.head()</span><br><span class="line">         X1        X2  y</span><br><span class="line"><span class="number">0</span>  <span class="number">0.107143</span>  <span class="number">0.603070</span>  <span class="number">1</span></span><br><span class="line"><span class="number">1</span>  <span class="number">0.093318</span>  <span class="number">0.649854</span>  <span class="number">1</span></span><br><span class="line"><span class="number">2</span>  <span class="number">0.097926</span>  <span class="number">0.705409</span>  <span class="number">1</span></span><br><span class="line"><span class="number">3</span>  <span class="number">0.155530</span>  <span class="number">0.784357</span>  <span class="number">1</span></span><br><span class="line"><span class="number">4</span>  <span class="number">0.210829</span>  <span class="number">0.866228</span>  <span class="number">1</span></span><br><span class="line"></span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">plot_init_data(data,fig,ax)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/init_data_2.png" alt="init_data_2"></p>
+<h3 id="使用SVM拟合决策曲线"><a href="#使用SVM拟合决策曲线" class="headerlink" title="使用SVM拟合决策曲线"></a>使用SVM拟合决策曲线</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">svc = svm.SVC(C=<span class="number">100</span>,gamma=<span class="number">10</span>,probability=<span class="literal">True</span>)</span><br><span class="line">svc.fit(data[[<span class="string">&#x27;X1&#x27;</span>,<span class="string">&#x27;X2&#x27;</span>]],data[<span class="string">&#x27;y&#x27;</span>])</span><br><span class="line">svc.score(data[[<span class="string">&#x27;X1&#x27;</span>,<span class="string">&#x27;X2&#x27;</span>]],data[<span class="string">&#x27;y&#x27;</span>])</span><br><span class="line"><span class="number">0.9698725376593279</span></span><br><span class="line"></span><br><span class="line">x1,x2 = find_decision_boundary(svc,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0.4</span>,<span class="number">1</span>,<span class="number">0.01</span>)</span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(x1,x2,s=<span class="number">10</span>,c=<span class="string">&#x27;y&#x27;</span>,label=<span class="string">&#x27;decision boundary&#x27;</span>)</span><br><span class="line">plot_init_data(data,fig,ax)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/boundary_2_c100.png" alt="boundary_2_c100"></p>
+<h2 id="数据集3"><a href="#数据集3" class="headerlink" title="数据集3"></a>数据集3</h2><p>在数据集3中给出了训练集和验证集，来比较验证集性能来选择SVM模型中的最优参数。</p>
+<h3 id="获取数据并可视化"><a href="#获取数据并可视化" class="headerlink" title="获取数据并可视化"></a>获取数据并可视化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">data3 = sio.loadmat(<span class="string">&#x27;d:/datasets/ex6/ex6data3.mat&#x27;</span>)</span><br><span class="line">X = data3[<span class="string">&#x27;X&#x27;</span>]</span><br><span class="line">y = data3[<span class="string">&#x27;y&#x27;</span>]</span><br><span class="line">Xval = data3[<span class="string">&#x27;Xval&#x27;</span>]</span><br><span class="line">yval = data3[<span class="string">&#x27;yval&#x27;</span>]</span><br><span class="line"></span><br><span class="line">data = pd.DataFrame(data3[<span class="string">&#x27;X&#x27;</span>],columns=[<span class="string">&#x27;X1&#x27;</span>,<span class="string">&#x27;X2&#x27;</span>])</span><br><span class="line">data[<span class="string">&#x27;y&#x27;</span>] = data3[<span class="string">&#x27;y&#x27;</span>]</span><br><span class="line">data.head()</span><br><span class="line">         X1        X2  y</span><br><span class="line"><span class="number">0</span> -<span class="number">0.158986</span>  <span class="number">0.423977</span>  <span class="number">1</span></span><br><span class="line"><span class="number">1</span> -<span class="number">0.347926</span>  <span class="number">0.470760</span>  <span class="number">1</span></span><br><span class="line"><span class="number">2</span> -<span class="number">0.504608</span>  <span class="number">0.353801</span>  <span class="number">1</span></span><br><span class="line"><span class="number">3</span> -<span class="number">0.596774</span>  <span class="number">0.114035</span>  <span class="number">1</span></span><br><span class="line"><span class="number">4</span> -<span class="number">0.518433</span> -<span class="number">0.172515</span>  <span class="number">1</span></span><br><span class="line"></span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">plot_init_data(data,fig,ax)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/init_data3.png" alt="init_data3"></p>
+<h3 id="选择最优参数"><a href="#选择最优参数" class="headerlink" title="选择最优参数"></a>选择最优参数</h3><p>选择的根据是训练的SVM模型在验证集上的准确度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">C_candidates = [<span class="number">0.01</span>,<span class="number">0.03</span>,<span class="number">0.1</span>,<span class="number">0.3</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">10</span>,<span class="number">30</span>,<span class="number">100</span>]</span><br><span class="line">gamma_candidates = C_candidates.copy()</span><br><span class="line">best = &#123;<span class="string">&#x27;C&#x27;</span>:<span class="literal">None</span>,<span class="string">&#x27;gamma&#x27;</span>:<span class="literal">None</span>&#125;</span><br><span class="line">best_score = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> C_candidates:</span><br><span class="line">    <span class="keyword">for</span> gamma <span class="keyword">in</span> gamma_candidates:</span><br><span class="line">        svc = svm.SVC(C=c,gamma=gamma)</span><br><span class="line">        svc.fit(X,y)</span><br><span class="line">        score = svc.score(Xval,yval)</span><br><span class="line">        <span class="keyword">if</span>(score &gt; best_score):</span><br><span class="line">            best_score = score</span><br><span class="line">            best[<span class="string">&#x27;C&#x27;</span>] = c</span><br><span class="line">            best[<span class="string">&#x27;gamma&#x27;</span>] = gamma</span><br><span class="line">best_score</span><br><span class="line"><span class="number">0.965</span></span><br><span class="line"></span><br><span class="line">best</span><br><span class="line">&#123;<span class="string">&#x27;C&#x27;</span>: <span class="number">0.3</span>, <span class="string">&#x27;gamma&#x27;</span>: <span class="number">100</span>&#125;</span><br><span class="line"></span><br><span class="line">x1,x2 = find_decision_boundary(svc,-<span class="number">0.6</span>,<span class="number">0.4</span>,-<span class="number">0.6</span>,<span class="number">0.6</span>,<span class="number">0.005</span>)</span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(x1,x2,s=<span class="number">10</span>,c=<span class="string">&#x27;y&#x27;</span>,label=<span class="string">&#x27;decision boudary&#x27;</span>)</span><br><span class="line">plot_init_data(data,fig,ax)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/boundary_3_best.png" alt="boundary_3_best"></p>
+<h1 id="垃圾邮件分类"><a href="#垃圾邮件分类" class="headerlink" title="垃圾邮件分类"></a>垃圾邮件分类</h1><p>这里对数据的预处理已经完成过了，我们只需要读取数据就可以了。</p>
+<h2 id="获取数据-1"><a href="#获取数据-1" class="headerlink" title="获取数据"></a>获取数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">spam_train = sio.loadmat(<span class="string">&#x27;d:/datasets/ex6/spamTrain.mat&#x27;</span>)</span><br><span class="line">spam_test = sio.loadmat(<span class="string">&#x27;d:/datasets/ex6/spamTest.mat&#x27;</span>)</span><br><span class="line"></span><br><span class="line">X = spam_train[<span class="string">&#x27;X&#x27;</span>]</span><br><span class="line">y = spam_train[<span class="string">&#x27;y&#x27;</span>]</span><br><span class="line">((<span class="number">4000</span>, <span class="number">1899</span>), (<span class="number">4000</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">Xtest = spam_test[<span class="string">&#x27;Xtest&#x27;</span>]</span><br><span class="line">ytest = spam_test[<span class="string">&#x27;ytest&#x27;</span>]</span><br><span class="line">Xtest.shape,ytest.shape</span><br><span class="line">((<span class="number">1000</span>, <span class="number">1899</span>), (<span class="number">1000</span>, <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+<p>样本中的特征为1899个，值为二进制数，代表1899个词汇有没有出现。</p>
+<h2 id="训练SVM"><a href="#训练SVM" class="headerlink" title="训练SVM"></a>训练SVM</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">svc = svm.SVC()</span><br><span class="line">svc.fit(X,y)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Training accuracy=&#123;0&#125;&#x27;</span>.<span class="built_in">format</span>(svc.score(X,y)))</span><br><span class="line">Training accuracy=<span class="number">0.99325</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Testing accuracy=&#123;0&#125;&#x27;</span>.<span class="built_in">format</span>(svc.score(Xtest,ytest)))</span><br><span class="line">Testing accuracy=<span class="number">0.987</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="可视化结果"><a href="#可视化结果" class="headerlink" title="可视化结果"></a>可视化结果</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1899维的单位矩阵，表示1899个样本，每个样本只有一个单词</span></span><br><span class="line">kw = np.eye(<span class="number">1899</span>)</span><br><span class="line">spam_val = pd.DataFrame(&#123;<span class="string">&#x27;idx&#x27;</span>:np.arange(<span class="number">1</span>,<span class="number">1899</span>+<span class="number">1</span>)&#125;)</span><br><span class="line">spam_val[<span class="string">&#x27;isspam&#x27;</span>] = svc.decision_function(kw)</span><br><span class="line">spam_val[<span class="string">&#x27;isspam&#x27;</span>].describe()</span><br><span class="line">count    <span class="number">1899.000000</span></span><br><span class="line">mean       -<span class="number">0.110039</span></span><br><span class="line">std         <span class="number">0.049094</span></span><br><span class="line"><span class="built_in">min</span>        -<span class="number">0.428396</span></span><br><span class="line"><span class="number">25</span>%        -<span class="number">0.131213</span></span><br><span class="line"><span class="number">50</span>%        -<span class="number">0.111985</span></span><br><span class="line"><span class="number">75</span>%        -<span class="number">0.091973</span></span><br><span class="line"><span class="built_in">max</span>         <span class="number">0.396286</span></span><br><span class="line">Name: isspam, dtype: float64</span><br><span class="line"></span><br><span class="line"><span class="comment">#提取一部分        </span></span><br><span class="line">decision = spam_val[spam_val[<span class="string">&#x27;isspam&#x27;</span>] &gt; <span class="number">0</span>]</span><br><span class="line"><span class="comment">#读取词汇列表</span></span><br><span class="line">path = <span class="string">&#x27;d:/datasets/ex6/vocab.txt&#x27;</span></span><br><span class="line">voc = pd.read_csv(path,header=<span class="literal">None</span>,names=[<span class="string">&#x27;idx&#x27;</span>,<span class="string">&#x27;voc&#x27;</span>],sep=<span class="string">&#x27;\t&#x27;</span>)</span><br><span class="line"><span class="comment">#显示提取的那一部分</span></span><br><span class="line">spamvoc = voc.loc[<span class="built_in">list</span>(decision[<span class="string">&#x27;idx&#x27;</span>])]</span><br><span class="line">spamvoc</span><br><span class="line">       idx         voc</span><br><span class="line"><span class="number">155</span>    <span class="number">156</span>    basenumb</span><br><span class="line"><span class="number">173</span>    <span class="number">174</span>       below</span><br><span class="line"><span class="number">297</span>    <span class="number">298</span>       click</span><br><span class="line"><span class="number">351</span>    <span class="number">352</span>     contact</span><br><span class="line"><span class="number">382</span>    <span class="number">383</span>      credit</span><br><span class="line"><span class="number">476</span>    <span class="number">477</span>      dollar</span><br><span class="line"><span class="number">478</span>    <span class="number">479</span>  dollarnumb</span><br><span class="line"><span class="number">529</span>    <span class="number">530</span>       email</span><br><span class="line"><span class="number">537</span>    <span class="number">538</span>       encod</span><br><span class="line"><span class="number">680</span>    <span class="number">681</span>        free</span><br><span class="line"><span class="number">697</span>    <span class="number">698</span>       futur</span><br><span class="line"><span class="number">738</span>    <span class="number">739</span>    guarante</span><br><span class="line"><span class="number">774</span>    <span class="number">775</span>        here</span><br><span class="line"><span class="number">791</span>    <span class="number">792</span>        hour</span><br><span class="line"><span class="number">1008</span>  <span class="number">1009</span>      market</span><br><span class="line"><span class="number">1088</span>  <span class="number">1089</span>        nbsp</span><br><span class="line"><span class="number">1101</span>  <span class="number">1102</span>    nextpart</span><br><span class="line"><span class="number">1120</span>  <span class="number">1121</span>     numbera</span><br><span class="line"><span class="number">1163</span>  <span class="number">1164</span>       offer</span><br><span class="line"><span class="number">1178</span>  <span class="number">1179</span>         opt</span><br><span class="line"><span class="number">1182</span>  <span class="number">1183</span>       order</span><br><span class="line"><span class="number">1190</span>  <span class="number">1191</span>         our</span><br><span class="line"><span class="number">1263</span>  <span class="number">1264</span>       pleas</span><br><span class="line"><span class="number">1298</span>  <span class="number">1299</span>       price</span><br><span class="line"><span class="number">1372</span>  <span class="number">1373</span>      receiv</span><br><span class="line"><span class="number">1397</span>  <span class="number">1398</span>       remov</span><br><span class="line"><span class="number">1399</span>  <span class="number">1400</span>       repli</span><br><span class="line"><span class="number">1460</span>  <span class="number">1461</span>          se</span><br><span class="line"><span class="number">1467</span>  <span class="number">1468</span>         see</span><br><span class="line"><span class="number">1519</span>  <span class="number">1520</span>      sincer</span><br><span class="line"><span class="number">1661</span>  <span class="number">1662</span>        text</span><br><span class="line"><span class="number">1721</span>  <span class="number">1722</span>    transfer</span><br><span class="line"><span class="number">1740</span>  <span class="number">1741</span>        <span class="built_in">type</span></span><br><span class="line"><span class="number">1795</span>  <span class="number">1796</span>       visit</span><br><span class="line"><span class="number">1823</span>  <span class="number">1824</span>      websit</span><br><span class="line"><span class="number">1829</span>  <span class="number">1830</span>      welcom</span><br><span class="line"><span class="number">1851</span>  <span class="number">1852</span>        will</span><br><span class="line"><span class="number">1892</span>  <span class="number">1893</span>         you</span><br><span class="line"><span class="number">1894</span>  <span class="number">1895</span>        your</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/">http://example.com/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/machine-learning/"># machine learning</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/">机器学习-9</a>
+            
+            
+            <a class="next" rel="next" href="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/">机器学习-7</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

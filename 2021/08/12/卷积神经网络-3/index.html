@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>卷积神经网络-3 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">卷积神经网络-3</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 12, 2021&nbsp;&nbsp;21:35:17</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="目标检测"><a href="#目标检测" class="headerlink" title="目标检测"></a>目标检测</h1><p>定位分类问题，不仅要使用神经网络进行分类，还要输出目标在图片中的位置。</p>
+<h2 id="目标定位"><a href="#目标定位" class="headerlink" title="目标定位"></a>目标定位</h2><p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/1.png" alt="1"></p>
+<p>在对一张进行分类的同时，可以再额外输出四个单元，$b_x,b_y,b_h,b_w$。</p>
+<p>在原图片中左上角的坐标视为(0,0)，右下角的坐标视为(1,1)，$(b_x,b_y)$是图片中目标的中心点，$b_h,b_w$分别为目标在图片中的高度和宽度。</p>
+<p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/2.png" alt="2"></p>
+<p>标签向量的设计可以为，第一位是图片是否有检测目标pc，后四位为目标位置，最后三位是检测目标分类。</p>
+<p>例如，图片里有一辆汽车，标签就是$\left[\begin{matrix}1\b_x\b_y\b_h\b_w\0\1\0 \end{matrix} \right]$，图片里没有检测目标，标签就是$\left[\begin{matrix}0\?\?\?\?\?\?\? \end{matrix} \right]$​，只要pc=0，其他位我们就不用关心。</p>
+<p>代价函数可以设计为pc为1时是各位的平方误差和，pc为0时是第一位的平方误差。</p>
+<h2 id="特征点检测"><a href="#特征点检测" class="headerlink" title="特征点检测"></a>特征点检测</h2><p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/3.png" alt="3"></p>
+<p>可以设置神经网络的输出是一系列特征点的坐标，第一位同样是是否有检测目标的标记位。</p>
+<p>比如人脸检测可以检测出一系列特征点，眼角，鼻子，嘴角等等，可以用于分析表情或者去做其他事情。体态检测可以检测出一系列的特征点判断动作等等。</p>
+<h2 id="基于滑动窗口的目标检测算法"><a href="#基于滑动窗口的目标检测算法" class="headerlink" title="基于滑动窗口的目标检测算法"></a>基于滑动窗口的目标检测算法</h2><p>首先使用裁剪合适的图片训练检测目标的分类器，然后在要检测的图片上实行窗口滑动算法，逐渐增大窗口大小，将窗口内的图片输入到分类器中。</p>
+<p>这种算法有个很明显的缺点就是计算成本太高。采用小粒度小步幅，窗口数量会太多，大粒度大步幅检测性能可能会下降。</p>
+<h2 id="卷积的窗口滑动实现"><a href="#卷积的窗口滑动实现" class="headerlink" title="卷积的窗口滑动实现"></a>卷积的窗口滑动实现</h2><h3 id="全连接层转换成卷积层"><a href="#全连接层转换成卷积层" class="headerlink" title="全连接层转换成卷积层"></a>全连接层转换成卷积层</h3><p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/4.png" alt="4"></p>
+<p>使用与输入相同维度的卷积核可以实现将全连接层转换为卷积层。</p>
+<h3 id="卷积层实现滑动窗口"><a href="#卷积层实现滑动窗口" class="headerlink" title="卷积层实现滑动窗口"></a>卷积层实现滑动窗口</h3><p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/5.png" alt="5"></p>
+<p>在原图片上选取窗口输入到卷积神经网络时，由于卷积操作的原理，会有很多重复的操作。可以把图片直接作为网络的输入，卷积的操作本身也会分成小窗口，最终得到的结果每一个像素点对应相对位置窗口的输出。</p>
+<p>上图中第二个示例蓝色部分就是结果与输入相对应的窗口位置。由于最大池化层的将图片维度减半，因此相当于在原图上以步长为2选取窗口。</p>
+<p>但是缺点是不能精准的标出边框。</p>
+<h2 id="YOLO"><a href="#YOLO" class="headerlink" title="YOLO"></a>YOLO</h2><p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/6.png" alt="6"></p>
+<p>YOLO的基本思想是将图片分成相同大小的方格，目标中点在哪个方格里就把目标分配给哪个方格。每个方格都有一个输出特征，分别为是否有目标的标志位，中点坐标，高度，宽度，分类信息。上图分成$3\times 3$的方格，所以将图片经卷积网络后输出$3\times 3\times 8$​的矩阵。</p>
+<p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/7.png" alt="7"></p>
+<p>约定的目标定位的格式是中心点所在方框的相对位置，中心点坐标必须小于1，高度和宽度可以大于1。</p>
+<h2 id="交并比"><a href="#交并比" class="headerlink" title="交并比"></a>交并比</h2><p>交并比函数用来评价目标检测算法。</p>
+<p> <img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/8.png" alt="8"></p>
+<p>交并比函数是计算目标检测算法得到的目标方框和实际的目标方框的交集面积比并集面积。</p>
+<p>在目标检测算法中通常设置交并比大于等于0.5输出是正确的，更严格一点还可以设置0.6,0.7。</p>
+<h2 id="非极大值抑制"><a href="#非极大值抑制" class="headerlink" title="非极大值抑制"></a>非极大值抑制</h2><p>非极大值抑制可以确保算法对每一个对象都只检测一次。</p>
+<p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/9.png" alt="9"></p>
+<p>在对图像划分方格后，对于一个目标所在的方格都有可能会认为当前方格存在一个目标，但是输出pc概率值是不一样的，高亮的部分是概率值最大的，我们需要抑制或抛弃与高亮部分方框交并比大的方框，只输出概率最大的分类结果。</p>
+<p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/10.png" alt="10"></p>
+<p> 以检测单个目标为例，具体的实现步骤是：</p>
+<p>首先把$p_c\le0.6$的输出抛弃，然后在剩余的单元格中选择$p_c$最大的，取出与这个单元格交并比大于等于0.5的单元格，然后在剩下的单元格中继续这个操作。</p>
+<p>如果要检测多个目标，应该在每个目标上执行非极大值抑制这个算法。</p>
+<h2 id="anchor-box"><a href="#anchor-box" class="headerlink" title="anchor box"></a>anchor box</h2><p>anchor box可以让一个方格检测出多个目标。</p>
+<p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/11.png" alt="11"></p>
+<p>对于多个目标重叠在一个方格里的情况以前的检测器就无法检测了。这时可以使用多个anchor box，来检测多个重叠的目标。</p>
+<p>以两个目标重叠为例，将这两个目标的输出连接在一起，形成一个长的输出，像上图那样，前八个特征属于anchor box 1，代表是一个行人，后八个特征属于anchor box 2，代表是一辆车。</p>
+<p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/12.png" alt="12"></p>
+<p>每种目标都有一个跟他们具有高交并比的anchor box，当多个目标中点在一个方格内时就用目标方框与anchor box计算交并比来确定目标属于哪个anchor box。</p>
+<p>这个算法无法检测三个目标在同一个方格和两个目标具有相似的anchor box，这时可以采取其他方法来打破僵局。但事实上，当图片被分成很多方格后这些情况出现的概率很低，对性能并没有很大的影响。</p>
+<h2 id="组合成YOLO"><a href="#组合成YOLO" class="headerlink" title="组合成YOLO"></a>组合成YOLO</h2><p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/13.png" alt="13"></p>
+<p>假设按$3\times 3 $分格，设置两个anchor box，训练神经网络输出的维度为$3\times 3 \times 16$，前8个特征与第一个anchor box相关，后8个特征与第二个anchor box相关。</p>
+<p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/14.png" alt="14"></p>
+<p>根据输出做出预测。</p>
+<p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/15.png" alt="15"></p>
+<p>在每一个方格中都会有两个预测的方框，首先丢弃所有pc低的方框，然后对于不同的目标执行非极大值抑制算法，最终得到检测的结果。</p>
+<h2 id="R-CNN"><a href="#R-CNN" class="headerlink" title="R-CNN"></a>R-CNN</h2><p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/16.png" alt="16"></p>
+<p>基于滑动窗口实现目标检测需要输入很多图块，RNN的基本思想是先使用图像分割算法找到候选区域，将这些候选区域输入到神经网络中。</p>
+<p><img src="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/17.png" alt="17"></p>
+<p>在R-CNN的基础上有许多改进的算法。</p>
+<p>Fast R-CNN是在R-CNN的基础上使用滑动窗口的卷积实现。</p>
+<p>Faster R-CNN使用卷积神经网络来选取候选块。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/">http://example.com/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/CNN/"># CNN</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/08/17/yolov3/">yolov3</a>
+            
+            
+            <a class="next" rel="next" href="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/">docker内搭建卷积神经网络实现MNIST数字分类</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

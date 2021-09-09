@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>机器学习-2 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">机器学习-2</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 30, 2021&nbsp;&nbsp;9:20:37</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="多变量线性回归"><a href="#多变量线性回归" class="headerlink" title="多变量线性回归"></a>多变量线性回归</h1><p>在预测房屋出售价格时要考虑因素不仅仅是面积，还有卧室数量、楼层、使用年限等等。</p>
+<p><img src="/2021/06/30/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-2/1.png" alt="1"></p>
+<p>约定符号：</p>
+<p>$n$：特征属性的个数</p>
+<p>$x^i$：第$i$个输入样本</p>
+<p>$x^i_j$：第$i$个输入样本的$j$属性的值</p>
+<h2 id="预测函数"><a href="#预测函数" class="headerlink" title="预测函数"></a>预测函数</h2><p>现在的预测函数可以选择<br>$$<br>h_\theta(x)=\theta_0+\theta_1x_1+\theta_2x_2+\cdots+\theta_nx_n<br>$$<br>令<br>$$<br>x=<br>\left[<br>\begin{matrix}<br>x_0 \<br>x_1 \<br>x_2 \<br>\vdots \<br>x_n<br>\end{matrix}<br>\right]<br>,x_0=1\<br>$$</p>
+<p>$$<br>\theta=<br>\left[<br>\begin{matrix}<br>\theta_0 \<br>\theta_1 \<br>\theta_2 \<br>\vdots \<br>\theta_n<br>\end{matrix}<br>\right]<br>$$</p>
+<p>那么<br>$$<br>h_\theta(x)=\theta_0x_0+\theta_1x_1+\cdots+\theta_nx_n=\theta^Tx<br>$$</p>
+<h2 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h2><p>同前一个问题一样，代价函数为<br>$$<br>J(\theta_0,\theta_1,\ldots,\theta_n)=\frac{1}{2m}\sum_{i=1}^{m}(h_\theta(x^i)-y^i)^2<br>$$</p>
+<h2 id="更新方程"><a href="#更新方程" class="headerlink" title="更新方程"></a>更新方程</h2><p>$$<br>\theta_j=\theta_j-\alpha\frac{\partial}{\partial \theta_j}J(\theta_0,\theta_1,\ldots,\theta_n)=\theta_j-\alpha\frac{1}{m}\sum_{i=1}^{m}(h_\theta(x^i)-y^i)x_j^i,j=0,1,\ldots,n<br>$$</p>
+<p>注意，对于每个$\theta_j$都要同时更新。</p>
+<h1 id="梯度下降的实用技巧"><a href="#梯度下降的实用技巧" class="headerlink" title="梯度下降的实用技巧"></a>梯度下降的实用技巧</h1><h2 id="特征缩放"><a href="#特征缩放" class="headerlink" title="特征缩放"></a>特征缩放</h2><p>如果多个特征的大小差距很大，可能导致梯度下降算法的效率降低，需要更多的下降才能收敛。</p>
+<p>通常将特征的范围缩小至[-1,1]之间，并不一定要求这样。[-3,3],[-1/3,1/3]都是可以接收的。</p>
+<p>进行特征缩放后，在预测数据集上进行相应的操作</p>
+<h3 id="特征值归一化"><a href="#特征值归一化" class="headerlink" title="特征值归一化"></a>特征值归一化</h3><p>$$<br>x=\frac{x-min}{max-min}<br>$$</p>
+<h3 id="特征值标准化"><a href="#特征值标准化" class="headerlink" title="特征值标准化"></a>特征值标准化</h3><p>$$<br>x=\frac{x-\mu}{\sigma}<br>$$</p>
+<h2 id="选择合适的学习速率"><a href="#选择合适的学习速率" class="headerlink" title="选择合适的学习速率"></a>选择合适的学习速率</h2><p> 如果随着迭代次数的增多，代价函数的值一直在增大，那么应该选择小一点的学习速率。再某一次迭代后，梯度下降超过了最小点，梯度又不断增加，算法在代价函数最小值点的周围反复横跳，导致离最小点越来越远。</p>
+<p>已经证明，只要学习速率足够小代价函数值一直会减小，但学习速率太小会导致算法收敛太慢。</p>
+<p>选择$\alpha\ -&gt;\ \ldots,0.001,0.003，0.01,0,03，0.1,1,\ldots$，然后绘制代价函数的值和迭代次数的图像，选择代价函数下降最快的学习速率。</p>
+<h1 id="特征和多项式回归"><a href="#特征和多项式回归" class="headerlink" title="特征和多项式回归"></a>特征和多项式回归</h1><h2 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h2><p>选择不同的特征可能会得到不同的算法。</p>
+<p>例如预测房屋售价，在已经拥有宽度和长度后可以不直接使用宽度和长度这两个特征，可以使用长度乘宽度得到的面积为特征。</p>
+<h2 id="多项式回归"><a href="#多项式回归" class="headerlink" title="多项式回归"></a>多项式回归</h2><p>多项式回归可以使线性回归拟合非常复杂的函数甚至是非线性函数。</p>
+<p><img src="/2021/06/30/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-2/2.png" alt="2"></p>
+<p>比如这个图，直线似乎不能很好的拟合这些数据，可以使用二次模型$\theta_0+\theta_1x+\theta_2x^2$或者使用三次模型$\theta_0+\theta_1x+\theta_2x^2+\theta_3x^3$,如果选择这样的模型的话，特征缩放就显得很重要了，因为不缩放的话数据可能会很大。</p>
+<p>这个图形更好的选择是$h_\theta(x)=\theta_0+\theta_1x+\theta_2\sqrt{x}$</p>
+<h1 id="正规方程"><a href="#正规方程" class="headerlink" title="正规方程"></a>正规方程</h1><p>就是用数学方法一次性的找出$\theta$的最优值，而不用一步步的迭代。</p>
+<p>举个简单的例子。</p>
+<p>代价方程：$J(\theta)=a\theta^2+b\theta+c,\theta$</p>
+<p>可以求导，令导数等于0直接得到最小值点的$\theta$值。</p>
+<p>但如果$\theta\in\reals^{n+1},J(\theta)=\frac{1}{2m}\sum_{i=1}^{m}(h_\theta(x^i)-y^i)^2$</p>
+<p>就要计算$\frac{\partial}{\partial\theta_j}J(\theta)=\ldots=0\ (for\ every\ j)$</p>
+<p>先给出结果：<br>$$<br>\theta=(X^TX)^{-1}X^Ty<br>$$<br>设计到矩阵的迹求导，怎么也推导不出来，后来又找到大佬写的文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39449570/article/details/78520543">小红的博客</a><br>$$<br>J(\theta)=\frac{1}{2m}\sum_{i=1}^{m}(h_\theta(x^i)-y^i)^2=\frac{1}{2m}<br>\left[<br>\begin{matrix}<br>X\theta-y<br>\end{matrix}<br>\right]^T<br>\left[<br>\begin{matrix}<br>X\theta-y<br>\end{matrix}<br>\right]<br>$$<br>$\left[<br>\begin{matrix}<br>X\theta-y<br>\end{matrix}<br>\right]^T<br>\left[<br>\begin{matrix}<br>X\theta-y<br>\end{matrix}<br>\right]$是只有一个元素的矩阵，对它求导就是对矩阵的迹求导。</p>
+<p>迹的特性：<br>$$<br>trA=trA^T\<br>tr(A+B)=trA+trB\<br>tr(aA)=a(trA)<br>$$<br>对矩阵的迹求导的特性：<br>$$<br>\bigtriangledown_A\ trAB=B^T\\<br>\bigtriangledown_{A^T}\ f(A)=(\bigtriangledown_A\ f(A))^T\\<br>\bigtriangledown_A\ trABA^TC=CAB+C^TAB^T\\<br>\bigtriangledown_A\ |A|=|A|(A^{-1})^T<br>$$<br>将代价函数展开并求导得<br>$$<br>\begin{aligned}<br>\bigtriangledown_\theta J(\theta)&amp;=\bigtriangledown_\theta tr\frac{1}{2m}<br>\left[<br>\begin{matrix}<br>X\theta-y<br>\end{matrix}<br>\right]^T<br>\left[<br>\begin{matrix}<br>X\theta-y<br>\end{matrix}<br>\right]<br>\&amp;=\frac{1}{2m}\bigtriangledown_\theta tr(\theta^TX^TX\theta-\theta^TX^Ty-y^TX\theta+y^Ty)\<br>&amp;=\frac{1}{2m}(\bigtriangledown_\theta tr(\theta^TX^TX\theta)-2\bigtriangledown_\theta tr(\theta^TX^Ty))\<br>&amp;=\frac{1}{2m}((\bigtriangledown_{\theta^T} tr(\theta^TX^TX\theta))^T-2(\bigtriangledown_{\theta^T} tr(\theta^TX^Ty))^T)\<br>&amp;=\frac{1}{2m}(2X^TX\theta-2X^Ty)\<br>&amp;=\frac{1}{m}(X^TX\theta-X^Ty)<br>\end{aligned}<br>$$<br>令$\bigtriangledown_\theta J(\theta)=0$得<br>$$<br>\begin{aligned}<br>X^TX\theta-X^Ty=0\ \<br>\Rightarrow \theta=(X^TX)^{-1}X^Ty<br>\end{aligned}<br>$$</p>
+<hr>
+<h1 id="正规方程和梯度下降比较"><a href="#正规方程和梯度下降比较" class="headerlink" title="正规方程和梯度下降比较"></a>正规方程和梯度下降比较</h1><p>正规方程需要计算X的转置，时间复杂度是$O(n^3)$，因此在训练数据较少的时候比较适合使用。</p>
+<p>梯度下降需要选择适合的学习速率$\alpha$，并且需要迭代多次才能收敛，在数据比较多的时候使用。</p>
+<h1 id="课后作业"><a href="#课后作业" class="headerlink" title="课后作业"></a>课后作业</h1><h2 id="多变量线性回归-1"><a href="#多变量线性回归-1" class="headerlink" title="多变量线性回归"></a>多变量线性回归</h2><p>在上一道题目的基础上，将输入特征变为两个。</p>
+<h3 id="导入数据"><a href="#导入数据" class="headerlink" title="导入数据"></a>导入数据</h3><p>数据文件的第一列是房屋面积，第二列是卧室数量，第三列是出售价格</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">path=<span class="string">&#x27;c:/Users/Administrator/.spyder-py3/datasets/ex1/ex1data2.txt&#x27;</span></span><br><span class="line">data1=pd.read_csv(path,header=<span class="literal">None</span>,names=[<span class="string">&#x27;Size&#x27;</span>,<span class="string">&#x27;Bedrooms&#x27;</span>,<span class="string">&#x27;Price&#x27;</span>])</span><br><span class="line">data1.head()</span><br><span class="line">Size  Bedrooms   Price</span><br><span class="line"><span class="number">0</span>  <span class="number">2104</span>         <span class="number">3</span>  <span class="number">399900</span></span><br><span class="line"><span class="number">1</span>  <span class="number">1600</span>         <span class="number">3</span>  <span class="number">329900</span></span><br><span class="line"><span class="number">2</span>  <span class="number">2400</span>         <span class="number">3</span>  <span class="number">369000</span></span><br><span class="line"><span class="number">3</span>  <span class="number">1416</span>         <span class="number">2</span>  <span class="number">232000</span></span><br><span class="line"><span class="number">4</span>  <span class="number">3000</span>         <span class="number">4</span>  <span class="number">539900</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="特征归一化"><a href="#特征归一化" class="headerlink" title="特征归一化"></a>特征归一化</h3><p>可以看到各项特征的范围差很大，需要进行特征归一化。将每类特征值减去平均值再除以标准差。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">data_copy=(data1-data1.mean())/data1.std()</span><br><span class="line">data_copy.head()</span><br><span class="line">       Size  Bedrooms     Price</span><br><span class="line"><span class="number">0</span>  <span class="number">0.130010</span> -<span class="number">0.223675</span>  <span class="number">0.475747</span></span><br><span class="line"><span class="number">1</span> -<span class="number">0.504190</span> -<span class="number">0.223675</span> -<span class="number">0.084074</span></span><br><span class="line"><span class="number">2</span>  <span class="number">0.502476</span> -<span class="number">0.223675</span>  <span class="number">0.228626</span></span><br><span class="line"><span class="number">3</span> -<span class="number">0.735723</span> -<span class="number">1.537767</span> -<span class="number">0.867025</span></span><br><span class="line"><span class="number">4</span>  <span class="number">1.257476</span>  <span class="number">1.090417</span>  <span class="number">1.595389</span></span><br></pre></td></tr></table></figure>
+
+<p>这里使用data_copy来进行特征归一化是因为在预测集上的数据也要进行相应的操作，要保留原始数据方便得到原来进行特征归一化的数据。</p>
+<h3 id="设置参数"><a href="#设置参数" class="headerlink" title="设置参数"></a>设置参数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">data_copy.insert(<span class="number">0</span>,<span class="string">&#x27;Ones&#x27;</span>,<span class="number">1</span>)</span><br><span class="line">X1=data_copy.iloc[:,:-<span class="number">1</span>]</span><br><span class="line">X1.head()</span><br><span class="line">   Ones      Size  Bedrooms</span><br><span class="line"><span class="number">0</span>     <span class="number">1</span>  <span class="number">0.130010</span> -<span class="number">0.223675</span></span><br><span class="line"><span class="number">1</span>     <span class="number">1</span> -<span class="number">0.504190</span> -<span class="number">0.223675</span></span><br><span class="line"><span class="number">2</span>     <span class="number">1</span>  <span class="number">0.502476</span> -<span class="number">0.223675</span></span><br><span class="line"><span class="number">3</span>     <span class="number">1</span> -<span class="number">0.735723</span> -<span class="number">1.537767</span></span><br><span class="line"><span class="number">4</span>     <span class="number">1</span>  <span class="number">1.257476</span>  <span class="number">1.090417</span></span><br><span class="line"></span><br><span class="line">X1=np.matrix(X1.values)</span><br><span class="line">y1=data_copy.iloc[:,data_copy.shape[<span class="number">1</span>]-<span class="number">1</span>:data_copy.shape[<span class="number">1</span>]]</span><br><span class="line">y1.head()</span><br><span class="line">      Price</span><br><span class="line"><span class="number">0</span>  <span class="number">0.475747</span></span><br><span class="line"><span class="number">1</span> -<span class="number">0.084074</span></span><br><span class="line"><span class="number">2</span>  <span class="number">0.228626</span></span><br><span class="line"><span class="number">3</span> -<span class="number">0.867025</span></span><br><span class="line"><span class="number">4</span>  <span class="number">1.595389</span></span><br><span class="line"></span><br><span class="line">y1=np.matrix(y.values)</span><br><span class="line"></span><br><span class="line">theta1=np.matrix(np.zeros(X.shape[<span class="number">1</span>]))</span><br></pre></td></tr></table></figure>
+
+<h3 id="训练数据"><a href="#训练数据" class="headerlink" title="训练数据"></a>训练数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">g,cost=gradientDescent(X1,y1,theta1,alpha,iters)</span><br><span class="line">g</span><br><span class="line">matrix([[-<span class="number">1.02524372e-16</span>,  <span class="number">8.84042349e-01</span>, -<span class="number">5.24551809e-02</span>]])</span><br></pre></td></tr></table></figure>
+
+<h3 id="代价函数随迭代次数增加而减小的图像"><a href="#代价函数随迭代次数增加而减小的图像" class="headerlink" title="代价函数随迭代次数增加而减小的图像"></a>代价函数随迭代次数增加而减小的图像</h3><p><img src="/2021/06/30/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-2/3.png" alt="3"></p>
+<h3 id="进行预测"><a href="#进行预测" class="headerlink" title="进行预测"></a>进行预测</h3><p>在输入个人数据时，要将数据进行与前面一样的操作。得到输出数据后，要进行相反的操作。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">perData=[<span class="number">1</span>,(<span class="number">2000</span>-data1.Size.mean())/data1.Size.std(),(<span class="number">3</span>-data1.Bedrooms.mean())/data1.Bedrooms.std()]</span><br><span class="line">price=perData*g.T</span><br><span class="line">price=price*data1.Price.std()+data1.Price.mean()</span><br><span class="line">price</span><br><span class="line">matrix([[<span class="number">341785.03879823</span>]])</span><br></pre></td></tr></table></figure>
+
+<h2 id="正规方程-1"><a href="#正规方程-1" class="headerlink" title="正规方程"></a>正规方程</h2><p>使用推导过的公式$\theta=(X^TX)^{-1}X^Ty$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">normalEqn</span>(<span class="params">X,y</span>):</span></span><br><span class="line">	<span class="keyword">return</span> np.linalg.pinv(X.T*X)*X.T*y</span><br></pre></td></tr></table></figure>
+
+<p><code>np.linalg.pinv()</code>是求矩阵的伪逆，<code>np.linalg.inv()</code>是求矩阵的逆。</p>
+<p>使用伪逆是防止有些矩阵不可逆。</p>
+<h3 id="计算参数"><a href="#计算参数" class="headerlink" title="计算参数"></a>计算参数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">g_1=normalEqn(X,y) <span class="comment">#使用上一个例题的数据</span></span><br><span class="line">g_1</span><br><span class="line">matrix([[-<span class="number">3.89578088</span>],</span><br><span class="line">        [ <span class="number">1.19303364</span>]])</span><br><span class="line"><span class="comment">#梯度下降得到的结果是matrix([[-3.24140214,  1.1272942 ]])</span></span><br></pre></td></tr></table></figure>
+
+<p>但是不知道为什么在第二个例题的数据上误差就很大，不清楚是不是因为特征归一化的原因。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/06/30/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-2/">http://example.com/2021/06/30/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/machine-learning/"># machine learning</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/07/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-3/">机器学习-3</a>
+            
+            
+            <a class="next" rel="next" href="/2021/06/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-1/">机器学习-1</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

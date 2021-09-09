@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>机器学习-6 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">机器学习-6</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">July 15, 2021&nbsp;&nbsp;12:27:19</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="评估假设"><a href="#评估假设" class="headerlink" title="评估假设"></a>评估假设</h1><p>在有的时候使用一组样本数据训练之后，又增加了一组数据，在新的数据上模型表现的不是很好。而盲目的增加样本数据的数量可能也不会对模型的性能带来很大的改观，这时候就要评估自己的假设。</p>
+<p>常用的方法是将数据集按照三七分成两部分，70%用来训练模型，30%用来测试样本。</p>
+<p>$m_{test}$用来表示测试样本的数量，测试样本的表示方法为$(x_{test}^{(i)},y_{test}^{(i)})$</p>
+<h2 id="具体做法"><a href="#具体做法" class="headerlink" title="具体做法"></a>具体做法</h2><p>线性回归和逻辑回归中可以先训练好$\theta$，然后使用训练好的$\theta$计算在测试数据集上的代价函数。</p>
+<p>在分类问题中评估假设还可以使用错误分类：<br>$$<br>error(h_\theta(x),y)=<br>\begin{cases}<br>1 &amp; \text{if }h_\theta(x)\ge0.5,y=0\text{ or if }h_\theta(x)&lt;0.5,y=1\<br>0 &amp; \text{otherwise}<br>\end{cases}<br>$$</p>
+<h1 id="模型选择和训练、验证、测试"><a href="#模型选择和训练、验证、测试" class="headerlink" title="模型选择和训练、验证、测试"></a>模型选择和训练、验证、测试</h1><p>在进行模型选择时需要对多项式的最高次数进行选择。</p>
+<p>我们假设另外一个参数d为假设模型的最高次数，在d取不同的值时训练数据$\theta^{(j)}$，这里的上标$j$指的是多项式最高参数。在得到的参数$\theta$后计算各自在训练集上的误差（代价函数值），取误差最小的d，作为我们多项式的最高次数。但在评估模型的时候又要在测试集上进行，而我们的d就是在测试集上拟合得来的，这就使得评估模型的结果不准确。</p>
+<p>为了解决上述的问题，我们可以将数据集分成三部分：训练集、交叉验证集（Cross Validation Set）、测试集。在全部数据集的占比为别为60%，20%，20%，之后我们就可以在交叉验证集上拟合d，然后在测试集上进行模型评估。</p>
+<h1 id="诊断偏差与方差"><a href="#诊断偏差与方差" class="headerlink" title="诊断偏差与方差"></a>诊断偏差与方差</h1><p>在执行学习算法后，可能得到的结果有两种情况：偏差过高或方差过高，也就是欠拟合和过拟合的问题。我们需要在算法出现错误后区分这两种问题，然后才能高效地对实际算法进行改进。</p>
+<p>可以通过观察训练误差和交叉验证误差来诊断这两种错误。</p>
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/bias_and_variance.png" alt="bias_and_variance"></p>
+<p>当训练误差和交叉验证误差都很大且几乎相等时是欠拟合问题，即偏差太大。</p>
+<p>当训练误差很小，而交叉验证误差很大时是过拟合问题，即方差太大。</p>
+<h1 id="正则化和偏差、方差"><a href="#正则化和偏差、方差" class="headerlink" title="正则化和偏差、方差"></a>正则化和偏差、方差</h1><p>正则化项的参数$\lambda$的取值不当也可能会导致偏差、方差过大的问题。</p>
+<p>当$\lambda$较小时，预测模型可能会出现过拟合问题，当$\lambda$较大时，预测模型可能会出现欠拟合问题。</p>
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/lambda.png" alt="lambda"></p>
+<p>这时，可以使用相似的方法。先设置一组预选的$\lambda$，在训练集上先训练好数据，然后再计算交叉验证误差，取误差最小的$\lambda$作为正则化参数。</p>
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/lambdajcv.png" alt="lambdajcv"></p>
+<h1 id="学习曲线"><a href="#学习曲线" class="headerlink" title="学习曲线"></a>学习曲线</h1><p>通过限制m（训练集的样本个数）来计算$J_{train}(\theta)$和$J_{cv}(\theta)$，画出随m变化的图像。</p>
+<p>在高偏差时，训练误差和验证误差随m增加逐渐变成平的，再继续增加样本数据个数也对减少误差没有多少帮助。</p>
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/highbias.png" alt="highbias"></p>
+<p>在高方差时，随m的增加训练误差和验证误差之间会存在差值，并且曲线的趋势是互相靠拢。这时增加样本数据个数，对减少误差还是有用的。</p>
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/highvariance.png" alt="highvariance"></p>
+<h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><h2 id="高偏差（欠拟合）"><a href="#高偏差（欠拟合）" class="headerlink" title="高偏差（欠拟合）"></a>高偏差（欠拟合）</h2><ul>
+<li>使用更多的特征</li>
+<li>使用更高的特征次幂</li>
+<li>减小$\lambda$</li>
+</ul>
+<h2 id="高方差（过拟合）"><a href="#高方差（过拟合）" class="headerlink" title="高方差（过拟合）"></a>高方差（过拟合）</h2><ul>
+<li>增加样本数据数量</li>
+<li>精简特征数</li>
+<li>增加$\lambda$</li>
+</ul>
+<h1 id="神经网络相关"><a href="#神经网络相关" class="headerlink" title="神经网络相关"></a>神经网络相关</h1><p>使用较小的神经网络的优点是计算量小，但容易出现欠拟合问题。</p>
+<p>使用较大型的神经网络的缺点是计算量大并且容易出现过拟合问题，可以通过增加正则化项来解决过拟合问题，并且大型的神经网络的表现比较好。</p>
+<p>对于神经网络的隐藏层数量也可以通过将数据集分为训练集、验证集、测试集的方式来不断尝试。</p>
+<h1 id="课后练习"><a href="#课后练习" class="headerlink" title="课后练习"></a>课后练习</h1><p>数据为一个水库的水位与流出水量。然后探讨方差-偏差的问题。</p>
+<h2 id="导入外部库"><a href="#导入外部库" class="headerlink" title="导入外部库"></a>导入外部库</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> scipy.io <span class="keyword">as</span> sio</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> scipy.optimize <span class="keyword">as</span> opt</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">path = <span class="string">&#x27;d:/datasets/ex5/ex5data1.mat&#x27;</span></span><br><span class="line">data = sio.loadmat(path)</span><br><span class="line">X,y,Xval,yval,Xtest,ytest = data[<span class="string">&#x27;X&#x27;</span>],data[<span class="string">&#x27;y&#x27;</span>],data[<span class="string">&#x27;Xval&#x27;</span>],data[<span class="string">&#x27;yval&#x27;</span>],data[<span class="string">&#x27;Xtest&#x27;</span>],data[<span class="string">&#x27;ytest&#x27;</span>]</span><br><span class="line">X.shape</span><br><span class="line">(<span class="number">12</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">y.shape</span><br><span class="line">(<span class="number">12</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">Xval.shape</span><br><span class="line">(<span class="number">21</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">yval.shape</span><br><span class="line">(<span class="number">21</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">Xtest.shape</span><br><span class="line">(<span class="number">21</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">ytest.shape</span><br><span class="line">(<span class="number">21</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(X,y,label=<span class="string">&#x27;initial data&#x27;</span>)</span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;water level&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;flow&#x27;</span>)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/initial_data.png" alt="initial_data"></p>
+<h2 id="正则化线性回归"><a href="#正则化线性回归" class="headerlink" title="正则化线性回归"></a>正则化线性回归</h2><p>首先进行线性回归，测试性能。</p>
+<h3 id="定义线性回归函数"><a href="#定义线性回归函数" class="headerlink" title="定义线性回归函数"></a>定义线性回归函数</h3><p>定义实现线性回归的一些函数，要求在输入数据的任意维度下都能运行。</p>
+<h4 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta,X,y,reg</span>):</span></span><br><span class="line">    theta,X,y = np.matrix(theta),np.matrix(X),np.matrix(y)</span><br><span class="line">    m = X.shape[<span class="number">0</span>]</span><br><span class="line">    inner = X*theta.T-y</span><br><span class="line">    reg_term = np.<span class="built_in">sum</span>(np.power(theta[:,<span class="number">1</span>:],<span class="number">2</span>))</span><br><span class="line">    <span class="keyword">return</span> (inner.T*inner)/(<span class="number">2</span>*m)+(reg/(<span class="number">2</span>*m))*reg_term</span><br></pre></td></tr></table></figure>
+
+<p>这里与之前不同的地方在于<br>$$<br>\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})^2<br>$$<br>向量化为向量$h_\theta(x)-y$的内积。</p>
+<h4 id="梯度函数"><a href="#梯度函数" class="headerlink" title="梯度函数"></a>梯度函数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient</span>(<span class="params">theta,X,y,reg</span>):</span></span><br><span class="line">    theta,X,y = np.matrix(theta),np.matrix(X),np.matrix(y)</span><br><span class="line">    m = X.shape[<span class="number">0</span>]</span><br><span class="line">    </span><br><span class="line">    error = X*theta.T-y</span><br><span class="line">    <span class="comment">#将矩阵theta第0列设为0</span></span><br><span class="line">    theta[:,:<span class="number">1</span>] = <span class="number">0</span></span><br><span class="line">    grad = (error.T*X)/m + (reg/m)*theta</span><br><span class="line">    <span class="keyword">return</span> np.array(grad)</span><br></pre></td></tr></table></figure>
+
+<h3 id="拟合线性回归"><a href="#拟合线性回归" class="headerlink" title="拟合线性回归"></a>拟合线性回归</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#插入全1的一列</span></span><br><span class="line">X_linear = np.insert(X,<span class="number">0</span>,np.ones(X.shape[<span class="number">0</span>]),axis=<span class="number">1</span>)</span><br><span class="line"><span class="comment">#正则化参数为0</span></span><br><span class="line">res=opt.minimize(fun=cost,x0=theta,args=(X_linear,y,<span class="number">0</span>),jac=gradient,method=<span class="string">&#x27;TNC&#x27;</span>)</span><br><span class="line"></span><br><span class="line">a = np.linspace(-<span class="number">50</span>,<span class="number">40</span>,<span class="number">1000</span>)</span><br><span class="line">b = res.x[<span class="number">0</span>]+(res.x[<span class="number">1</span>]*a)</span><br><span class="line"></span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(X,y,label=<span class="string">&#x27;initial data&#x27;</span>)</span><br><span class="line">ax.plot(a,b,label=<span class="string">&#x27;fit curve&#x27;</span>)</span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;water level&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;flow&#x27;</span>)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/linear_regression_fitcurve.png" alt="linear_regression_fitcurve"></p>
+<h3 id="画出学习曲线"><a href="#画出学习曲线" class="headerlink" title="画出学习曲线"></a>画出学习曲线</h3><p>在机器学习中的一个重要概念是偏差-方差权衡。偏差较大的模型会欠拟合，而方差较大的模型会过拟合。</p>
+<p>判断偏差方差的问题主要通过画出学习曲线来识别。</p>
+<p>定义一个执行线性回归的函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">linear_regression</span>(<span class="params">X,y,reg</span>):</span></span><br><span class="line">    </span><br><span class="line">    theta = np.zeros(X.shape[<span class="number">1</span>])</span><br><span class="line">    </span><br><span class="line">    res = opt.minimize(fun=cost,x0=theta,args=(X,y,reg),method=<span class="string">&#x27;TNC&#x27;</span>,jac=gradient)</span><br><span class="line">    <span class="keyword">return</span> res.x</span><br></pre></td></tr></table></figure>
+
+<p>然后通过增加样本数量计算训练集和交叉验证集的误差，画出学习曲线。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#交叉验证集数据也插入全1的一列</span></span><br><span class="line">Xval_linear = np.insert(Xval,<span class="number">0</span>,np.ones(X.shape[<span class="number">0</span>]),axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">m = X.shape[<span class="number">0</span>]</span><br><span class="line">training_cost,cv_cost = np.zeros(m),np.zeros(m)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,m+<span class="number">1</span>):</span><br><span class="line">    <span class="comment">#取训练集前i个样本训练数据，计算训练误差</span></span><br><span class="line">    theta = linear_regression(X_linear[:i,:],y[:i,:],<span class="number">0</span>)</span><br><span class="line">    tc = cost(theta,X_linear[:i,:],y[:i,:],<span class="number">0</span>)</span><br><span class="line">    cv = cost(theta,Xval_linear,yval,<span class="number">0</span>)</span><br><span class="line">    training_cost[i-<span class="number">1</span>] = <span class="built_in">float</span>(tc)</span><br><span class="line">    cv_cost[i-<span class="number">1</span>] = <span class="built_in">float</span>(cv)</span><br><span class="line">    </span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.plot(np.arange(<span class="number">1</span>,m+<span class="number">1</span>),training_cost,c=<span class="string">&#x27;b&#x27;</span>,label=<span class="string">&#x27;training cost&#x27;</span>)</span><br><span class="line">ax.plot(np.arange(<span class="number">1</span>,m+<span class="number">1</span>),cv_cost,c=<span class="string">&#x27;r&#x27;</span>,label=<span class="string">&#x27;cv cost&#x27;</span>)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/linear_regression_cost_compare.png" alt="linear_regression_cost_compare"></p>
+<p>两条曲线逐渐趋于水平，欠拟合了。</p>
+<h2 id="多项式回归"><a href="#多项式回归" class="headerlink" title="多项式回归"></a>多项式回归</h2><p>直线已经拟合不了这个模型了，需要将预测函数的次数升高。</p>
+<p>首先要定义特征映射函数，将原特征的次幂作为新的特征。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">poly_features</span>(<span class="params">x,power,as_ndarray=<span class="literal">False</span></span>):</span></span><br><span class="line">    data = &#123;<span class="string">&#x27;f&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(i): np.power(x,i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,power+<span class="number">1</span>)&#125;</span><br><span class="line">    df = pd.DataFrame(data)</span><br><span class="line">    <span class="keyword">return</span> df.values <span class="keyword">if</span> as_ndarray <span class="keyword">else</span> df</span><br></pre></td></tr></table></figure>
+
+<p>这可能导致有的特征会非常大，因此要定义一个特征归一化函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">normalize_feature</span>(<span class="params">df</span>):</span></span><br><span class="line">    <span class="keyword">return</span> df.apply(<span class="keyword">lambda</span> column:(column-column.mean())/column.std())</span><br></pre></td></tr></table></figure>
+
+<p><code>df.apply(func,axis)</code>，其中axis默认为0对列进行操作。</p>
+<p>最后整合到一起</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prepare_poly_data</span>(<span class="params">*args, power</span>):</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">prep</span> <span class="title">are</span>(<span class="params">x</span>):</span></span><br><span class="line">        df = poly_features(x,power=power)</span><br><span class="line">        </span><br><span class="line">        ndarr = np.array(normalize_feature(df).values)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> np.insert(ndarr,<span class="number">0</span>,np.ones(ndarr.shape[<span class="number">0</span>]),axis=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> [prepare(x) <span class="keyword">for</span> x <span class="keyword">in</span> args]</span><br></pre></td></tr></table></figure>
+
+<p>这里使用了可变长度参数、嵌套定义函数，序列解包。</p>
+<p>再定义一个画出学习参数的函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_learning_curve</span>(<span class="params">Xinit,X,y,Xval,yval,reg</span>):</span></span><br><span class="line">    </span><br><span class="line">    training_cost,cv_cost = [],[]</span><br><span class="line">    m = X.shape[<span class="number">0</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,m+<span class="number">1</span>):</span><br><span class="line">        theta = linear_regression(X[:i,:],y[:i,:],reg)</span><br><span class="line">        </span><br><span class="line">        tc = <span class="built_in">float</span>(cost(theta,X[:i,:],y[:i,:],<span class="number">0</span>))</span><br><span class="line">        cv = <span class="built_in">float</span>(cost(theta,Xval,yval,<span class="number">0</span>))</span><br><span class="line">        training_cost.append(tc)</span><br><span class="line">        cv_cost.append(cv)</span><br><span class="line">    </span><br><span class="line">    fig,ax = plt.subplots(<span class="number">2</span>,<span class="number">1</span>,figsize=(<span class="number">12</span>,<span class="number">12</span>))</span><br><span class="line">    <span class="comment">#学习曲线</span></span><br><span class="line">    ax[<span class="number">0</span>].plot(np.arange(<span class="number">1</span>,m+<span class="number">1</span>),training_cost,label=<span class="string">&#x27;training cost&#x27;</span>)</span><br><span class="line">    ax[<span class="number">0</span>].plot(np.arange(<span class="number">1</span>,m+<span class="number">1</span>),cv_cost,label=<span class="string">&#x27;cv cost&#x27;</span>)</span><br><span class="line">    ax[<span class="number">0</span>].set_xlabel(<span class="string">&#x27;m&#x27;</span>)</span><br><span class="line">    ax[<span class="number">0</span>].set_ylabel(<span class="string">&#x27;cost&#x27;</span>)</span><br><span class="line">    ax[<span class="number">0</span>].legend()</span><br><span class="line">    </span><br><span class="line">    fitX = np.linspace(-<span class="number">50</span>,<span class="number">40</span>,<span class="number">1000</span>)</span><br><span class="line">    <span class="comment">#X进行处理过，y没有处理，所以这里只处理X，np.dot：array类型执行矩阵乘法</span></span><br><span class="line">    fity = np.dot(prepare_poly_data(fitX,power=X.shape[<span class="number">1</span>]-<span class="number">1</span>)[<span class="number">0</span>],linear_regression(X,y,reg).T)</span><br><span class="line">    <span class="comment">#原始数据和拟合曲线</span></span><br><span class="line">    ax[<span class="number">1</span>].scatter(Xinit,y,label=<span class="string">&#x27;initial_Xy&#x27;</span>)</span><br><span class="line">    ax[<span class="number">1</span>].plot(fitX,fity,label=<span class="string">&#x27;fit curve&#x27;</span>)</span><br><span class="line">    ax[<span class="number">1</span>].set_xlabel(<span class="string">&#x27;water level&#x27;</span>)</span><br><span class="line">    ax[<span class="number">1</span>].set_ylabel(<span class="string">&#x27;flow&#x27;</span>)</span><br><span class="line">    ax[<span class="number">1</span>].legend()</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>要在画学习曲线前先将特征扩展，直接扩展到8阶。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#传参前要先将X，Xval，Xtest平铺，才能转换成DataFrame型数据</span></span><br><span class="line">X_poly,Xval_poly,Xtest_poly = prepare_poly_data(X.ravel(),Xval.ravel(),Xtest.ravel(),power=<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+
+<p>改变正则化参数，画出学习曲线。</p>
+<p>$\lambda=0$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_learning_curve(X,X_poly,y,Xval_poly,yval,<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/m8l0.png" alt="m8l1"></p>
+<p>训练代价趋近于0，过拟合了。</p>
+<p>$\lambda=1$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_learning_curve(X,X_poly,y,Xval_poly,yval,<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/m8l1.png" alt="m8l1"></p>
+<p>与上一个相比，减轻了过拟合问题。</p>
+<p>$\lambda=10$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_learning_curve(X,X_poly,y,Xval_poly,yval,<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/m8l10.png" alt="m8l10"></p>
+<p>这是又欠拟合了。</p>
+<h3 id="找到最佳的正则化参数"><a href="#找到最佳的正则化参数" class="headerlink" title="找到最佳的正则化参数"></a>找到最佳的正则化参数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">lambda_candidate = [<span class="number">0</span>,<span class="number">0.001</span>,<span class="number">0.003</span>,<span class="number">0.01</span>,<span class="number">0.03</span>,<span class="number">0.1</span>,<span class="number">0.3</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">10</span>]</span><br><span class="line">training_cost,cv_cost = [],[]</span><br><span class="line"><span class="keyword">for</span> lam <span class="keyword">in</span> lambda_candidate:</span><br><span class="line">    theta = linear_regression(X_poly,y,lam)</span><br><span class="line">    tc = <span class="built_in">float</span>(cost(theta,X_poly,y,lam))</span><br><span class="line">    cv = <span class="built_in">float</span>(cost(theta,Xval_poly,yval,lam))</span><br><span class="line">    training_cost.append(tc)</span><br><span class="line">    cv_cost.append(cv)</span><br><span class="line"></span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.plot(lambda_candidate,training_cost,c=<span class="string">&#x27;r&#x27;</span>,label=<span class="string">&#x27;training cost&#x27;</span>)</span><br><span class="line">ax.plot(lambda_candidate,cv_cost,c=<span class="string">&#x27;b&#x27;</span>,label=<span class="string">&#x27;cross validation cost&#x27;</span>)</span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;lambda&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;cost&#x27;</span>)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/choose_lambda.png" alt="choose_lambda"></p>
+<p>可见$\lambda=1$时交叉验证代价最小。</p>
+<h3 id="最终确定正则化参数"><a href="#最终确定正则化参数" class="headerlink" title="最终确定正则化参数"></a>最终确定正则化参数</h3><p>最后要在全新的数据集上测试正则化参数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">training_cost,cv_cost,test_cost = [],[],[]</span><br><span class="line"><span class="keyword">for</span> lam <span class="keyword">in</span> lambda_candidate:</span><br><span class="line">    theta = linear_regression(X_poly,y,lam)</span><br><span class="line">    trainc = <span class="built_in">float</span>(cost(theta,X_poly,y,<span class="number">0</span>))</span><br><span class="line">    cv = <span class="built_in">float</span>(cost(theta,Xval_poly,yval,<span class="number">0</span>))</span><br><span class="line">    testc = <span class="built_in">float</span>(cost(theta,Xtest_poly,ytest,<span class="number">0</span>))</span><br><span class="line">    training_cost.append(trainc)</span><br><span class="line">    cv_cost.append(cv)</span><br><span class="line">    test_cost.append(testc)</span><br><span class="line">    </span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.plot(lambda_candidate,training_cost,c=<span class="string">&#x27;r&#x27;</span>,label=<span class="string">&#x27;training cost&#x27;</span>)</span><br><span class="line">ax.plot(lambda_candidate,cv_cost,c=<span class="string">&#x27;b&#x27;</span>,label=<span class="string">&#x27;cross validation cost&#x27;</span>)</span><br><span class="line">ax.plot(lambda_candidate,test_cost,c=<span class="string">&#x27;y&#x27;</span>,label=<span class="string">&#x27;testcost&#x27;</span>)</span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;lambda&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;cost&#x27;</span>)</span><br><span class="line">ax.legend()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/choose_best_lambda.png" alt="choose_best_lambda"></p>
+<p>最佳的$\lambda$的取值是0.3。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/">http://example.com/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/machine-learning/"># machine learning</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/">机器学习-7</a>
+            
+            
+            <a class="next" rel="next" href="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-5/">机器学习-5</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

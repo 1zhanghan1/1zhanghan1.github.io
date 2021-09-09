@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>机器学习-9 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">机器学习-9</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 4, 2021&nbsp;&nbsp;16:25:24</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h1><p>无监督学习是学习无标签的数据，找到其中隐藏的信息。</p>
+<h2 id="聚类算法"><a href="#聚类算法" class="headerlink" title="聚类算法"></a>聚类算法</h2><p>聚类问题是将数据进行划分成组。应用：市场划分，社会关系分析，组织计算机集群天文数据分析。</p>
+<h3 id="K-均值算法"><a href="#K-均值算法" class="headerlink" title="K-均值算法"></a>K-均值算法</h3><p>K均值算法是一个迭代算法，用图像来表示整个算法过程。</p>
+<p>原有数据：</p>
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/K-1.png" alt="K-1"></p>
+<ol>
+<li>随机生成两点作为聚类中心<br><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/K-2.png" alt="K-2"></li>
+<li>遍历数据集，将每个数据分配给距离接近的聚类中心<br><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/K-3.png" alt="K-3"></li>
+<li>将每个聚类中心移动到各自数据集的均值处<br><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/K-4.png" alt="K-4"></li>
+<li>重复2,3两步，直至收敛<br><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/K-5.png" alt="K-5"></li>
+</ol>
+<p>如果在迭代时有一个聚类中心没有一个数据，那么就可以删掉这个聚类中心，但这样得到的是K-1簇数据。如果一定要得到K簇数据，那么就重新随机选择K个聚类中心。</p>
+<p>K-均值算法输入：</p>
+<p>$K:$分类簇数</p>
+<p>${x^{(1)},x^{(2)},\dots,x^{(m)}}:$训练集</p>
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/K-step.png" alt="K-step"></p>
+<h4 id="优化目标"><a href="#优化目标" class="headerlink" title="优化目标"></a>优化目标</h4><p>约定符号：</p>
+<p>$c^{(i)}:$数据样本$x^{(i)}$分配到的聚类中心下标</p>
+<p>$\mu_k:$下标为k的聚类中心</p>
+<p>$\mu_{c^{(i)}}:$数据样本$x^{(i)}$分配到的聚类中心</p>
+<p>优化目标（失真函数）：<br>$$<br>J(c^{(1)},\dots,c^{(m)},\mu_1,\dots,\mu_k) = \frac{1}{m}\sum_{i=1}^m||x^{(i)}-\mu_{c^{(i)}}||^2<br>$$<br>在K-均值算法每一步迭代的第一步中分配聚类中心是在改变$c^{(1)},\dots,c^{(m)}$来最小化$J$，第二步中移动聚类中心是在改变$\mu_1,\dots,\mu_k$来最小化$J$。</p>
+<h4 id="随机初始化"><a href="#随机初始化" class="headerlink" title="随机初始化"></a>随机初始化</h4><p>随机初始化的方法很多，有一种是非常有效的。</p>
+<p>$K&lt;m$</p>
+<p>在训练样本中随机挑选K个样本，设置$\mu_1,\dots,\mu_K$等于这K个样本。</p>
+<h4 id="局部最优问题"><a href="#局部最优问题" class="headerlink" title="局部最优问题"></a>局部最优问题</h4><p>如果随机挑选的聚类中心不是很好就可能会得到一个局部最优解。</p>
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/local_optima.png" alt="local_optima"></p>
+<p>挑选一次聚类中心不一定能进行很好的分类。</p>
+<p>解决这个问题就要多挑选几次聚类中心（50-1000），每次都执行一次K-均值算法。最后会得到多种聚类方法，选择$J(c^{(1)},\dots,c^{(m)},\mu_1,\dots,\mu_k)$最小的方法。多次随机初始化的方法只使用K很小（2-10）时才效果明显，如果K比较大，通常一次随机初始化就会得到一个比较好的结果。</p>
+<h2 id="降维问题"><a href="#降维问题" class="headerlink" title="降维问题"></a>降维问题</h2><p>将高度相关的特征用一个新的特征来表示，这样就可以减少特征数量，也就是降维，同时也可以进行数据压缩。降维的另一应用是可以实现数据的可视化，如果一个样本的特征有很多，降维成2个特征，这样就可以在二维的图形中显示出来，进行可视化。</p>
+<h3 id="主成分分析PCA"><a href="#主成分分析PCA" class="headerlink" title="主成分分析PCA"></a>主成分分析PCA</h3><p>将n维的数据降维到k维，那么就要找到k个向量，将数据投影到这些向量上，然后最小化投影误差。</p>
+<p>例如将二维数据降维到一维，就要找到一个向量，最小化投影误差，直观上理解就是将二维的坐标投影到一条直线上，转换成一维的数据。</p>
+<h4 id="与线性回归的差异"><a href="#与线性回归的差异" class="headerlink" title="与线性回归的差异"></a>与线性回归的差异</h4><p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/pca_linear.png" alt="pca_linear"></p>
+<p>线性回归最小化的是每个点与直线纵坐标的误差平方和，PCA最小化的是每个点到直线的距离平方和。并且线性回归将y看做特殊的特征，需要进行预测的值，在PCA中所有数据都是平等的。</p>
+<h4 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h4><h5 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h5><p>首先要将所有数据减去平均值，使总体的平均值为0。如果数据的特征之间差距较大，还要进一步的特征缩放，除最大值或标准差。</p>
+<h5 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h5><p>训练集合${x^{(1)},\dots,x^{(m)} }$，其中$x^{(i)}$是n维行向量。</p>
+<ol>
+<li><p>计算协方差矩阵<br>$$<br>\Sigma=\frac{1}{m}\sum_{i=1}^m(x^{(i)})^T(x^{(i)})<br>$$</p>
+<p>协方差矩阵是正定矩阵。</p>
+</li>
+<li><p>计算$\Sigma$矩阵的特征向量<br><code>[U,S,V] = svd(Sigma)</code><br>这里的svd是奇异值分解函数，对于方阵来说就是进行特征值分解。$\Sigma=USV^T$，$\Sigma$为方阵$n<em>n$时,S是$\Sigma$的特征值组成的对角矩阵,按特征值绝对值降序排序，U=V，U的列向量是特征向量。<br>我们需要的是矩阵U的前k列,得到Ureduce是$n</em>k$的矩阵。<br>$$<br>z^{(i)} = x^{(i)} \times U_{reduce},x^{(i)}(1\times n),U_{reduce}(n\times k)<br>$$</p>
+</li>
+</ol>
+<h5 id="选择主成分个数k"><a href="#选择主成分个数k" class="headerlink" title="选择主成分个数k"></a>选择主成分个数k</h5><p>平均投影方差：$\frac{1}{m}\sum_{i=1}^m||x^{(i)}-x^{(i)}_{approx}||^2$</p>
+<p>总体方差：$\frac{1}{m}\sum_{i=1}^{m}||x^{(i)}||^2$</p>
+<p>选择最小的k能使<br>$$<br>\frac{\frac{1}{m}\sum_{i=1}^m||x^{(i)}-x^{(i)}<em>{approx}||^2}{\frac{1}{m}\sum</em>{i=1}^{m}||x^{(i)}||^2}\le0.01\tag{1}<br>$$<br>这时保留了99%的方差</p>
+<p>具体算法步骤是：</p>
+<ol>
+<li>尝试k=1</li>
+<li>计算出$U_{reduce},z^{(1)},\dots,z^{(m)},x_{approx}^{1},\dots,x_{approx}^{m}$</li>
+<li>检查$(1)$式是否成立，不成立k加1，直至成立</li>
+</ol>
+<p>在实现时有更简单的方法，只需要运行一次<code>svd()</code>就可以得到结果。</p>
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/choose_k.png" alt="choose_k"></p>
+<h4 id="压缩重现"><a href="#压缩重现" class="headerlink" title="压缩重现"></a>压缩重现</h4><p>使用PCA将数据压缩，在需要的时候也要将压缩的数据进行重现。</p>
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/reconstruction.png" alt="reconstruction"></p>
+<p>我们这里的X是以一个行向量作为一个样本数据。</p>
+<p>之前进行数据压缩的转换是<br>$$<br>Z=X\times U_{reduce}<br>$$<br>重构数据的转换是<br>$$<br>X_{approx} = Z\times U_{reduce}^T<br>$$<br>在投影平方误差非常小的时候，就可以近似地用$X_{approx}$去表示$X$，即<br>$$<br>X_{approx}\approx X<br>$$</p>
+<h4 id="加速学习算法"><a href="#加速学习算法" class="headerlink" title="加速学习算法"></a>加速学习算法</h4><p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/speed_up.png" alt="speed_up"></p>
+<p>将训练集的X看做无标签数据，应用PCA算法得到主要成分，实现了将X降维的目的，减少了特征数量。然后用映射过的数据Z与y应用学习算法，得到结果。但由于Z保留了大部分的方差，映射后的样本特征几乎保留了所有的性质，与原数据得到的结果几乎相同，但速度得到很大的提升。</p>
+<h4 id="错误的应用"><a href="#错误的应用" class="headerlink" title="错误的应用"></a>错误的应用</h4><h5 id="防止过拟合"><a href="#防止过拟合" class="headerlink" title="防止过拟合"></a>防止过拟合</h5><p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/prevent_overfit.png" alt="prevent_overfit"></p>
+<p>PCA可以减少特征的数量，较少的特征数量似乎可以减轻过拟合的问题。但是由于PCA</p>
+<p>得到的是原数据的近似表示，并且视为无标签数据，所以可能会丢弃一些与y相关但在X中很微小的特征。防止过拟合的更好办法是使用正则化。</p>
+<h5 id="滥用PCA"><a href="#滥用PCA" class="headerlink" title="滥用PCA"></a>滥用PCA</h5><p>在刚开始设计一个机器学习系统的时候，不要把应用PCA直接放在计划中。更好的做法是先使用原数据进行设计机器学习系统，如果出现内存占用太多或者学习速度太慢的情况，才考虑使用PCA去减少特征数量解决这些问题。先不用看效果，需要时在应用。</p>
+<h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><h2 id="K-means"><a href="#K-means" class="headerlink" title="K-means"></a>K-means</h2><h3 id="获取数据并可视化"><a href="#获取数据并可视化" class="headerlink" title="获取数据并可视化"></a>获取数据并可视化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">path = <span class="string">&#x27;d:/datasets/ex7/ex7data1.mat&#x27;</span></span><br><span class="line">data = sio.loadmat(path)</span><br><span class="line">X = data[<span class="string">&#x27;X&#x27;</span>]</span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(X[:,<span class="number">0</span>],X[:,<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/k_means_p1.png" alt="k_means_p1"></p>
+<h3 id="划分样本数据"><a href="#划分样本数据" class="headerlink" title="划分样本数据"></a>划分样本数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#X为样本数据，centroids为聚类中心</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_closed_centroids</span>(<span class="params">X,centroids</span>):</span></span><br><span class="line">    </span><br><span class="line">    m = X.shape[<span class="number">0</span>]</span><br><span class="line">    k = centroids.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment">#每个样本划分到的聚类中心下标</span></span><br><span class="line">    idx = np.zeros(m)</span><br><span class="line">    <span class="comment">#遍历划分样本数据</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">        min_dist = <span class="number">100000</span></span><br><span class="line">        <span class="comment">#遍历所有聚类中心，算出最小投影平方和</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(k):</span><br><span class="line">            dist = np.<span class="built_in">sum</span>((X[i,:]-centroids[j,:])**<span class="number">2</span>)</span><br><span class="line">            <span class="keyword">if</span> dist &lt; min_dist:</span><br><span class="line">                min_dist = dist</span><br><span class="line">                idx[i] = j</span><br><span class="line">    <span class="keyword">return</span> idx</span><br></pre></td></tr></table></figure>
+
+<h3 id="移动聚类中心"><a href="#移动聚类中心" class="headerlink" title="移动聚类中心"></a>移动聚类中心</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_centroids</span>(<span class="params">X,idx,k</span>):</span></span><br><span class="line">    </span><br><span class="line">    n = X.shape[<span class="number">1</span>]</span><br><span class="line">    <span class="comment">#k个聚类中心，每个聚类中心是n维向量</span></span><br><span class="line">    centroids = np.zeros((k,n))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(k):</span><br><span class="line">        <span class="comment">#得到划分给下标为i的聚类中心的样本数据下标</span></span><br><span class="line">        idx_i = np.where(idx == i)</span><br><span class="line">        <span class="comment">#下标为i的聚类中心为该类所有样本数据的平均</span></span><br><span class="line">        centroids[i,:] = (np.<span class="built_in">sum</span>(X[idx_i,:],axis=<span class="number">1</span>)/<span class="built_in">len</span>(idx_i[<span class="number">0</span>])).ravel()</span><br><span class="line">    <span class="keyword">return</span> centroids</span><br></pre></td></tr></table></figure>
+
+<p>注意：<code>np.where(idx == i)</code>返回的是只有一个元素的数组，里面的元素是我们想要的数组，所以后面使用<code>len(idx_i[0])</code>计算分类数据个数。<code>np.sum(X[idx_i,:]</code>返回也是上述格式，因此使用<code>axis=1</code>计算行方向上的和。</p>
+<h3 id="随机初始化-1"><a href="#随机初始化-1" class="headerlink" title="随机初始化"></a>随机初始化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_centroids</span>(<span class="params">X,k</span>):</span></span><br><span class="line">    idx = np.random.choice(np.arange(X.shape[<span class="number">0</span>]),k)</span><br><span class="line">    centroids = X[idx,:]</span><br><span class="line">    <span class="keyword">return</span> centroids</span><br></pre></td></tr></table></figure>
+
+<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_k_means</span>(<span class="params">X,k,maxIters</span>):</span></span><br><span class="line">    <span class="comment">#随机初始化</span></span><br><span class="line">    centroids = init_centroids(X,k)</span><br><span class="line">    idx = np.zeros(X.shape[<span class="number">0</span>])</span><br><span class="line">    <span class="comment">#迭代</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(maxIters):</span><br><span class="line">        <span class="comment">#根据聚类中心划分</span></span><br><span class="line">        idx = find_closed_centroids(X,centroids)</span><br><span class="line">        <span class="comment">#移动聚类中心</span></span><br><span class="line">        centroids = compute_centroids(X,idx,k)</span><br><span class="line">    <span class="keyword">return</span> idx,centroids</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行算法并显示结果"><a href="#运行算法并显示结果" class="headerlink" title="运行算法并显示结果"></a>运行算法并显示结果</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">idx,centroids = run_k_means(X,<span class="number">3</span>,<span class="number">10</span>)</span><br><span class="line">cluster1 = X[np.where(idx==<span class="number">0</span>)[<span class="number">0</span>],:]</span><br><span class="line">cluster2 = X[np.where(idx==<span class="number">1</span>)[<span class="number">0</span>],:]</span><br><span class="line">cluster3 = X[np.where(idx==<span class="number">2</span>)[<span class="number">0</span>],:]</span><br><span class="line"></span><br><span class="line">figa,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(cluster1[:,<span class="number">0</span>],cluster1[:,<span class="number">1</span>],c=<span class="string">&#x27;r&#x27;</span>)</span><br><span class="line">ax.scatter(cluster2[:,<span class="number">0</span>],cluster2[:,<span class="number">1</span>],c=<span class="string">&#x27;y&#x27;</span>)</span><br><span class="line">ax.scatter(cluster3[:,<span class="number">0</span>],cluster3[:,<span class="number">1</span>],c=<span class="string">&#x27;b&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/k_means_p2.png" alt="k_means_p2"></p>
+<h3 id="数据压缩"><a href="#数据压缩" class="headerlink" title="数据压缩"></a>数据压缩</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#获取数据</span></span><br><span class="line">data = sio.loadmat(<span class="string">&#x27;d:/datasets/ex7/bird_small.mat&#x27;</span>)￼</span><br><span class="line">A = data[<span class="string">&#x27;A&#x27;</span>]</span><br><span class="line">A.shape</span><br><span class="line">(<span class="number">128</span>, <span class="number">128</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#每个像素三个字节表示颜色，共有256种颜色，最大值为255</span></span><br><span class="line"><span class="comment">#标准化</span></span><br><span class="line">A = A/<span class="number">255</span></span><br><span class="line"></span><br><span class="line">X = A.reshape((A.shape[<span class="number">0</span>]*A.shape[<span class="number">1</span>],A.shape[<span class="number">2</span>]))</span><br><span class="line">X.shape</span><br><span class="line">(<span class="number">16384</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#保留16个颜色</span></span><br><span class="line">idx,centroids = run_k_means(X,<span class="number">16</span>,<span class="number">10</span>)</span><br><span class="line"><span class="comment">#获得保留的16个颜色</span></span><br><span class="line">X_recovered = centroids[idx.astype(<span class="built_in">int</span>),:]</span><br><span class="line">X_recovered.shape</span><br><span class="line">(<span class="number">16384</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">X_recovered = X_recovered.reshape((A.shape[<span class="number">0</span>],A.shape[<span class="number">1</span>],A.shape[<span class="number">2</span>]))</span><br><span class="line">X_recovered.shape</span><br><span class="line">(<span class="number">128</span>, <span class="number">128</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#与原图对比</span></span><br><span class="line">fig,axs = plt.subplots(<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line">axs[<span class="number">0</span>].imshow(A)</span><br><span class="line">axs[<span class="number">1</span>].imshow(X_recovered)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/compare_picture.png" alt="compare_picture"></p>
+<p>只保留了16种颜色，主要特征仍然存在。</p>
+<h3 id="KMeans库函数"><a href="#KMeans库函数" class="headerlink" title="KMeans库函数"></a>KMeans库函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</span><br><span class="line">pic = io.imread(<span class="string">&#x27;d:/datasets/ex7/bird_small.png&#x27;</span>)/<span class="number">255</span></span><br><span class="line">pic.shape</span><br><span class="line">(<span class="number">128</span>, <span class="number">128</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">io.imshow(pic)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/io_imshow.png" alt="io_imshow"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">data = pic.reshape(<span class="number">128</span>*<span class="number">128</span>,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans</span><br><span class="line">model = KMeans(n_clusters=<span class="number">16</span>,n_init=<span class="number">100</span>,n_jobs=-<span class="number">1</span>)</span><br><span class="line">model.fit(data)</span><br><span class="line"></span><br><span class="line">centroids = model.cluster_centers_</span><br><span class="line">C = model.predict(data)</span><br><span class="line"></span><br><span class="line">centroids.shape,C.shape</span><br><span class="line">((<span class="number">16</span>, <span class="number">3</span>), (<span class="number">16384</span>,))</span><br><span class="line"></span><br><span class="line">compressed_pic = centroids[C,:].reshape((<span class="number">128</span>,<span class="number">128</span>,<span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">fig,axs = plt.subplots(<span class="number">2</span>,<span class="number">1</span>)</span><br><span class="line">axs[<span class="number">0</span>].imshow(pic)</span><br><span class="line">axs[<span class="number">1</span>].imshow(compressed_pic)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/compare_picture1.png" alt="compare_picture1"></p>
+<h2 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h2><p>PCA是在数据集中找到主成分或者最大方差方向的线性变换，可用作降维。</p>
+<h3 id="获取数据并可视化-1"><a href="#获取数据并可视化-1" class="headerlink" title="获取数据并可视化"></a>获取数据并可视化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data = sio.loadmat(<span class="string">&#x27;d:/datasets/ex7/ex7data1.mat&#x27;</span>)</span><br><span class="line">X = data[<span class="string">&#x27;X&#x27;</span>]</span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(X[:,<span class="number">0</span>],X[:,<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/PCA_1.png" alt="PCA_1"></p>
+<h3 id="PCA算法"><a href="#PCA算法" class="headerlink" title="PCA算法"></a>PCA算法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PCA</span>(<span class="params">X</span>):</span></span><br><span class="line">    X = (X-X.mean())/X.std()</span><br><span class="line">    X = np.matrix(X)</span><br><span class="line">    <span class="comment">#协方差矩阵</span></span><br><span class="line">    cov = (X.T*X)/X.shape[<span class="number">0</span>]</span><br><span class="line">    <span class="comment">#奇异值分解</span></span><br><span class="line">    U,S,V = np.linalg.svd(cov)</span><br><span class="line">    <span class="keyword">return</span> U,S,V</span><br><span class="line"><span class="comment">#数据压缩</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">project_data</span>(<span class="params">X,U,k</span>):</span></span><br><span class="line">    U_reduced = U[:,:k]</span><br><span class="line">    <span class="keyword">return</span> np.dot(X,U_reduced)</span><br><span class="line"><span class="comment">#数据重现</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recover_data</span>(<span class="params">Z,U,k</span>):</span></span><br><span class="line">    U_reduced = U[:,:k]</span><br><span class="line">    <span class="keyword">return</span> np.dot(Z,U_reduced.T)</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行算法"><a href="#运行算法" class="headerlink" title="运行算法"></a>运行算法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">U,S,V = PCA(X)</span><br><span class="line"><span class="comment">#降到一维</span></span><br><span class="line">Z = project_data(X,U,<span class="number">1</span>)</span><br><span class="line">Z.shape</span><br><span class="line">(<span class="number">50</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#数据重现</span></span><br><span class="line">X_approx = recover_data(Z,U,<span class="number">1</span>)</span><br><span class="line">X_approx.shape</span><br><span class="line">(<span class="number">50</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">fig,ax = plt.subplots(figsize=(<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line">ax.scatter(<span class="built_in">list</span>(X_approx[:,<span class="number">0</span>]),<span class="built_in">list</span>(X_approx[:,<span class="number">1</span>]))</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/PCA_2.png" alt="PCA_2"></p>
+<h3 id="将PCA应用于脸部图像"><a href="#将PCA应用于脸部图像" class="headerlink" title="将PCA应用于脸部图像"></a>将PCA应用于脸部图像</h3><h4 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">faces = sio.loadmat(<span class="string">&#x27;d:/datasets/ex7/ex7faces.mat&#x27;</span>)</span><br><span class="line">faces.shape</span><br><span class="line">X = faces[<span class="string">&#x27;X&#x27;</span>]</span><br><span class="line">X.shape</span><br><span class="line">(<span class="number">5000</span>, <span class="number">1024</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="显示前100个脸部图像"><a href="#显示前100个脸部图像" class="headerlink" title="显示前100个脸部图像"></a>显示前100个脸部图像</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">X_first = X[:<span class="number">100</span>,:]</span><br><span class="line">fig,axs = plt.subplots(<span class="number">10</span>,<span class="number">10</span>,sharex=<span class="literal">True</span>,sharey=<span class="literal">True</span>,figsize=(<span class="number">8</span>,<span class="number">8</span>))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        axs[i,j].imshow(X_first[<span class="number">10</span>*i+j,:].reshape((<span class="number">32</span>,<span class="number">32</span>)).T)</span><br><span class="line">        plt.xticks([])</span><br><span class="line">        plt.yticks([])</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/first_100_faces.png" alt="first_100_faces"></p>
+<h4 id="运行算法-1"><a href="#运行算法-1" class="headerlink" title="运行算法"></a>运行算法</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">U,S,V = PCA(X)</span><br><span class="line"><span class="comment">#数据压缩</span></span><br><span class="line">Z = project_data(X,U,<span class="number">100</span>)</span><br><span class="line"><span class="comment">#数据重现</span></span><br><span class="line">X_approx = recover_data(Z,U,<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+
+<p>选择一幅图片对比</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">face = X[<span class="number">3</span>,:].reshape((<span class="number">32</span>,<span class="number">32</span>)).T</span><br><span class="line">plt.imshow(face)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/face1.png" alt="face1"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">face = X_approx[<span class="number">3</span>,:].reshape((<span class="number">32</span>,<span class="number">32</span>)).T</span><br><span class="line">plt.imshow(face)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/face2.png" alt="face2"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/">http://example.com/2021/08/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-9/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/machine-learning/"># machine learning</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/08/05/%E9%98%BF%E9%87%8C%E4%BA%91%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86Linux/">阿里云远程管理Linux</a>
+            
+            
+            <a class="next" rel="next" href="/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/">机器学习-8</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

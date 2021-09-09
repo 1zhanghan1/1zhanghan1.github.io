@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>机器学习-5 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">机器学习-5</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">July 15, 2021&nbsp;&nbsp;12:24:15</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h1><p>神经网络是利用计算机模拟人类大脑的结构，来训练数据接受输入数据，计算得到输出数据。</p>
+<p>它可以解决特征很多的复杂非线性假设问题。</p>
+<h2 id="前向传播"><a href="#前向传播" class="headerlink" title="前向传播"></a>前向传播</h2><p>一个简单的神经网络示例：</p>
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-5/neural_network.png" alt="neural_network"></p>
+<p>神经网络中每一个节点代表一个神经元。</p>
+<p>第一层是输入层，$x_i$是输入样本的第i个特征，省去了$x_0$这个偏置单元。</p>
+<p>第二层是一个隐藏层，$a^{(2)}_i$是第二层的$j$单元的激活项，激活项可以看作一个中间结果，同样省去了上面的偏置单元。</p>
+<p>第三层是输出层，输出最后的结果$h_\theta(x)$</p>
+<p>各节点的连线是层数之间映射控制矩阵的权重。</p>
+<p>$\theta^{(j)}$是从第$j$层到第$j+1$层的映射矩阵。</p>
+<p>计算过程：<br>$$<br>a^{(2)}<em>1 = g(\theta^{(1)}</em>{10}x_0+\theta^{(1)}<em>{11}x_1+\theta^{(1)}</em>{12}x_2+\theta^{(1)}<em>{13}x_3)\\<br>a^{(2)}<em>2 = g(\theta^{(1)}</em>{20}x_0+\theta^{(1)}</em>{21}x_1+\theta^{(1)}<em>{22}x_2+\theta^{(1)}</em>{23}x_3)\\<br>a^{(2)}<em>3 = g(\theta^{(1)}</em>{30}x_0+\theta^{(1)}<em>{31}x_1+\theta^{(1)}</em>{32}x_2+\theta^{(1)}_{33}x_3)\\<br>h_\theta(x)=a^{(3)}<em>1=g(\theta^{(2)}</em>{10}a^{(2)}<em>0+\theta^{(2)}</em>{11}a^{(2)}<em>1+\theta^{(2)}</em>{12}a^{(2)}<em>2+\theta^{(2)}</em>{13}a^{(2)}_3)<br>$$</p>
+<p>那么矩阵形式就是：<br>$$<br>a^{(2)}=g(x*(\theta^{(1)})^T)\\<br>h_\theta(x)=a^{(3)}_1=g(a^{(2)}*(\theta^{(2)})^T)<br>$$</p>
+<p>其中<br>$$<br>x=<br>\left[<br>\begin{matrix}<br>x_0&amp;<br>x_1&amp;<br>x_2&amp;<br>x_3<br>\end{matrix}<br>\right]<br>$$</p>
+<p>$$<br>a^{(2)}=<br>\left[<br>\begin{matrix}<br>a^{(2)}_0&amp;<br>a^{(2)}_1&amp;<br>a^{(2)}_2&amp;<br>a^{(2)}_3<br>\end{matrix}<br>\right]<br>$$</p>
+<p>$$<br>\theta^{(1)}=<br>\left[<br>\begin{matrix}<br>\theta^{(1)}<em>{10}&amp;\theta^{(1)}</em>{20}&amp;\theta^{(1)}<em>{30}\<br>\theta^{(1)}</em>{11}&amp;\theta^{(1)}<em>{21}&amp;\theta^{(1)}</em>{31}\<br>\theta^{(1)}<em>{12}&amp;\theta^{(1)}</em>{22}&amp;\theta^{(1)}<em>{32}\<br>\theta^{(1)}</em>{13}&amp;\theta^{(1)}<em>{23}&amp;\theta^{(1)}</em>{33}\<br>\end{matrix}<br>\right]<br>=\left[<br>\begin{matrix}<br>\theta^{(1)}<em>{10}&amp;\theta^{(1)}</em>{11}&amp;\theta^{(1)}<em>{12}&amp;\theta^{(1)}</em>{13}\<br>\theta^{(1)}<em>{20}&amp;\theta^{(1)}</em>{21}&amp;\theta^{(1)}<em>{22}&amp;\theta^{(1)}</em>{23}\<br>\theta^{(1)}<em>{30}&amp;\theta^{(1)}</em>{31}&amp;\theta^{(1)}<em>{32}&amp;\theta^{(1)}</em>{33}\<br>\end{matrix}<br>\right]^T<br>$$</p>
+<p>$$<br>\theta^{(2)}=<br>\left[<br>\begin{matrix}<br>\theta^{(2)}<em>{10}\<br>\theta^{(2)}</em>{11}\<br>\theta^{(2)}<em>{12}\<br>\theta^{(2)}</em>{13}\<br>\end{matrix}<br>\right]<br>=\left[<br>\begin{matrix}<br>\theta^{(2)}<em>{10}&amp;<br>\theta^{(2)}</em>{11}&amp;<br>\theta^{(2)}<em>{12}&amp;<br>\theta^{(2)}</em>{13}<br>\end{matrix}<br>\right]^T<br>$$</p>
+<p>在实现代码是$\theta$都是以行向量为一组要训练的参数，所以$\theta^{(j)}$的维度是$S_{j+1}\times(S_j+1)$。其中$S_j$是神经网络第$j$层的单元数（不计算偏置单元）。</p>
+<p>计算$h_\theta(x)$的方式从输入单元的激活项开始计算下一层隐藏层单元的激活项，一直计算到最后的输出层得到$h_\theta(x)$，这就是前向传播。</p>
+<p>神经网络的每一个除输入单元之外的单元都可以看作是以前一层所有单元为输入进行逻辑回归得到的结果，整个神经网络就可以看作经过多次逻辑回归处理输入的过程，这样就可以处理很复杂并且特征很多的非线性假设函数。</p>
+<h2 id="多元分类"><a href="#多元分类" class="headerlink" title="多元分类"></a>多元分类</h2><p>神经网络可以进行多元分类。</p>
+<p>只要将输出单元的个数变为要分类的种类数。</p>
+<p>如果分类的种数为4种，那么输出单元就是4个，设为$y^{(i)}$<br>$$<br>y^{(i)}\approx<br>\left[<br>\begin{matrix}<br>1\0\0\0<br>\end{matrix}<br>\right]<br>,\ \left[<br>\begin{matrix}<br>0\1\0\0<br>\end{matrix}<br>\right]<br>,\ \left[<br>\begin{matrix}<br>0\0\1\0<br>\end{matrix}<br>\right]<br>,\ \left[<br>\begin{matrix}<br>0\0\0\1<br>\end{matrix}<br>\right]<br>$$<br>每一种情况代表一种分类。</p>
+<p>设K为分类种数，$K\ge3$时使用。</p>
+<h2 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h2><p>总结一下约定符号：</p>
+<p>$\theta^{(j)}$：第j层到第j+1层的映射控制矩阵</p>
+<p>$a^{(j)}_i$：第j层第i个单元的激励项</p>
+<p>$K$：输出单元数</p>
+<p>$L$：神经网络总层数</p>
+<p>$S_j$：第j层单元数（不计算偏置单元）</p>
+<p>在逻辑回归中的代价函数：<br>$$<br>J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}[y^{(i)}log(h_\theta(x^{(i)}))+(1-y^{(i)})log(1-h_\theta(x^{(i)}))]+\frac{\lambda}{2m}\sum_{j=1}^{n}\theta_j^2<br>$$<br>在神经网络中的代价函数：<br>$$<br>J(\theta)=-\frac{1}{m}\sum_{i=1}^{m}\sum_{k=1}^K[y^{(i)}<em>klog(h_\theta(x^{(i)})<em>k)+(1-y^{(i)}<em>k)log(1-h_\theta(x^{(i)})<em>k)]+\frac{\lambda}{2m}\sum</em>{l=1}^{L}\sum</em>{i=1}^{S_l}\sum</em>{j=1}^{S</em>{l+1}}(\theta_{ji}^{(l)})^2<br>$$</p>
+<h2 id="反向传播算法"><a href="#反向传播算法" class="headerlink" title="反向传播算法"></a>反向传播算法</h2><p>反向传播算法的作用是使代价函数变得最小。</p>
+<p>用$\delta^{(l)}_j$来表示第l层第j个单元的“误差”。</p>
+<p>设神经网络有4层：</p>
+<p>首先得到<br>$$<br>\delta^{(4)}_j=a^{(4)}_j-y_j<br>$$<br>这是输出值与真实值的差，向量化后得到<br>$$<br>\delta^{(4)}=a^{(4)}-y<br>$$<br>再继续得到<br>$$<br>\delta^{(3)}=(\theta^{(3)})^T\delta^{(4)}\cdot g^{‘}(z^{(3)})<br>$$<br>不难推出<br>$$<br>g^{‘}(z^{(3)})=a^{(3)}\cdot(1-a^{(3)})<br>$$<br>那么可以得到<br>$$<br>\delta^{(3)}=(\theta^{(3)})^T\delta^{(4)}\cdot(a^{(3)}\cdot(1-a^{(3)}))\<br>\delta^{(2)}=(\theta^{(2)})^T\delta^{(3)}\cdot(a^{(2)}\cdot(1-a^{(2)}))<br>$$<br>这里的 $\cdot$ 表示向量对应位置相乘，结果还是原维度的向量。</p>
+<p>经过复杂的推导，得到代价函数的每一个偏导是：($\lambda=0$)<br>$$<br>\frac{\partial}{\partial \theta^{(l)}_{ij}}J(\theta)=a^{(l)}_j\delta^{(l+1)}_i<br>$$</p>
+<p>矩阵形式是：($\lambda=0$)<br>$$<br>\frac{\partial}{\partial \theta^{(l)}}J(\theta)=(\delta^{(l+1)})^T*a^{(l)}<br>$$</p>
+<h2 id="总结算法步骤"><a href="#总结算法步骤" class="headerlink" title="总结算法步骤"></a>总结算法步骤</h2><p>$$<br>\begin{align*}\label{2}<br>&amp; Back\ Propagation\ algorithm\<br>&amp; Training\ set\ {(x^{(1)},y^{(1)}),\cdots,(x^{(m)},y^{(m)})}\<br>&amp; set\ \Delta^{(l)}<em>{ij}=0\ (for\ all\ l,i,j)\<br>&amp; For\ i=1\ to\ m\<br>&amp; \ \ \ \ Set\ a^{(1)}=x^{(i)}\<br>&amp; \ \ \ \ Perform\ forward\ propagation\ to\ compute\ a^{(l)}\ fot\ l=2,3,\cdots,L\<br>&amp; \ \ \ \ Using\ y^{(i)},\ compute\ \delta^{(L)}=a^{(L)}-y^{i}\<br>&amp; \ \ \ \ Compute\ \delta^{(L-1)},\delta^{(L-2)},\cdots,\delta^{(2)}\<br>&amp; \ \ \ \ \Delta^{(l)}</em>{ij}=\Delta^{(l)}<em>{ij}+a^{(l)}<em>j\delta^{(l+1)}<em>i/\Delta^{(l)}=\Delta^{(l)}+\delta^{(l+1)}(a^{(l)})^T\<br>&amp; D^{(l)}</em>{ij}=\frac{1}{m}\Delta^{(l)}</em>{ij}+\lambda \theta^{(l)}</em>{ij}\ if\ j\neq0\<br>&amp; D^{(l)}<em>{ij}=\frac{1}{m}\Delta^{(l)}</em>{ij}\ \ \ \ \ \ \ \ \ \ \ \ \ if\ j=0<br>\end{align*}<br>$$</p>
+<p>得到<br>$$<br>\frac{\partial}{\partial \theta^{(l)}<em>{ij}}J(\theta)=D^{(l)}</em>{ij }<br>$$</p>
+<h2 id="理解反向传播算法"><a href="#理解反向传播算法" class="headerlink" title="理解反向传播算法"></a>理解反向传播算法</h2><p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-5/forword.png" alt="forword"></p>
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-5/back.png" alt="back"></p>
+<h2 id="梯度检测"><a href="#梯度检测" class="headerlink" title="梯度检测"></a>梯度检测</h2><p>反向传播算法实现时有很多细节，可能会出现不易察觉的bug，导致虽然代价函数的值一直在下降，但下降的速度比没有bug时低了一个数量级。使用梯度检测则可以避免所有这样的bug。</p>
+<p>主要思想是使用偏导近似值来与反向传播计算出的值进行比较。</p>
+<p>偏导近似值为：<br>$$<br>\frac{\partial}{\partial \theta_j}J(\theta)=\frac{J(\theta_0,\cdots,\theta_j+\epsilon,\cdots,\theta_n)-J(\theta_0,\cdots,\theta_j-\epsilon,\cdots,\theta_n)}{2\epsilon}<br>$$</p>
+<p>$\epsilon$取尽可能小的正数，一般取$\epsilon=10^{-4}$</p>
+<h2 id="随机初始化"><a href="#随机初始化" class="headerlink" title="随机初始化"></a>随机初始化</h2><p>在逻辑回归中，$\theta$的初值被取为全0是可以的，但在神经网络中，会导致同一层的单元相等，整个网络都在重复计算同一个特征。</p>
+<p><img src="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-5/zero_initialization.png" alt="zero_initialization"></p>
+<p>为了解决这个问题，在给$\theta$赋初值时采取随机初始化的方式。</p>
+<p>将每一个$\theta^{(l)}_{ij}$初始化为在$[-\epsilon,\epsilon]$之间的随机数，这里的$\epsilon$和梯度检测中的$\epsilon$没有关系。</p>
+<p>具体方法是先生成一个全是$[0,1]$的矩阵，再乘$2\epsilon$，再减去$\epsilon$。</p>
+<h2 id="总体回顾算法"><a href="#总体回顾算法" class="headerlink" title="总体回顾算法"></a>总体回顾算法</h2><ol>
+<li>选择一种网络结构，输入层的单元数与样本特征数相等，输出层的单元数与分类的种数相同。隐藏层的层数和每层的单元数越多越好，但过多会导致运算复杂。<br>提醒：输出层的每个单元输出都是0或1，输出层的输出结果是一个01向量，并且只有一个1，1的位置不同代表了不同的分类。在训练前，要把样本的结果向量改变成相同的格式。</li>
+<li>随机初始化权重矩阵（$\theta$）</li>
+<li>使用前向传播算法计算出所有样本的$h_\theta(x^{(i)})$</li>
+<li>计算代价函数$J(\theta)$</li>
+<li>使用反向传播算法计算出偏导$\frac{\partial}{\partial \theta^{(l)}_{jk}}J(\theta)$<br>刚开始时还是使用for循环的办法对每一个样本计算。</li>
+<li>使用梯度检测算法检测反向传播算法得出的结果是否正确，然后停用梯度检测算法。</li>
+<li>使用优化算法结合反向传播算法训练参数</li>
+</ol>
+<h1 id="课后作业"><a href="#课后作业" class="headerlink" title="课后作业"></a>课后作业</h1><p>任务和上一个作业是一样的，不过这次是要采用反向传播的前馈神经网络自动学习神经网络的参数。</p>
+<h2 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy.io <span class="keyword">import</span> loadmat</span><br><span class="line">data = loadmat(<span class="string">&#x27;d:/datasets/ex4/ex4data1.mat&#x27;</span>)</span><br><span class="line">data</span><br><span class="line">&#123;<span class="string">&#x27;__header__&#x27;</span>: <span class="string">b&#x27;MATLAB 5.0 MAT-file, Platform: GLNXA64, Created on: Sun Oct 16 13:09:09 2011&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;__version__&#x27;</span>: <span class="string">&#x27;1.0&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;__globals__&#x27;</span>: [],</span><br><span class="line"> <span class="string">&#x27;X&#x27;</span>: array([[<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, ..., <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>],</span><br><span class="line">        [<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, ..., <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>],</span><br><span class="line">        [<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, ..., <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>],</span><br><span class="line">        ...,</span><br><span class="line">        [<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, ..., <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>],</span><br><span class="line">        [<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, ..., <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>],</span><br><span class="line">        [<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, ..., <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>]]),</span><br><span class="line"> <span class="string">&#x27;y&#x27;</span>: array([[<span class="number">10</span>],</span><br><span class="line">        [<span class="number">10</span>],</span><br><span class="line">        [<span class="number">10</span>],</span><br><span class="line">        ...,</span><br><span class="line">        [ <span class="number">9</span>],</span><br><span class="line">        [ <span class="number">9</span>],</span><br><span class="line">        [ <span class="number">9</span>]], dtype=uint8)&#125;</span><br><span class="line"></span><br><span class="line">X=data[<span class="string">&#x27;X&#x27;</span>]</span><br><span class="line">X.shape</span><br><span class="line">(<span class="number">5000</span>, <span class="number">400</span>)</span><br><span class="line"></span><br><span class="line">y=data[<span class="string">&#x27;y&#x27;</span>]</span><br><span class="line">y.shape</span><br><span class="line">(<span class="number">5000</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">np.unique(y)</span><br><span class="line">array([ <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>,  <span class="number">6</span>,  <span class="number">7</span>,  <span class="number">8</span>,  <span class="number">9</span>, <span class="number">10</span>], dtype=uint8)</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h2><p>y的初始格式是1-10，我们需要进行向量化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OneHotEncoder</span><br><span class="line">encoder = OneHotEncoder(sparse=<span class="literal">False</span>)</span><br><span class="line">y_onehot = encoder.fit_transform(y)</span><br><span class="line">y_onehot.shape</span><br><span class="line">(<span class="number">5000</span>, <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="定义函数"><a href="#定义函数" class="headerlink" title="定义函数"></a>定义函数</h2><h3 id="sigmoid函数"><a href="#sigmoid函数" class="headerlink" title="sigmoid函数"></a>sigmoid函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">z</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>/(<span class="number">1</span>+np.exp(-z))</span><br></pre></td></tr></table></figure>
+
+<h3 id="前向传播计算输出和隐藏层单元的激活项"><a href="#前向传播计算输出和隐藏层单元的激活项" class="headerlink" title="前向传播计算输出和隐藏层单元的激活项"></a>前向传播计算输出和隐藏层单元的激活项</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">h_val</span>(<span class="params">theta1,theta2,X</span>):</span></span><br><span class="line">    a1 = X</span><br><span class="line">    <span class="comment">#最前面一列插入全1</span></span><br><span class="line">    a1 = np.insert(a1,<span class="number">0</span>,values=np.ones(a1.shape[<span class="number">0</span>]),axis=<span class="number">1</span>)</span><br><span class="line">    z2 = a1*theta1.T</span><br><span class="line">    a2 = sigmoid(z2)</span><br><span class="line">    <span class="comment">#最前面一列插入全1</span></span><br><span class="line">    a2 = np.insert(a2,<span class="number">0</span>,values=np.ones(a2.shape[<span class="number">0</span>]),axis=<span class="number">1</span>)</span><br><span class="line">    z3 = a2*theta2.T</span><br><span class="line">    a3 = sigmoid(z3)</span><br><span class="line">    <span class="keyword">return</span> a1,a2,a3</span><br></pre></td></tr></table></figure>
+
+<h3 id="代价函数-1"><a href="#代价函数-1" class="headerlink" title="代价函数"></a>代价函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">theta,X,y,lambdaParam</span>):</span></span><br><span class="line">    <span class="comment">#将长向量theta分裂成theta1和theta2</span></span><br><span class="line">    theta1 = theta[:(<span class="number">25</span>*<span class="number">401</span>)]</span><br><span class="line">    theta2 = theta[(<span class="number">25</span>*<span class="number">401</span>):]</span><br><span class="line">    theta1 = np.matrix(np.reshape(theta1,(<span class="number">25</span>,<span class="number">401</span>)))</span><br><span class="line">    theta2 = np.matrix(np.reshape(theta2,(<span class="number">10</span>,<span class="number">26</span>)))</span><br><span class="line">    </span><br><span class="line">    X,y = np.matrix(X),np.matrix(y)</span><br><span class="line">    <span class="comment">#计算当前网络的输出和隐藏层单元的激活项</span></span><br><span class="line">    a1,a2,a3 = h_val(theta1,theta2,X)</span><br><span class="line">    </span><br><span class="line">    inner = np.multiply(y,np.log(a3))+np.multiply(<span class="number">1</span>-y,np.log(<span class="number">1</span>-a3))</span><br><span class="line">    <span class="comment">#正则项</span></span><br><span class="line">    reg = np.<span class="built_in">sum</span>(np.power(theta,<span class="number">2</span>))-np.<span class="built_in">sum</span>(np.power(theta1[:,<span class="number">0</span>],<span class="number">2</span>))-np.<span class="built_in">sum</span>(np.power(theta2[:,<span class="number">0</span>],<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> np.<span class="built_in">sum</span>(inner)/(-<span class="built_in">len</span>(X))+reg*(lambdaParam/(<span class="number">2</span>*<span class="built_in">len</span>(X)))</span><br></pre></td></tr></table></figure>
+
+<h3 id="反向传播算法计算下降梯度"><a href="#反向传播算法计算下降梯度" class="headerlink" title="反向传播算法计算下降梯度"></a>反向传播算法计算下降梯度</h3><p>这里要格外注意要把数组转换成矩阵，并且要把矩阵的维度对应好</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient</span>(<span class="params">theta,X,y,lambdaParam</span>):</span></span><br><span class="line">    <span class="comment">#将长向量theta分裂成theta1和theta2，并转换成矩阵</span></span><br><span class="line">    theta1 = theta[:(<span class="number">25</span>*<span class="number">401</span>)]</span><br><span class="line">    theta2 = theta[(<span class="number">25</span>*<span class="number">401</span>):]</span><br><span class="line">    theta1 = np.matrix(np.reshape(theta1,(<span class="number">25</span>,<span class="number">401</span>)))<span class="comment"># 25*401</span></span><br><span class="line">    theta2 = np.matrix(np.reshape(theta2,(<span class="number">10</span>,<span class="number">26</span>)))<span class="comment"># 10*26</span></span><br><span class="line">    </span><br><span class="line">    X,y = np.matrix(X),np.matrix(y)<span class="comment"># 5000*400，5000*10</span></span><br><span class="line">    <span class="comment">#计算当前网络的输出和隐藏层单元的激活项</span></span><br><span class="line">    a1,a2,a3 = h_val(theta1,theta2,X)<span class="comment"># 5000*401，5000*26，5000*10</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#计算delta</span></span><br><span class="line">    delta3 = a3-y<span class="comment"># 5000*10</span></span><br><span class="line">    delta2 = np.multiply(delta3*theta2,np.multiply(a2,<span class="number">1</span>-a2))<span class="comment"># 5000*26</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#计算偏导</span></span><br><span class="line">    partial2 = delta3.T*a2<span class="comment"># 10*26</span></span><br><span class="line">    <span class="comment">#这里要去掉偏置单元对应的偏导（0列）</span></span><br><span class="line">    partial1 = (delta2[:,<span class="number">1</span>:]).T*a1<span class="comment"># 25*401</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#计算正则项</span></span><br><span class="line">    <span class="comment">#将theta1和theta2的0列替换成0</span></span><br><span class="line">    theta1[:,<span class="number">0</span>] = np.matrix(np.zeros(theta1.shape[<span class="number">0</span>])).T</span><br><span class="line">    theta2[:,<span class="number">0</span>] = np.matrix(np.zeros(theta2.shape[<span class="number">0</span>])).T</span><br><span class="line">    <span class="comment">#加上正则项，计算梯度，并转换成数组</span></span><br><span class="line">    m = X.shape[<span class="number">0</span>]</span><br><span class="line">    partial1 = np.array(partial1/m+(lambdaParam/m)*theta1)</span><br><span class="line">    partial2 = np.array(partial2/m+(lambdaParam/m)*theta2)</span><br><span class="line">    <span class="comment">#将梯度展开成长向量</span></span><br><span class="line">    <span class="keyword">return</span> np.concatenate((partial1.ravel(),partial2.ravel()))</span><br></pre></td></tr></table></figure>
+
+<h2 id="梯度检测-1"><a href="#梯度检测-1" class="headerlink" title="梯度检测"></a>梯度检测</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient_checking</span>(<span class="params">theta,X,y,epsilon</span>):</span></span><br><span class="line">    length = theta.shape[<span class="number">0</span>]</span><br><span class="line">    approxGrad = np.zeros(length)</span><br><span class="line">    <span class="comment">#反向传播算法计算出的梯度</span></span><br><span class="line">    grad = gradient(theta,X,y,<span class="number">0</span>)</span><br><span class="line">    <span class="comment">#数学方式得到近似的梯度</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(length):</span><br><span class="line">        <span class="comment">#复制theta，否则会共用内存</span></span><br><span class="line">        thetaPlus = theta.copy()</span><br><span class="line">        thetaPlus[i] += epsilon</span><br><span class="line">        thetaMinus = theta.copy()</span><br><span class="line">        thetaMinus[i] -= epsilon</span><br><span class="line">        </span><br><span class="line">        approxGrad[i] = (cost(thetaPlus,X,y,<span class="number">0</span>)-cost(thetaMinus,X,y,<span class="number">0</span>))/(<span class="number">2</span>*epsilon)</span><br><span class="line">    <span class="comment">#进行比较</span></span><br><span class="line">    result = [<span class="number">0</span> <span class="keyword">if</span> np.<span class="built_in">abs</span>(a-b) &lt; <span class="number">10</span>**(-<span class="number">4</span>) <span class="keyword">else</span> <span class="number">1</span> <span class="keyword">for</span> (a,b) <span class="keyword">in</span> <span class="built_in">zip</span>(grad,approxGrad)]</span><br><span class="line">    <span class="comment">#返回不相等的比例</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(result)/<span class="built_in">len</span>(result)</span><br></pre></td></tr></table></figure>
+
+<p>这个算法执行的时间特别长。</p>
+<p>用给定的theta1和theta2进行梯度检测</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">weights = loadmat(<span class="string">&#x27;d:/datasets/ex4/ex4weights.mat&#x27;</span>)</span><br><span class="line">theta1=weights[<span class="string">&#x27;Theta1&#x27;</span>]</span><br><span class="line">theta1.shape</span><br><span class="line">(<span class="number">25</span>, <span class="number">401</span>)</span><br><span class="line"></span><br><span class="line">theta2.shape</span><br><span class="line">(<span class="number">10</span>, <span class="number">26</span>)</span><br><span class="line"></span><br><span class="line">theta = np.concatenate((theta1.ravel(),theta2.ravel()))</span><br><span class="line">theta.shape</span><br><span class="line">(<span class="number">10285</span>,)</span><br><span class="line"></span><br><span class="line"><span class="comment">#取epsilon为0.0001</span></span><br><span class="line">gradient_checking(theta,X,y_onehot,<span class="number">10</span>**(-<span class="number">4</span>))</span><br><span class="line"><span class="number">0.0</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="随机初始化-1"><a href="#随机初始化-1" class="headerlink" title="随机初始化"></a>随机初始化</h2><p>在训练参数前不能将参数简单的设为0，要取在0附近的随机数。</p>
+<p>这里参数的初始值为在$[-0.12,0.12]$之间的随机数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">params = (np.random.random(size=(<span class="number">25</span>*<span class="number">401</span>+<span class="number">10</span>*<span class="number">26</span>)))</span><br><span class="line">params = params*<span class="number">2</span>*<span class="number">0.12</span>-<span class="number">0.12</span></span><br><span class="line">params.shape</span><br><span class="line">(<span class="number">10285</span>,)</span><br></pre></td></tr></table></figure>
+
+<h2 id="训练参数"><a href="#训练参数" class="headerlink" title="训练参数"></a>训练参数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">result = fmin_tnc(func=cost,fprime=gradient,x0=params,args=(X,y_onehot,<span class="number">1</span>))</span><br><span class="line"><span class="comment">#将长向量分裂成t1，t2</span></span><br><span class="line">t1=result[<span class="number">0</span>][:(<span class="number">25</span>*<span class="number">401</span>)]</span><br><span class="line">t2=result[<span class="number">0</span>][(<span class="number">25</span>*<span class="number">401</span>):]</span><br><span class="line">t1 = np.matrix(np.reshape(t1,(<span class="number">25</span>,<span class="number">401</span>)))</span><br><span class="line">t2 = np.matrix(np.reshape(t2,(<span class="number">10</span>,<span class="number">26</span>)))</span><br></pre></td></tr></table></figure>
+
+<h2 id="评测模型"><a href="#评测模型" class="headerlink" title="评测模型"></a>评测模型</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#前项传播计算输出</span></span><br><span class="line">a1,a2,a3 = h_val(t1,t2,np.matrix(X))</span><br><span class="line"><span class="comment">#选其中输入值最大的作为预测</span></span><br><span class="line">y_pred = np.array(np.argmax(a3,axis=<span class="number">1</span>)+<span class="number">1</span>)</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report</span><br><span class="line"><span class="built_in">print</span>(classification_report(y,y_pred))</span><br><span class="line">              precision    recall  f1-score   support</span><br><span class="line"></span><br><span class="line">           <span class="number">1</span>       <span class="number">0.99</span>      <span class="number">1.00</span>      <span class="number">1.00</span>       <span class="number">500</span></span><br><span class="line">           <span class="number">2</span>       <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">1.00</span>       <span class="number">500</span></span><br><span class="line">           <span class="number">3</span>       <span class="number">1.00</span>      <span class="number">0.99</span>      <span class="number">1.00</span>       <span class="number">500</span></span><br><span class="line">           <span class="number">4</span>       <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">1.00</span>       <span class="number">500</span></span><br><span class="line">           <span class="number">5</span>       <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">1.00</span>       <span class="number">500</span></span><br><span class="line">           <span class="number">6</span>       <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">1.00</span>       <span class="number">500</span></span><br><span class="line">           <span class="number">7</span>       <span class="number">0.99</span>      <span class="number">1.00</span>      <span class="number">1.00</span>       <span class="number">500</span></span><br><span class="line">           <span class="number">8</span>       <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">1.00</span>       <span class="number">500</span></span><br><span class="line">           <span class="number">9</span>       <span class="number">0.99</span>      <span class="number">0.99</span>      <span class="number">0.99</span>       <span class="number">500</span></span><br><span class="line">          <span class="number">10</span>       <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">1.00</span>       <span class="number">500</span></span><br><span class="line"></span><br><span class="line">    accuracy                           <span class="number">1.00</span>      <span class="number">5000</span></span><br><span class="line">   macro avg       <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">5000</span></span><br><span class="line">weighted avg       <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">1.00</span>      <span class="number">5000</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-5/">http://example.com/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-5/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/machine-learning/"># machine learning</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/">机器学习-6</a>
+            
+            
+            <a class="next" rel="next" href="/2021/07/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-4/">机器学习-4</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

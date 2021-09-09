@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>python日记-1 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">python日记-1</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 17, 2021&nbsp;&nbsp;15:57:57</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>刚刚开始学习python，日记第一篇，记录一下学习心得，方便自查。</p>
+<p>现在主要学习python的语法基础，目标是能够流畅使用python，为以后的学习提供帮助，不深究原理。</p>
+<p>主要的学习方法是在慕课上观看董付国老师的网课，然后再做一些编程题。</p>
+<hr>
+<p>科班出身，就记录一些与用过的C，C++，Java不同的地方吧。</p>
+<h1 id="常用内置对象"><a href="#常用内置对象" class="headerlink" title="常用内置对象"></a>常用内置对象</h1><ul>
+<li><p>复数类型：complex</p>
+<p>例如 3+4j          很好奇为什么是j，常用的不是i吗。。</p>
+</li>
+<li><p>字符串：str</p>
+<p>可以用单引号，双引号，三引号作为定界符，以r或R引导的为原始字符串</p>
+<p>‘asd’，“sdtgsdg”，‘’‘dfhdfh’‘’都是字符串</p>
+<p>r‘shdfh’，R‘sdgfd’原始字符串，原始字符串是给人看的，目的是为了避免字符串中转义字符带来的问题，计算机中都是字符串。</p>
+</li>
+<li><p>字节串：bytes</p>
+<p>以字母b引导的字符串</p>
+<p>例如  b‘dfhdfh’</p>
+<p>简单查了一下，字节串是给机器看的，字符串是给人看的，暂时还不知道用处。</p>
+</li>
+<li><p>列表：list</p>
+<p>以方括号隔开的一组元素，元素之间以逗号分隔</p>
+<p>[1,2,3]   [‘a’,’b’,[‘c’,2]] </p>
+<p>奇特的是里面的元素可以是任意类型，而且可嵌套</p>
+</li>
+<li><p>字典：dict</p>
+<p>形式：{1:’food’,2:’taste’,3:’import’}</p>
+<p>这不就是C中的map吗，键值对，键：值，键不能重复</p>
+</li>
+<li><p>元组：tuple</p>
+<p>形式：(2,-5,6)  (3,)</p>
+<p>就是不能改变的列表，只有一个元素时最后要加，</p>
+</li>
+<li><p>集合：set</p>
+<p>形式：{‘a’,’b’,’c’}</p>
+<p>与C中的集合差不多，不能重复</p>
+</li>
+</ul>
+<p>python还有一些特点</p>
+<p>动态编程（不需要声明变量名和类型）、支持任意大的数字、math.isclose(a,b)判断两个实数是否相等，支持复数类型的运算，python 3.x全面支持中文</p>
+<p><img src="/2021/06/17/python%E6%97%A5%E8%AE%B0-1/1.png" alt="1"></p>
+<h1 id="算数运算符"><a href="#算数运算符" class="headerlink" title="算数运算符"></a>算数运算符</h1><ul>
+<li><p>+</p>
+<p>除了用于算数加法外，还可以用于列表、元组、字符串的连接。</p>
+</li>
+<li><p>*</p>
+<p>除了用于算数乘法外，还可以用于列表、元组、字符串的重复，生成新的对象</p>
+</li>
+<li><p>/</p>
+<p>数学意义上的除法</p>
+</li>
+<li><p>//</p>
+<p>整除，向下取整。</p>
+</li>
+<li><p>**<br>幂乘<br>3 ** 2 等价于 pow(3,2)，我觉得这个挺方便</p>
+</li>
+<li><p>关系运算符可以连用<br>1&lt;3&lt;5 等价于1 &lt; 3 and 3 &lt;５<br>逻辑短路</p>
+</li>
+<li><p>集合比较<br>＜判断是不是子集　＜＝　判断是不是真子集，以此类推</p>
+</li>
+<li><p>成员测试运算符ｉｎ<br>３　ｉｎ　［１，２，３］<br>＇ａｂｃ＇　ｉｎ　＇ａｂｃｄｅｆ＇</p>
+</li>
+<li><p>集合运算<br>｜　并集<br>＆　交集<br>＾　对称差集　｛１,２,３｝＾｛３，４，５｝={1,2,4,5}<br>－　差集</p>
+</li>
+</ul>
+<p>还有很多内置函数，这些还是等之后在应用中熟悉吧。</p>
+<hr>
+<h1 id="Python序列结构"><a href="#Python序列结构" class="headerlink" title="Python序列结构"></a>Python序列结构</h1><p>看图</p>
+<p><img src="/2021/06/17/python%E6%97%A5%E8%AE%B0-1/2.png" alt="2"></p>
+<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>列表(list)是包含若干元素的有序连续内存空间。因此，在尾部操作较快。类似线性表</p>
+<p>python中的列表与C中的数组或者数据结构中的线性表最大的不同是存储的元素类型可以不同，那么是不是说底层存储结构每个元素所占的空间是不同的呢？但是列表又可以按照下标进行访问，像C中的数组一样，如果每个元素所占空间不同的话，那这个访问方式会比较慢，所以python可能使用了索引的结构，而每个地址的长度是相同的，这样就可以实现随机访问。</p>
+<p>python中有一个内置函数list()用来创建列表，相当于构造函数吧，可以将元组、range对象、字符串、字典、集合等可迭代对象转换为列表。没有参数时会创建空列表，x=[]也可以创建空列表。</p>
+<p>del命令可删除列表。例如<code>del x</code>。</p>
+<p>列表可以双向检索，即可通过下标访问，下标为负时逆序按下标访问。如图</p>
+<p><img src="/2021/06/17/python%E6%97%A5%E8%AE%B0-1/3.png" alt="3"></p>
+<p><strong>列表常用方法</strong></p>
+<p><img src="/2021/06/17/python%E6%97%A5%E8%AE%B0-1/4.png" alt="4"></p>
+<p>此外，还有insert(),extend()方法。</p>
+<p>insert(a,b),在列表a位置插入b</p>
+<p>extend(列表)，将列表追加至当前列表尾部。</p>
+<p>+可用于列表的连接，*可用于列表的重复，均生成新列表。</p>
+<p><strong>内置函数对列表的操作</strong></p>
+<p><img src="/2021/06/17/python%E6%97%A5%E8%AE%B0-1/5.png" alt="5"></p>
+<p>zip()函数参数为多个列表，取每个列表相同位置元素组成元组，生成zip对象，长列表多余部分截去。像拉链一样。</p>
+<p>map()函数有两个参数，第一个参数是函数名，第二个参数是一个可迭代对象，作用是将可迭代对象中的所有元素都执行函数，结果生成map对象</p>
+<p><strong>列表推导式</strong></p>
+<p>在逻辑上等价于一个循环语句，不过形式更加简介，用于生成列表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList = [x*x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]</span><br></pre></td></tr></table></figure>
+
+<p>等价于</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList = [] <span class="comment">#创建空列表</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">       aList.append(x*x)  <span class="comment">#列表末尾增加元素</span></span><br></pre></td></tr></table></figure>
+
+<p>可用于</p>
+<ol>
+<li><p>实现嵌套列表的平铺</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>vec = [[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>],[<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>]]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>[num <span class="keyword">for</span> elem <span class="keyword">in</span> vec <span class="keyword">for</span> num <span class="keyword">in</span> elem]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+
+<p>相当于一个二重循环</p>
+<p>这样看来列表推导式的执行顺序是从左到右，或者python的执行顺序都是从左到右？</p>
+</li>
+<li><p>过滤不符合条件的元素</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList = [-<span class="number">1</span>,-<span class="number">4</span>,<span class="number">6</span>,<span class="number">7.5</span>,-<span class="number">2.3</span>,<span class="number">9</span>,-<span class="number">11</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>[i <span class="keyword">for</span> i <span class="keyword">in</span> aList <span class="keyword">if</span> i&gt;<span class="number">0</span>]</span><br><span class="line">[<span class="number">6</span>, <span class="number">7.5</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+
+<p>列表推导式后面还能加if判定条件的</p>
+</li>
+</ol>
+<p><strong>切片</strong></p>
+<p>在形式上，切片使用2个冒号分隔的3个数字来完成</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">someList[start:end:step]</span><br></pre></td></tr></table></figure>
+
+<p>start表示切片的开始位置，默认为0</p>
+<p>end表示切片截止的位置(不包含)，默认为列表长度</p>
+<p>step表示切片的步长，默认为1</p>
+<p>上述三个参数取默认值时可以省略，当step省略时还可以省略最后一个冒号，第一个冒号不能省略</p>
+<p>step还可以为负整数，表示反向切片，但此时start应比end小</p>
+<p>可用于</p>
+<ol>
+<li><p>获取列表部分元素</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList = [<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList[:]</span><br><span class="line">[<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aLsit[::-<span class="number">1</span>]</span><br><span class="line">[<span class="number">8</span>,<span class="number">7</span>,<span class="number">6</span>,<span class="number">5</span>,<span class="number">4</span>,<span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+
+<p>与使用索引作为下标访问元素时，切片操作不会因为下标越界抛出异常，只会在列表尾部截断或返回空列表，代码的健壮性更强</p>
+</li>
+<li><p>为列表增加元素</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList = [<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList[<span class="built_in">len</span>(aList):] = [<span class="number">9</span>] <span class="comment">#在列表尾部增加元素</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aLsit[:<span class="number">0</span>] = [<span class="number">1</span>,<span class="number">2</span>]  <span class="comment">#在列表头部增加元素</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList[<span class="number">3</span>:<span class="number">3</span>] = [<span class="number">4</span>]  <span class="comment">#在列表中间位置插入元素</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList</span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+
+<p>厉害了，这个操作实在是方便</p>
+</li>
+<li><p>替换和修改列表中的元素<br>切片还可以用来修改列表中的元素</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>aLsit = [<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">9</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList[:<span class="number">3</span>] = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList</span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">9</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList[<span class="number">3</span>:] = [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]  <span class="comment">#切片连续，两边列表长度可以不相等</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList</span><br><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList[::<span class="number">2</span>] = [<span class="number">0</span>]*<span class="number">3</span>   <span class="comment">#步长为2,切片不连续，两边列表长度必须相等</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList</span><br><span class="line">[<span class="number">0</span>,<span class="number">2</span>,<span class="number">0</span>,<span class="number">4</span>,<span class="number">0</span>,<span class="number">6</span>]</span><br></pre></td></tr></table></figure></li>
+<li><p>删除列表中的元素</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList = [<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">9</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList[:<span class="number">3</span>] = []</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aList</span><br><span class="line">[<span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+
+<p>切片可以删除列表部分元素</p>
+</li>
+</ol>
+<h2 id="元组：轻量级列表"><a href="#元组：轻量级列表" class="headerlink" title="元组：轻量级列表"></a>元组：轻量级列表</h2><p>元组与列表非常相似，支持双向索引，大部分函数也都适用，但区别在于元组不可变，不能增加、删除、修改元组中的元素，切片操作也只能用于访问元素。</p>
+<p>函数tuple()可以将其他可迭代对象转换为元组。</p>
+<p><strong>生成器推导式</strong></p>
+<p>与列表推导式非常相似，在形式上生成器推导式适用圆括号()作为定界符。</p>
+<p>生成器推导式创建一个生成器对象，具有惰性求值的特点，即只在需要时才生成新元素，空间占用少，适合大数据处理。</p>
+<p>使用生成器对象时可以转换为列表或元组，或者可以使用生成器对象<code>__next__()</code>(注意，两个下划线)或者内置函数<code>next()</code>进行遍历，或者for循环进行遍历。但遍历时，每个元素只能访问一次，不支持下标访问元素。</p>
+<p><img src="/2021/06/17/python%E6%97%A5%E8%AE%B0-1/6.png" alt="6"></p>
+<p><img src="/2021/06/17/python%E6%97%A5%E8%AE%B0-1/7.png" alt="7"></p>
+<h2 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h2><p>相当于C中的map，键要求不能重复并且是可哈希的数据类型，整形、实数、复数、字符串、元组等</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>aDic = &#123;<span class="string">&#x27;1&#x27;</span>:<span class="number">1</span>,<span class="string">&#x27;2&#x27;</span>:<span class="number">2</span>,<span class="string">&#x27;3&#x27;</span>:<span class="number">3</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x = <span class="built_in">dict</span>()  <span class="comment">#空字典</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x = &#123;&#125;    <span class="comment">#空字典</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>keys = [<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>,<span class="string">&#x27;d&#x27;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>values = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>aDic = <span class="built_in">dict</span>(<span class="built_in">zip</span>(keys,values))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>d = <span class="built_in">dict</span>(name=<span class="string">&#x27;Dong&#x27;</span>,age=<span class="number">39</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>字典元素的访问</strong></p>
+<p><code>someDict[key]</code></p>
+<p>若键不存在，抛出异常</p>
+<p><code>get()</code>函数返回指定键对应的值，允许键不存在时返回特定的值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>d.get(<span class="string">&#x27;age&#x27;</span>)</span><br><span class="line"><span class="number">39</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>d.get(<span class="string">&#x27;address&#x27;</span>,<span class="string">&#x27;Not Exists&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;Not Exists.&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>此外</p>
+<p><code>items()</code>函数返回字典的键值对，<code>keys()</code>函数返回字典的键，<code>values()</code>函数返回字典的值。</p>
+<p><strong>注意：</strong>每一对键值对都可以用下标来访问，下标0访问键，下标1访问值。</p>
+<p><strong>元素添加、修改</strong></p>
+<p><code>someDict[key]=value</code></p>
+<p>若键存在，则修改该键对应的值。若键不存在，则创建该键值对。</p>
+<p><strong>元素删除</strong></p>
+<p><code>del someDict[key]</code></p>
+<p>若键不存在则抛出异常</p>
+<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><p>与字典一样，使用大括号为定界符，创建空集合时不能使用空的大括号，那样会创建字典</p>
+<p>元素只能是数字、字符串、元组等不可变类型(可哈希类型)</p>
+<p>可以将集合赋值给变量创建集合对象</p>
+<p>或者使用set()函数，将其他可迭代对象转换为集合。</p>
+<p><strong>增加集合元素</strong></p>
+<p>使用add()方法增加新元素，若已经存在则忽略该操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>s = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s.add(<span class="number">3</span>)    <span class="comment">#重复元素</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>s</span><br><span class="line">&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除集合元素</strong></p>
+<ul>
+<li>pop()<br>随机删除并返回集合中的一个元素，若集合为空则抛出异常</li>
+<li>remove()<br>删除集合中的指定元素，如果指定元素不存在则抛出异常</li>
+<li>discard()<br>删除集合中的指定元素，如果指定元素不存在则忽略该操作 </li>
+</ul>
+<p><strong>集合运算</strong></p>
+<ul>
+<li><code>|</code>  并集</li>
+<li><code>&amp;</code>  交集</li>
+<li><code>-</code>  差集</li>
+<li><code>^</code>  对称差集</li>
+<li><code>&lt;</code> 比较大小/包含关系</li>
+<li>依次类推</li>
+</ul>
+<h2 id="序列解包"><a href="#序列解包" class="headerlink" title="序列解包"></a>序列解包</h2><p>可以对多个变量同时进行赋值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>x,y,z = <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x,y = y,x  <span class="comment">#交换变量的值</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x,y,z = <span class="built_in">range</span>(<span class="number">3</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x,y,z = <span class="built_in">map</span>(<span class="built_in">str</span>,<span class="built_in">range</span>(<span class="number">3</span>))</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>初步感受到了Python的独特性。。。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/06/17/python%E6%97%A5%E8%AE%B0-1/">http://example.com/2021/06/17/python%E6%97%A5%E8%AE%B0-1/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/06/24/python%E6%97%A5%E8%AE%B0-2/">python日记-2</a>
+            
+            
+            <a class="next" rel="next" href="/2021/05/19/%E8%80%83%E7%A0%94%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/">考研经验分享</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

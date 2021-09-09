@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>机器学习-7 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">机器学习-7</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">July 16, 2021&nbsp;&nbsp;8:44:42</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="机器学习系统设计"><a href="#机器学习系统设计" class="headerlink" title="机器学习系统设计"></a>机器学习系统设计</h1><p>在设计实现大型复杂的机器学习系统时遇到的一系列问题的解决方法。</p>
+<h2 id="确定执行的优先级"><a href="#确定执行的优先级" class="headerlink" title="确定执行的优先级"></a>确定执行的优先级</h2><p>以垃圾邮件分类为例。</p>
+<p>选择样本特征为邮件里出现的单词，进行字典排序后，设置特征为1时单词出现，为0单词没有出现。在实际中，通常是选择在训练集上出现最频繁的n（10000~50000）个单词。</p>
+<p>降低误差的几个方法会花费较多时间：</p>
+<ul>
+<li>收集大量的数据</li>
+<li>从邮件头部中的信息中提取出特征</li>
+<li>从邮件主体中提取单词作为特征，单词复数、大小写等是否为不同的单词</li>
+<li>将错误拼写的单词作为特征</li>
+</ul>
+<p>通常随机选择使用这些方法。</p>
+<h2 id="误差分析"><a href="#误差分析" class="headerlink" title="误差分析"></a>误差分析</h2><p>开发一个机器学习系统推荐的步骤：</p>
+<ol>
+<li>先快速实现一个简单粗暴的算法，然后在交叉验证集上进行测试。</li>
+<li>画出学习曲线，判断是否需要更多的数据、更多的特征等等。</li>
+<li>进行误差分析，观察在叉验证集上被错误分类的样本，找出他们公有的特征或规律，启发你找到解决办法。例如将标点符号作为特征。</li>
+</ol>
+<h2 id="数值估计"><a href="#数值估计" class="headerlink" title="数值估计"></a>数值估计</h2><p>当我们改进自己的学习算法时，需要一个尺度来衡量算法改进的怎么样。一个常用的方法是看算法在交叉验证集上的错误率。</p>
+<p>在对一个算法进行改进后，观察在验证集上的错误率有没有降低，如果降低了那就认为算法的效果更好了。</p>
+<h2 id="不对称性分类的误差评估"><a href="#不对称性分类的误差评估" class="headerlink" title="不对称性分类的误差评估"></a>不对称性分类的误差评估</h2><p>在样本中，分类的分布不对称，会导致上述误差分析失效。</p>
+<p>例如，预测肿瘤的算法在训练集上的错误率是1%，虽然看上去还不错，得肿瘤的概率很小，或者训练集中得肿瘤的样本只有0.5%，如果预测全都是y=0，那错误率只有0.5%，表现比之前甚至更好。</p>
+<h3 id="精确度和召回率"><a href="#精确度和召回率" class="headerlink" title="精确度和召回率"></a>精确度和召回率</h3><p>将预测结果与实际结果进行统一考虑。</p>
+<p><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/Precision_Recall.png" alt="Precision_Recall"></p>
+<p>精确度=预测为1正确的数量/预测为1的总数量</p>
+<p>召回率=预测为1正确的数量/实际为1的总数量</p>
+<p>这两个占比越高越好。</p>
+<p>然而，事实中，这两个衡量度不会都非常高，我们需要在这两个数值之间进行权衡。</p>
+<p>如果要保证正确率很高的情况下才会告知患者可能是肿瘤，可以设置$h_\theta(x)\ge0.7$时$y=1$，这样会得到高的精确度和低召回率。</p>
+<p>如果为了以防万一，我们需要在概率略微大一点就告诉患者可能是肿瘤，就可以设置$h_\theta(x)\ge0.3$时$y=1$，这样会得到低精确度和高召回率。</p>
+<p>在精确度和召回率这两个指标中进行估计不太方便，要将这两个指标变成一个指标进行更直观的权衡。通常取平均值不是一个好的办法，因为可能会导致一个很高，一个很低。较好的办法是计算F值。<br>$$<br>F=2\frac{PR}{P+R}<br>$$<br>P是精确度，R是召回率 </p>
+<h2 id="机器学习数据"><a href="#机器学习数据" class="headerlink" title="机器学习数据"></a>机器学习数据</h2><p>虽然之前有说有的时候寻找更多的数据不会有很大的提升，但是如果模型构建的足够好，数据的多少决定着算法的成败。</p>
+<p>如果使用的机器学习算法使用足够多的参数（线性、逻辑回归有足够多的特征，神经网络有足够多的隐藏层单元），那么$J_{train}(\theta)$就会非常小。</p>
+<p>如果训练的数据足够多，就不太可能会过拟合，即<br>$$<br>J_{train}(\theta)\approx J_{test}(\theta)<br>$$</p>
+<p>这就意味$J_{test}(\theta)$非常小。因此就不会有高偏差和高方差的问题。</p>
+<h1 id="支持向量机SVM"><a href="#支持向量机SVM" class="headerlink" title="支持向量机SVM"></a>支持向量机SVM</h1><h2 id="优化目标"><a href="#优化目标" class="headerlink" title="优化目标"></a>优化目标</h2><p>回顾逻辑回归</p>
+<p>逻辑回归的假设函数为<br>$$<br>h_\theta(x)=\frac{1}{1+e^{-\theta^Tx}}<br>$$<br>当$y=1$时，我们希望$h_\theta(x)\approx1$，即$\theta^Tx\gg0$</p>
+<p>当$y=0$时，我们希望$h_\theta(x)\approx0$，即$\theta^Tx\ll0$</p>
+<p>考虑单个样本的代价：</p>
+<p><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/cost.png" alt="cost"></p>
+<p>当$y=1$时在$z\ge1$右侧的区间用水平直线代替，左侧用一条与原代价函数距离很近的直线代替，得到一条新的分段代价函数$cost_1(z)$。同样，当$y=0$时以$z=-1$为界限得到分段代价函数$cost_0(z)$。</p>
+<p>这样得到的代价函数在计算上更有优势。</p>
+<p>原本在逻辑回归中要做的操作是<br>$$<br>min_\theta=\frac{1}{m}[\sum_{i=1}^m(y^{(i)}(-logh_\theta(x^{(i)}))+(1-y^{(i)})(-log(1-h_\theta(x^{(i)})))]+\frac{\lambda}{2m}\sum_{j=1}^{m}\theta_j^2<br>$$<br>在SVM中变为<br>$$<br>min_\theta=C\sum_{i=1}^m(y^{(i)}cost_1(\theta^Tx^{(i)})+(1-y^{(i)})cost_0(\theta^Tx^{(i)}))+\frac{1}{2}\sum_{j=1}^{m}\theta_j^2\tag1<br>$$<br>这里的$C$和$\lambda$起的作用相似，都是为了调整第一项和第二项相对权重。</p>
+<p>可以将$C$认为与$\frac{1}{\lambda}$一样，$\lambda$越大正则化项权重就越大，$C$越大第一项权重就越大，正则化项权重就越小。</p>
+<p>$(1)$式就是SVM的优化目标。</p>
+<p>与逻辑回归不同的地方还在于，SVM在得到最优的参数$\theta$后不会输出概率，而是直接输出1或0。</p>
+<h2 id="大间距分类器"><a href="#大间距分类器" class="headerlink" title="大间距分类器"></a>大间距分类器</h2><p>SVM也叫做大间距分类器。</p>
+<p>上面介绍了SVM的优化目标，由$cost_1(\theta^Tx)$和$cost_0(\theta^Tx)$可得，在$y^{(i)}=1$时，$\theta^Tx^{(i)}\ge1$，在$y^{(i)}=0$时，$\theta^Tx^{(i)}\le-1$。而不是简单的用0来作为分界线。</p>
+<p><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/large_margin_classifier.png" alt="large_margin_classifier"></p>
+<p>这样的结果就会使得SVM更具有鲁棒性，在拟合曲线时尽可能地把正样本和负样本以最大间距分开。</p>
+<p>这里要补充一下向量内积的知识。</p>
+<p><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/vector_inner_product.png" alt="vector_inner_product"></p>
+<p>向量的内积除了可以用向量相应位置的乘积之和来计算外，在几何上也可以计算v向量在u向量上的投影长度$p$（可负）乘向量u的范式（长度、模）得到。</p>
+<p>为了形象地解释SVM又被成为大间距分类器的原因，先把问题进行简化。</p>
+<p>设置$C$非常大，那么在$(1)$式中，最小化过程中$\sum_{i=1}^m(y^{(i)}cost_1(\theta^Tx^{(i)})+(1-y^{(i)})cost_0(\theta^Tx^{(i)}))$会趋向于0，进一步将$\theta_0$化简为0，这样优化目标就被化简为<br>$$<br>min_\theta=\frac{1}{2}\sum_{j=1}^{m}\theta_j^2\tag2=\frac{1}{2}||\theta||^2<br>$$<br>设$p^{(i)}$是$x^{(i)}$在$\theta^{(i)}$上的投影长度</p>
+<p>同时分类器又要满足条件：<br>$$<br>p^{(i)}\cdot||\theta||\ge1\ \ \ \ \ if\ y^{(i)}\text{ = 1}\<br>p^{(i)}\cdot||\theta||\le-1\ \ \ if\ y^{(i)}\text{ = 0}\tag{3}<br>$$<br><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/error.png" alt="error"></p>
+<p>在这个例子里，如果拟合的曲线如上绿色直线所示，那么就会有很多样本距离拟合曲线很近，此时$\theta$是拟合曲线的垂直向量，这些样本的$p$值就会很小，为了满足$(3)$式，就要使$||\theta||$很大，但这与全局优化目标$(2)$相悖，所以SVM并不会选择这条曲线。</p>
+<p><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/right.png" alt="right"></p>
+<p>实际上SVM会拟合出上图的绿色直线，这时$p^{(i)}$就没有那么小，就更容易训练出$||\theta||$较小的$\theta$。直观上理解就是拟合的曲线与样本数据有最大的间距，相当于提供了一个安全因子。</p>
+<h2 id="核函数"><a href="#核函数" class="headerlink" title="核函数"></a>核函数</h2><p>在拟合非线性模型时，要对特征进行扩展。</p>
+<p>在SVM中扩展特征有专门的方法，就是核函数。</p>
+<p>假设只有两个特征，扩展过的特征为$f_i$，假设函数为：<br>$$<br>\theta_0+\theta_1x_1+\theta_2x_2+\theta_3x_1x_2+\theta_4x_1^2+\theta_5x_2^2+\cdots<br>$$<br>那么<br>$$<br>f_1=x_1,f_2=x_2,f_3=x_1x_2,f_4=x_1^2,f_5=x_2^2,\cdots<br>$$</p>
+<p>核函数相当于一个相似度函数，得到新的特征是原特征与选择的标记$l^{(i)}$的相似度。</p>
+<p>如果手动选择三个标记$l^{(1)},l^{(2)},l^{(3)}$</p>
+<p><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/kernel1.png" alt="kernel1"></p>
+<p>得到的新特征就是与这三个标记的相似度函数。图中的<code>similarity(x,l)</code>函数代表相似度函数，一般写成<code>k(x,l)</code>表示核函数。这里使用的核函数是高斯核函数。</p>
+<p><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/kernel2.png" alt="kernel2"></p>
+<p>在这个核函数中，如果一个样本和标记的欧式距离很近，那么就几乎等于1，如果很远就几乎等于0。</p>
+<p>高斯核函数的图形</p>
+<p><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/kernel3.png" alt="kernel3"></p>
+<h3 id="找到标记点"><a href="#找到标记点" class="headerlink" title="找到标记点"></a>找到标记点</h3><p>还有一个问题需要解决，就是要怎么找到标记点。</p>
+<p>一种常用的方法是将每一个样本都当做一个标记，这样就会得到m+1个特征，$f_0=1$。每个样本都有一个特征是1，如果用高斯核函数的话。</p>
+<p><img src="/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/kernel4.png" alt="kernel4"></p>
+<p>同时将正则化项向量化为$\theta^T\theta$，如果样本数据数量非常多，也会进行优化变为$\theta^TM\theta$。</p>
+<p>在使用SVM时，要选择参数C。可以将C等价于$\frac{1}{\lambda}$。</p>
+<ul>
+<li>C很大，相当于$\lambda$很小，低偏差，高方差</li>
+<li>C很小，相当于$\lambda$很大，高偏差，低方差</li>
+</ul>
+<p>在使用高斯核函数时，要选择参数$\sigma^2$。</p>
+<ul>
+<li>$\sigma^2$很大，$f^{(i)}$变化就会很平缓，高偏差，低方差</li>
+<li>$\sigma^2$很小，$f^{(i)}$变化就会很急剧，低偏差，高方差</li>
+</ul>
+<h2 id="使用SVM"><a href="#使用SVM" class="headerlink" title="使用SVM"></a>使用SVM</h2><ul>
+<li><p>需要要选择参数C</p>
+</li>
+<li><p>需要选择核函数<br>如果数据量很少，而原数据的特征很多，即n很小，m很大，不使用核函数（使用线性核函数）。<br>$$<br>f_i=x_i<br>$$<br>如果数据量很大，而原数据的特征很少，即n很大，m很小，选择高斯函数。<br>$$<br>f_i=exp(-\frac{||x-l^{(i)}||^2}{2\sigma^2}),l^{(i)}=x^{(i)}<br>$$<br>使用高斯核函数时要选择适当的$\sigma^2$。<br>注意：在使用高斯函数之前对特征进行归一化。<br>有效的核函数需要满足默塞尔定律，确保所有的SVM包都能正常运行，使得内部的优化方法保持高效。<br>其他不常用的核函数：<br>多项式核函数：$k(x,l)=(x^Tl)^2|(x^Tl)^3|(x^Tl+constant)^{degree}$，通常用于x，l都为严格的非负数。<br>字符串核函数：常用语输入数据是字符串。<br>卡方核函数、直方相交核函数</p>
+</li>
+</ul>
+<p>在进行多类别分类时可以向逻辑分类时一样每次将要分类的目标作为正样本，其他样本作为负样本，进行单独训练。其次，在SVM许多包中内置了多类别分类函数。</p>
+<h1 id="训练算法的选择"><a href="#训练算法的选择" class="headerlink" title="训练算法的选择"></a>训练算法的选择</h1><ul>
+<li>n相对于m很大（n=100000，m=10…000）<br>使用逻辑回归或线性核函数的SVM。</li>
+<li>n小，m适中（n=1-1000，m=10-100000）<br>使用高斯核函数的SVM。</li>
+<li>n小，m大（n=1-1000，m=50000+）<br>增加更多的特征，然后使用逻辑回归或线性核函数的SVM 。</li>
+<li>机器学习在大多数情况下都表现的非常好，但缺点是训练得非常慢。</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/">http://example.com/2021/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-7/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/machine-learning/"># machine learning</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-8/">机器学习-8</a>
+            
+            
+            <a class="next" rel="next" href="/2021/07/15/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-6/">机器学习-6</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

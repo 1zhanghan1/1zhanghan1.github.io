@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>docker内搭建卷积神经网络实现MNIST数字分类 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">docker内搭建卷积神经网络实现MNIST数字分类</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 12, 2021&nbsp;&nbsp;9:59:41</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Torch建立卷积神经网络实现mnist数字分类"><a href="#Torch建立卷积神经网络实现mnist数字分类" class="headerlink" title="Torch建立卷积神经网络实现mnist数字分类"></a>Torch建立卷积神经网络实现mnist数字分类</h1><p>本文主要借鉴了<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_40585997/article/details/109314452">PyTorch_CNN网络搭建_MNIST数据集_gXh的博客-CSDN博客</a>以及<a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/index.html">PyTorch documentation </a>学习pytorch一些函数的使用方法。</p>
+<h2 id="导入包"><a href="#导入包" class="headerlink" title="导入包"></a>导入包</h2><p>首先导入需要的相关包</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotpy.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+
+<h2 id="获取数据集"><a href="#获取数据集" class="headerlink" title="获取数据集"></a>获取数据集</h2><p>在torchvision中给我们提供了很多数据集，其中就有MINIST数据集。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载数据</span></span><br><span class="line">data_train = torchvision.datasets.MNIST(root=<span class="string">&#x27;d:/datasets/cnndata&#x27;</span>,train=<span class="literal">True</span>,transform=torchvision.transforms.ToTensor(),download=<span class="literal">True</span>)</span><br><span class="line">data_test = torchvision.datasets.MNIST(root=<span class="string">&#x27;d:/datasets/cnndata&#x27;</span>,train=<span class="literal">False</span>,transform=torchvision.transforms.ToTensor(),download=<span class="literal">True</span>)</span><br><span class="line"><span class="comment">#装载数据</span></span><br><span class="line">train_loader = DataLoader(data_train,batch_size=<span class="number">512</span>,shuffle=<span class="literal">True</span>)</span><br><span class="line">test_loader = DataLoader(data_test,batch_size=<span class="number">512</span>,shuffle=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>下载数据<img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/1.png" alt="1"></p>
+<p>这是官网的使用手册。root是数据存放的位置，train是否为训练集（选择False则下载测试集），download是否下载（如果该位置已经存在数据就不下载），transform数据的转换函数。</p>
+<p>这里存放的位置是一个自定义的位置，训练集和测试集都下载，并且将数据转换为Tensor类型。</p>
+</li>
+<li><p>装载数据<br><img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/2.png" alt="2"><br>装载函数一般只要使用几个常用参数。dataset是装载的数据集，batch_size是每次取数据的个数，shuffle是否打乱。</p>
+</li>
+</ol>
+<p>装载之后就得到了可迭代的数据对象。</p>
+<h2 id="可视化数据"><a href="#可视化数据" class="headerlink" title="可视化数据"></a>可视化数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">example = <span class="built_in">enumerate</span>(train_loader)</span><br><span class="line">idx,(data_example,label_example) = <span class="built_in">next</span>(example)</span><br><span class="line">data_example.shape</span><br><span class="line">torch.Size([<span class="number">512</span>, <span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>])</span><br></pre></td></tr></table></figure>
+
+<p>由此可知数据集中的图片是$28\times 28 \times1$的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">images = data_example[:<span class="number">100</span>]</span><br><span class="line">fig,axs=plt.subplots(<span class="number">10</span>,<span class="number">10</span>,sharex=<span class="literal">True</span>,sharey=<span class="literal">True</span>,figsize=(<span class="number">12</span>,<span class="number">12</span>))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        axs[i,j].imshow(images[i*<span class="number">10</span>+j][<span class="number">0</span>],cmap=<span class="string">&#x27;gray&#x27;</span>,interpolation=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">        plt.xticks([])</span><br><span class="line">        plt.yticks([])</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/8.png" alt="8"></p>
+<h2 id="建立网络模型"><a href="#建立网络模型" class="headerlink" title="建立网络模型"></a>建立网络模型</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CNN</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(CNN, self).__init__()</span><br><span class="line">        </span><br><span class="line">        self.conv1 = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">1</span>, <span class="number">10</span>, <span class="number">3</span>,stride=<span class="number">1</span>,padding=<span class="number">1</span>),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">            nn.MaxPool2d(kernel_size=<span class="number">2</span>,stride=<span class="number">2</span>),</span><br><span class="line">            )</span><br><span class="line">        self.conv2 = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">10</span>, <span class="number">20</span>, <span class="number">5</span>),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">            nn.MaxPool2d(kernel_size=<span class="number">2</span>,stride=<span class="number">2</span>),</span><br><span class="line">            )</span><br><span class="line">        self.FC = nn.Sequential(</span><br><span class="line">            nn.Linear(<span class="number">5</span>*<span class="number">5</span>*<span class="number">20</span>, <span class="number">100</span>),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">            nn.Linear(<span class="number">100</span>,<span class="number">10</span>),</span><br><span class="line">            )</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self,x</span>):</span></span><br><span class="line">        </span><br><span class="line">        x = self.conv1(x)</span><br><span class="line">        x = self.conv2(x)</span><br><span class="line">        <span class="comment">#展开成长张量</span></span><br><span class="line">        x = x.view(-<span class="number">1</span>,<span class="number">5</span>*<span class="number">5</span>*<span class="number">20</span>)</span><br><span class="line">        out = self.FC(x)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+
+<p>建立一个模型类，继承父类nn.Module。在pytorch框架中，所有的网络模型都必须继承nn.Module。需要重写的两个重要的方法是<code>__init__()</code>和<code>forward()</code>。分别用来初始化网络模型和前向传播。</p>
+<p>使用到的几个函数：</p>
+<ol>
+<li><p><code>nn.Sequential()</code><br><img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/3.png" alt="3"><br>这个方法的参数是个数不定的模型，可以将这些模型逻辑上当作一个模型，即按照顺序执行参数中的模型。</p>
+</li>
+<li><p><code>nn.Conv2d()</code><br>这个函数实现了一个2D的卷积层，是卷积网络中最常用的函数。函数原型为：</p>
+<p><img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/4.png" alt="4"><br>参数意义：<img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/5.png" alt="5"><br>一般常用的参数是：in_channels(输入的信道数)，out_channels(输出的信道数)，kernel_size(卷积核大小，元组，为一个实数时元组的元素相同)，stride(卷积操作的步数)，padding(填充数据个数)。</p>
+</li>
+<li><p><code>nn.ReLU()</code><br>经过一个非线性运算。<br>函数原型：</p>
+<p><img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/6.png" alt="6"><br>inplace为True时进行覆盖运算，可以节省一些空间。</p>
+</li>
+<li><p><code>nn.MaxPool2d()</code><br>实现一个2D的最大池化层。<br><img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/7.png" alt="7"><br>常用的参数是卷积核大小kernel_size和步长stride。</p>
+</li>
+</ol>
+<p>这里我构造的模型是：</p>
+<p>输入层的维度是$28\times 28\times1$。</p>
+<p>第一个模块卷积层为10个$3\times 3,s=1,p=1$的卷积核，得到结果的维度是$28\times 28 \times10$，经过非线性激活后，下一层是$2\times 2,s=2$的最大池化层，输出维度是$14\times 14 \times 10$。</p>
+<p>第二个模块卷积层为20个$5\times 5,s=1$的卷积核，得到结果的维度是$10\times 10 \times20$，经过非线性激活后，下一层是$2\times 2,s=2$的最大池化层，输出维度是$5\times 5 \times 20$。</p>
+<p>第三个模块第一个全连接层输入是500个数据的张量，输出是100个数据的张量，经非线性激活后，第二个全连接层输出10个数据的张量。</p>
+<p>总共需要训练的参数个数是$3\times 3\times 1\times10+10+5\times 5\times 10\times20+20+500\times100+100\times10=56120$</p>
+<h2 id="训练参数并记录变化"><a href="#训练参数并记录变化" class="headerlink" title="训练参数并记录变化"></a>训练参数并记录变化</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#定义模型</span></span><br><span class="line">model = CNN()</span><br><span class="line"><span class="comment">#损失函数</span></span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line"><span class="comment">#优化器</span></span><br><span class="line">optimizer = torch.optim.Adam(model.parameters())</span><br><span class="line"></span><br><span class="line"><span class="comment">#每遍历一次，训练集的损失函数值和精确度</span></span><br><span class="line">train_losses = []</span><br><span class="line">train_accu = []</span><br><span class="line"><span class="comment">#每遍历一次，测试集的损失函数值和精确度</span></span><br><span class="line">test_losses = []</span><br><span class="line">test_accu = []</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#训练数据</span></span><br><span class="line"><span class="comment">#遍历五次训练集</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    </span><br><span class="line">    train_loss = <span class="number">0</span></span><br><span class="line">    train_acc = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#设置模型处于训练模式</span></span><br><span class="line">    model.train()</span><br><span class="line">    <span class="comment">#分批遍历训练集</span></span><br><span class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> train_loader:</span><br><span class="line">        <span class="comment">#取出图片数据和相应的标记</span></span><br><span class="line">        img,label = data</span><br><span class="line">        <span class="comment">#输入图片得到结果</span></span><br><span class="line">        out = model(img)</span><br><span class="line">        <span class="comment">#计算损失函数值</span></span><br><span class="line">        loss = criterion(out,label)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#梯度清零</span></span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        <span class="comment">#反向传播计算梯度值</span></span><br><span class="line">        loss.backward()</span><br><span class="line">        <span class="comment">#更新参数</span></span><br><span class="line">        optimizer.step()</span><br><span class="line">        <span class="comment">#积累当前批次数据的损失</span></span><br><span class="line">        train_loss += loss.item()</span><br><span class="line">        <span class="comment">#返回最大值和下标</span></span><br><span class="line">        _,pred = out.<span class="built_in">max</span>(<span class="number">1</span>)</span><br><span class="line">        <span class="comment">#预测正确的数量</span></span><br><span class="line">        num_correct = (pred==label).<span class="built_in">sum</span>().item()</span><br><span class="line">        <span class="comment">#正确率</span></span><br><span class="line">        acc = num_correct/img.shape[<span class="number">0</span>]</span><br><span class="line">        <span class="comment">#积累当前批次数据的正确率</span></span><br><span class="line">        train_acc += acc</span><br><span class="line">    <span class="comment">#记录当前批次数据的平均损失和平均正确率</span></span><br><span class="line">    train_losses.append(train_loss/<span class="built_in">len</span>(train_loader))</span><br><span class="line">    train_accu.append(train_acc/<span class="built_in">len</span>(train_loader))</span><br><span class="line">    </span><br><span class="line">    test_loss = <span class="number">0</span></span><br><span class="line">    test_acc = <span class="number">0</span></span><br><span class="line">    <span class="comment">#标记</span></span><br><span class="line">    model.<span class="built_in">eval</span>()</span><br><span class="line">    <span class="keyword">for</span> img,label <span class="keyword">in</span> test_loader:</span><br><span class="line">        out = model(img)</span><br><span class="line">        loss = criterion(out,label)</span><br><span class="line">        </span><br><span class="line">        test_loss += loss.item()</span><br><span class="line">        </span><br><span class="line">        _,pred = out.<span class="built_in">max</span>(<span class="number">1</span>)</span><br><span class="line">        num_correct = (pred==label).<span class="built_in">sum</span>().item()</span><br><span class="line">        acc = num_correct/img.shape[<span class="number">0</span>]</span><br><span class="line">        test_acc += acc</span><br><span class="line">    </span><br><span class="line">    test_losses.append(test_loss/<span class="built_in">len</span>(test_loader))</span><br><span class="line">    test_accu.append(test_acc/<span class="built_in">len</span>(test_loader))</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;epoch:&#123;&#125;,Train Loss:&#123;:.4f&#125;,Train Acc:&#123;:.4f&#125;,Test Loss:&#123;:.4f&#125;,Test Acc:&#123;:.4f&#125;&#x27;</span></span><br><span class="line">             .<span class="built_in">format</span>(epoch,train_loss/<span class="built_in">len</span>(train_loader),train_acc/<span class="built_in">len</span>(train_loader),</span><br><span class="line">                    test_loss/<span class="built_in">len</span>(test_loader),test_acc/<span class="built_in">len</span>(test_loader)))</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">fig,axs = plt.subplots(<span class="number">2</span>,<span class="number">1</span>,figsize=(<span class="number">12</span>,<span class="number">12</span>))</span><br><span class="line">axs[<span class="number">0</span>].plot(np.arange(<span class="number">5</span>),<span class="built_in">list</span>(train_losses),c=<span class="string">&#x27;r&#x27;</span>,label=<span class="string">&#x27;train loss&#x27;</span>)</span><br><span class="line">axs[<span class="number">0</span>].plot(np.arange(<span class="number">5</span>),<span class="built_in">list</span>(test_losses),c=<span class="string">&#x27;b&#x27;</span>,label=<span class="string">&#x27;test loss&#x27;</span>)</span><br><span class="line">axs[<span class="number">0</span>].legend()</span><br><span class="line">axs[<span class="number">1</span>].plot(np.arange(<span class="number">5</span>),<span class="built_in">list</span>(train_accu),c=<span class="string">&#x27;r&#x27;</span>,label=<span class="string">&#x27;train accu&#x27;</span>)</span><br><span class="line">axs[<span class="number">1</span>].plot(np.arange(<span class="number">5</span>),<span class="built_in">list</span>(test_accu),c=<span class="string">&#x27;b&#x27;</span>,label=<span class="string">&#x27;test accu&#x27;</span>)</span><br><span class="line">axs[<span class="number">1</span>].legend()</span><br></pre></td></tr></table></figure>
+
+<p>这里采用的方法是mini-Batch梯度下降，每次训练时的数据就是装载数据时的batch_size大小。</p>
+<p>参考的文章里在统计测试数据时也加了<code>optimizer.zero_grad()</code>，<code>loss.backward()</code>，<code>optimizer.step()</code>，我觉得是不对的。</p>
+<p>输出的结果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">epoch:<span class="number">0</span>,Train Loss:<span class="number">0.7826</span>,Train Acc:<span class="number">0.7986</span>,Test Loss:<span class="number">0.2236</span>,Test Acc:<span class="number">0.9352</span></span><br><span class="line">epoch:<span class="number">1</span>,Train Loss:<span class="number">0.1738</span>,Train Acc:<span class="number">0.9486</span>,Test Loss:<span class="number">0.1213</span>,Test Acc:<span class="number">0.9629</span></span><br><span class="line">epoch:<span class="number">2</span>,Train Loss:<span class="number">0.1131</span>,Train Acc:<span class="number">0.9668</span>,Test Loss:<span class="number">0.0816</span>,Test Acc:<span class="number">0.9766</span></span><br><span class="line">epoch:<span class="number">3</span>,Train Loss:<span class="number">0.0847</span>,Train Acc:<span class="number">0.9745</span>,Test Loss:<span class="number">0.0642</span>,Test Acc:<span class="number">0.9807</span></span><br><span class="line">epoch:<span class="number">4</span>,Train Loss:<span class="number">0.0702</span>,Train Acc:<span class="number">0.9788</span>,Test Loss:<span class="number">0.0531</span>,Test Acc:<span class="number">0.9821</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/9.png" alt="9"></p>
+<h1 id="在docker内跑通"><a href="#在docker内跑通" class="headerlink" title="在docker内跑通"></a>在docker内跑通</h1><p>首先通过FileZilla将python文件上传至云端中，然后在云端修改文件中的路径信息，删除画图相关的代码，并拷贝至容器路径下。</p>
+<p>拷贝命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp ./pyprogramme/untitled0.py 3cd1e404d829:./data/CNN_mnist.py</span><br></pre></td></tr></table></figure>
+
+<p>从宿主机拷贝文件到容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp 宿主机文件路径 容器名称:容器文件路径</span><br></pre></td></tr></table></figure>
+
+<p>从容器拷贝文件到宿主机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp 容器名称:容器文件路径 宿主机文件路径</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43288858/article/details/104597500?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162873199616780255253910%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=162873199616780255253910&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-104597500.first_rank_v2_pc_rank_v29&utm_term=docker%E6%96%87%E4%BB%B6&spm=1018.2226.3001.4187">参考文章</a></p>
+<p>之后进入容器，执行文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python 文件路径执行文件</span><br></pre></td></tr></table></figure>
+
+<p>执行结果</p>
+<p><img src="/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/10.png" alt="10"></p>
+<h1 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h1><ol>
+<li>在训练卷积网络时使用的损失函数是<code>nn.CrossEntropyLoss()</code>，在网络结构中就不能再使用<code>softmax()</code>，否则会产生误差。<br>因为<code>nn.CrossEntropyLoss()</code>是<code>nn.logSoftmax()</code>和<code>nn.NLLLoss()</code>的整合。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/LIsaWinLee/article/details/107683641">参考文章</a></li>
+<li>在训练参数时，有时会爆内存。解决办法是将训练时所有+loss都改为+loss.item()。具体是因为loss的数据类型是Variable，使用Variable进行计算时会记录新产生的Variable的符号，在反向传播的时候进行使用。如果直接将loss加起来，网络会一直延伸变大。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/github_38148039/article/details/107144632">参考文章</a></li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/">http://example.com/2021/08/12/docker%E5%86%85%E6%90%AD%E5%BB%BA%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0MNIST%E6%95%B0%E5%AD%97%E5%88%86%E7%B1%BB/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/docker-CNN-MINIST/"># docker,CNN,MINIST</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/08/12/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-3/">卷积神经网络-3</a>
+            
+            
+            <a class="next" rel="next" href="/2021/08/10/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-2/">卷积神经网络-2</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

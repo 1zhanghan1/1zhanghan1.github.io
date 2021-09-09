@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>python日记-2 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">python日记-2</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">June 24, 2021&nbsp;&nbsp;20:49:22</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>前段时间忙着毕业，回到家里也是一堆事情，今天终于有时间继续python日记了。。。</p>
+<p>对了，我写文章的方法是先看一遍网课视频，再看一遍，然后完成文章，每三章记录一次吧。</p>
+<hr>
+<h1 id="程序控制结构"><a href="#程序控制结构" class="headerlink" title="程序控制结构"></a>程序控制结构</h1><h2 id="条件表达式"><a href="#条件表达式" class="headerlink" title="条件表达式"></a>条件表达式</h2><p>条件表达式用于判断条件是否成立，判定的标准只有True和False，值得一提的是和C一样，除了布尔表达式，python也可以用其他表达式来充当条件表达式，数字非0为True，0为False，其他类型的数据非空为True，空为False。与C不同的是，条件表达式不能包含赋值语句，否则会报错。</p>
+<p>python中的分支结构也是<code>if...else...</code>句型，只是python将<code>else if</code>简化为<code>elif</code>，同时由于python以空格缩进来表示程序的结构，所以在使用分支结构时要特别注意语句的缩进，开头缩进一样的语句在一个逻辑层上。</p>
+<h2 id="循环结构"><a href="#循环结构" class="headerlink" title="循环结构"></a>循环结构</h2><p>循环结构分为for循环和while循环，基本和C差不多。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> 条件表达式:</span><br><span class="line">	循环体</span><br><span class="line">[<span class="keyword">else</span>:</span><br><span class="line">	<span class="keyword">else</span>子句代码块]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> 取值 <span class="keyword">in</span> 序列或迭代对象：</span><br><span class="line">	循环体</span><br><span class="line">[<span class="keyword">else</span>:</span><br><span class="line">	<span class="keyword">else</span>子句代码块]</span><br></pre></td></tr></table></figure>
+
+<p>循环结构后的else语句，只有在循环是正常结束后才会执行，如果是因为执行break语句或者发生异常而结束循环则不会执行else语句。</p>
+<h2 id="精彩案例"><a href="#精彩案例" class="headerlink" title="精彩案例"></a>精彩案例</h2><p>我发现在精彩案例里面可以学到python的其他知识，所以放在这里一起记录。</p>
+<p>第一个是提示输入成绩，然后输出平均分的案例。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">numbers = []									<span class="comment">#列表存放成绩</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	x = <span class="built_in">input</span>(<span class="string">&#x27;请输入一个成绩：&#x27;</span>)</span><br><span class="line">	<span class="keyword">try</span>:										<span class="comment">#异常处理</span></span><br><span class="line">		numbers.append(<span class="built_in">float</span>(x))</span><br><span class="line">	<span class="keyword">except</span>:</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&#x27;不是合法成绩&#x27;</span>)</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	<span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">		flag = <span class="built_in">input</span>(<span class="string">&#x27;继续输入吗？（yes/no）&#x27;</span>)</span><br><span class="line">		<span class="keyword">if</span> flag.lower() <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;yes&#x27;</span>, <span class="string">&#x27;no&#x27;</span>):	<span class="comment">#限定输入内容</span></span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&#x27;只能输入yes或no&#x27;</span>)</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">	<span class="keyword">if</span> flag.lower() == <span class="string">&#x27;no&#x27;</span>:</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">		</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sum</span>(numbers)/<span class="built_in">len</span>(numbers))</span><br></pre></td></tr></table></figure>
+
+<p>值得学习的地方：</p>
+<ol>
+<li>为了防止输入成绩非法，将成绩的转换放入异常处理结构中</li>
+<li>输入yes或no时考虑大小写，将输入内容全部转化为小写</li>
+<li>判断是否在一个集合中时，使用临时元组和in关键字</li>
+</ol>
+<p>第二个是模拟决赛现场计算最终成绩的过程</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	<span class="keyword">try</span>:</span><br><span class="line">		n = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&#x27;请输入评委人数：&#x27;</span>))</span><br><span class="line">		<span class="keyword">if</span> n &lt;= <span class="number">2</span>:</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&#x27;评委人数太少，必须多余2个人。&#x27;</span>)</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">	<span class="keyword">except</span>:</span><br><span class="line">		<span class="keyword">pass</span></span><br><span class="line">		</span><br><span class="line">scores = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">	<span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">		<span class="keyword">try</span>:</span><br><span class="line">			score = <span class="built_in">input</span>(<span class="string">&#x27;请输入第&#123;0&#125;个评委的分数：&#x27;</span>.<span class="built_in">format</span>(i+<span class="number">1</span>))</span><br><span class="line">			score = <span class="built_in">float</span>(score)</span><br><span class="line">			<span class="keyword">assert</span> <span class="number">0</span>&lt;=score&lt;=<span class="number">100</span></span><br><span class="line">			score.append(score)</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		<span class="keyword">except</span>:</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&#x27;分数错误&#x27;</span>)</span><br><span class="line">			</span><br><span class="line">highest = <span class="built_in">max</span>(scores)</span><br><span class="line">lowest = <span class="built_in">min</span>(scores)</span><br><span class="line">scores.remove(highest)</span><br><span class="line">scores.remove(lowest)</span><br><span class="line">finalScore = <span class="built_in">round</span>(<span class="built_in">sum</span>(scores)/<span class="built_in">len</span>(scores),<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">formatter = <span class="string">&#x27;去掉一个最高分&#123;0&#125;\n去掉一个最低分&#123;1&#125;\n最后得分&#123;2&#125;&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(formatter.<span class="built_in">format</span>(highest,lowest,finalScore))</span><br></pre></td></tr></table></figure>
+
+<p>值得学习的地方：</p>
+<ol>
+<li>pass语句什么都不做，空语句</li>
+<li>format()函数可以将字符串中的占位符换成变量</li>
+<li>assert断言，后面的条件表达式若是Flase则抛出异常</li>
+<li>max(),min(),remove()的用法，round()函数是将小数四舍六入五平分，第二个参数是保留小数位数</li>
+</ol>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><h2 id="函数定义语法"><a href="#函数定义语法" class="headerlink" title="函数定义语法"></a>函数定义语法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> 函数名(<span class="params">[参数列表]</span>):</span></span><br><span class="line">	函数体</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是:</p>
+<ul>
+<li>函数形参不需要声明变量，不需要指定函数返回值类型</li>
+<li>允许嵌套定义函数</li>
+</ul>
+<h2 id="修饰器"><a href="#修饰器" class="headerlink" title="修饰器"></a>修饰器</h2><p>修饰器是接收其他函数作为参数并对其进行一定改造产生新函数代替原来的函数</p>
+<p>python面向对象程序设计中的静态方法、类方法、属性等也都是通过修饰器实现的。 </p>
+<p>例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">before</span>(<span class="params">func</span>):</span>							<span class="comment">#定义修饰器</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">wrapper</span>(<span class="params">*args, **kwargs</span>):</span></span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&#x27;Before function called.&#x27;</span>)</span><br><span class="line">		<span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">	<span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">after</span>(<span class="params">func</span>):</span>							<span class="comment">#定义修饰器</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">wrapper</span>(<span class="params">*args, **kwargs</span>):</span></span><br><span class="line">		result = func(*args, **kwargs)</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&#x27;After function called.&#x27;</span>)</span><br><span class="line">		<span class="keyword">return</span> result</span><br><span class="line">	<span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="meta">@before</span></span><br><span class="line"><span class="meta">@after										</span><span class="comment">#同时使用两个修饰器改造函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span>():</span></span><br><span class="line">	<span class="built_in">print</span>(<span class="number">3</span>)</span><br><span class="line"><span class="comment">#调用</span></span><br><span class="line">test()</span><br></pre></td></tr></table></figure>
+
+<p>这个修饰器给我似曾相识的感觉，使用的方法和java中的注解一样，然后这个before和after的功能和C++中重写前加后加操作符差不多。</p>
+<p>感觉修饰器很有用，它可以在不修改原有函数代码的基础上对函数功能进行增加。</p>
+<p>看修饰器的这个格式，感觉像是在修饰器中定义了一个函数，将修饰的函数放在这个函数中运行。比如，上面的例子中，先标注了@before，将test函数传入before修饰器中，before修饰器中嵌套定义了一个wrapper函数，before修饰器返回wrapper，就是执行了wrapper函数，在before修饰器中的wrapper函数先执行打印语句，再返回带有所有参数的func函数，相当于原封不动地执行func函数；又标注了@after，此时传入after修饰器的函数参数就是被before修饰过的test函数，可以认为是before修饰器中的wrapper函数，然后再进行上述类似的包裹运行的情况。所以运行的顺序为：after中的wrapper –&gt; before中的wrapper –&gt; test –&gt; before中的wrapper –&gt; after中的wrapper。董付国老师说标注的修饰器离函数越近越先执行，我想是这个原理吧。</p>
+<p>不会画图，只能用语言来表述出来。</p>
+<h2 id="函数参数"><a href="#函数参数" class="headerlink" title="函数参数"></a>函数参数</h2><h3 id="位置参数"><a href="#位置参数" class="headerlink" title="位置参数"></a>位置参数</h3><p>调用函数时实参和形参的顺序、数量必须严格一致。</p>
+<h3 id="默认值参数"><a href="#默认值参数" class="headerlink" title="默认值参数"></a>默认值参数</h3><p>定义函数时，可以给某一些形参设置默认值。使用函数时，可以进行覆盖。但要注意的是，函数的所有默认值参数都要放在右边，即右边不能出现没有默认值的普通位置参数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> 函数名(<span class="params">..., 形参名=默认值</span>):</span></span><br><span class="line">	函数体</span><br></pre></td></tr></table></figure>
+
+<h3 id="关键参数"><a href="#关键参数" class="headerlink" title="关键参数"></a>关键参数</h3><p>在调用函数时可以明确指定哪个值传递给哪个参数，实参顺序和形参顺序可以不一致。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">demo</span>(<span class="params">a, b, c=<span class="number">5</span></span>):</span></span><br><span class="line">	<span class="built_in">print</span>(a,b,c)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>demo(<span class="number">3</span>, <span class="number">7</span>)</span><br><span class="line"><span class="number">3</span> <span class="number">7</span> <span class="number">5</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>demo(a=<span class="number">7</span>,b=<span class="number">3</span>,c=<span class="number">6</span>)</span><br><span class="line"><span class="number">7</span> <span class="number">3</span> <span class="number">6</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>demo(c=<span class="number">8</span>,a=<span class="number">9</span>,b=<span class="number">0</span>)</span><br><span class="line"><span class="number">9</span> <span class="number">0</span> <span class="number">8</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="可变长度参数"><a href="#可变长度参数" class="headerlink" title="可变长度参数"></a>可变长度参数</h3><p>可变长度参数的两种形式：参数名前加1<code>*</code>个或2个<code>*</code></p>
+<ul>
+<li>*parameter用来接收多个位置参数并将其放在一个元组中</li>
+<li>**parameter接收多个关键参数并存放到字典中</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">demo</span>(<span class="params">*p</span>):</span></span><br><span class="line">	<span class="built_in">print</span>(p)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>demo(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">&gt;&gt; demo(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">(<span class="number">1</span>,<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">demo</span>(<span class="params">**p</span>):</span></span><br><span class="line">	<span class="keyword">for</span> item <span class="keyword">in</span> p.items():</span><br><span class="line">		<span class="built_in">print</span>(item)</span><br><span class="line">		</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>demo(x=<span class="number">1</span>,y=<span class="number">2</span>,z=<span class="number">3</span>)</span><br><span class="line">(<span class="string">&#x27;y&#x27;</span>, <span class="number">2</span>)</span><br><span class="line">(<span class="string">&#x27;x&#x27;</span>, <span class="number">1</span>)</span><br><span class="line">(<span class="string">&#x27;z&#x27;</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="变量的作用域"><a href="#变量的作用域" class="headerlink" title="变量的作用域"></a>变量的作用域</h2><p> 主要了解全局变量和局部变量</p>
+<p>局部变量是只能在函数内部使用，函数执行结束就自动释放，一个python程序也可以看成一个函数，一个程序中的全部变量相当于这个程序的局部变量。</p>
+<h3 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h3><p>全局变量通过global关键字定义，分为两种情况：</p>
+<ul>
+<li>全局变量在函数外定义，在函数内需要改变全局变量的值，需要在函数内使用global声明为全局变量</li>
+<li>在函数内部可以将变量直接定义为全局变量，函数执行结束后也不释放</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">demo</span>():</span></span><br><span class="line">	<span class="keyword">global</span> x			<span class="comment">#声明全局变量</span></span><br><span class="line">	x = <span class="number">3</span></span><br><span class="line">	y = <span class="number">4</span></span><br><span class="line">	<span class="built_in">print</span>(x,y)</span><br><span class="line">	</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x = <span class="number">5</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>demo()</span><br><span class="line"><span class="number">3</span> <span class="number">4</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y</span><br><span class="line">报错</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">del</span> x</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x</span><br><span class="line">报错</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>demo()</span><br><span class="line"><span class="number">3</span> <span class="number">4</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>在某个作用域中只要有为变量赋值的操作，那么该变量就是这个作用域中的局部变量，除非使用global进行了声明。</p>
+<h2 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h2><p>lambda表达式用来声明匿名函数，即没有名字临时使用的小函数，尤其适合需要一个函数作为另一个函数参数的场合。</p>
+<p>lambda表达式只可以包含一个表达式，不允许包含符合语句，但可以调用其他函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>f = <span class="keyword">lambda</span> x,y,z: x+y+z			<span class="comment">#可以取名</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)						<span class="comment">#调用</span></span><br><span class="line"><span class="number">6</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g = <span class="keyword">lambda</span> x, y=<span class="number">2</span>, z=<span class="number">3</span>: x+y+z</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g(<span class="number">1</span>)</span><br><span class="line"><span class="number">6</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g(<span class="number">2</span>,z=<span class="number">4</span>,y=<span class="number">5</span>)</span><br><span class="line"><span class="number">11</span></span><br></pre></td></tr></table></figure>
+
+<p>lambda表达式可以使用函数的一切性质</p>
+<h2 id="生成器函数"><a href="#生成器函数" class="headerlink" title="生成器函数"></a>生成器函数</h2><p>包含yield语句的函数可以用来创建生成器对象，也成生成器函数。</p>
+<p>yield语句和return语句的作用相似，用于从函数中返回值。但不同的是，return语句执行后函数就会结束运行，而执行yield语句返回值后，函数后面的代码会暂时挂起，可以使用生成器对象的<code>__next__()</code>方法、内置函数next()，for循环遍历生成器对象或其他方式显式“索要”数据时恢复执行。</p>
+<p>生成器具有惰性求职的特点，适合大数据处理。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">f</span>():</span></span><br><span class="line">	a, b = <span class="number">1</span>, <span class="number">1</span></span><br><span class="line">	<span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">		<span class="keyword">yield</span> a</span><br><span class="line">		a, b = b, a+b</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = f()							<span class="comment">#创建生成器对象</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)				<span class="comment">#斐波那契数列前10个元素</span></span><br><span class="line">	<span class="built_in">print</span>(a.__next__(), end=<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">	</span><br><span class="line"><span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">5</span> <span class="number">8</span> <span class="number">13</span> <span class="number">21</span> <span class="number">34</span> <span class="number">55</span></span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> f():</span><br><span class="line">	<span class="keyword">if</span> i &gt; <span class="number">100</span>:</span><br><span class="line">		<span class="built_in">print</span>(i, end=<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="number">144</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = f()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(a)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">next</span>(a)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.__next__()</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.__next__()</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="精彩案例-1"><a href="#精彩案例-1" class="headerlink" title="精彩案例"></a>精彩案例</h2><p>第一个是生成随机数，根据提示猜数的模拟游戏</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randint</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">guess</span>(<span class="params">maxValue=<span class="number">100</span>, maxTimes=<span class="number">5</span></span>):</span></span><br><span class="line">	value = randint(<span class="number">1</span>,maxValue)</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(maxTimes):</span><br><span class="line">		prompt = <span class="string">&#x27;Start to GUESS:&#x27;</span> <span class="keyword">if</span> i==<span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;Guess again:&#x27;</span></span><br><span class="line">		<span class="keyword">try</span>:</span><br><span class="line">			x = <span class="built_in">int</span>(<span class="built_in">input</span>(prompt))</span><br><span class="line">		<span class="keyword">except</span>:</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&#x27;Must input an integer between 1 and &#x27;</span>, maxValue)</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			<span class="keyword">if</span> x == value:</span><br><span class="line">				<span class="built_in">print</span>(<span class="string">&#x27;Congratulations!&#x27;</span>)</span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line">			<span class="keyword">elif</span> x &gt; value:</span><br><span class="line">				<span class="built_in">print</span>(<span class="string">&#x27;Too big&#x27;</span>)</span><br><span class="line">			<span class="keyword">else</span>:</span><br><span class="line">				<span class="built_in">print</span>(<span class="string">&#x27;Too little&#x27;</span>)</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&#x27;Game over. FAIL.&#x27;</span>)</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&#x27;The value is &#x27;</span>, value)</span><br></pre></td></tr></table></figure>
+
+<p>值得学习的地方：</p>
+<ol>
+<li><code>x if a else y</code> 如果a成立则为x，否则为y，就像C中的三目运算符<code>?:</code></li>
+<li>else正在异常处理结构中使用，else语句块只在没有发生异常是才会执行</li>
+<li>random库中生成随机整数函数randint</li>
+<li>print打印语句时，最后接变量可以直接逗号后跟变量</li>
+</ol>
+<p>第二个是基于递归算法的汉诺塔问题的实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hannoi</span>(<span class="params">num, src, dst, temp=<span class="literal">None</span></span>):</span></span><br><span class="line">	<span class="comment">#num:要移动的盘子数  src:原来的柱子   dst:目标柱子   temp:用作过渡的临时柱子</span></span><br><span class="line">	<span class="comment">#声明用来记录移动次数的全局变量</span></span><br><span class="line">	<span class="keyword">global</span> times</span><br><span class="line">	<span class="comment">#确认参数类型和范围</span></span><br><span class="line">	<span class="keyword">assert</span> <span class="built_in">type</span>(num) == <span class="built_in">int</span>, <span class="string">&#x27;num must be integer&#x27;</span></span><br><span class="line">	<span class="keyword">assert</span> num&gt;<span class="number">0</span>, <span class="string">&#x27;num must &gt; 0&#x27;</span></span><br><span class="line">	<span class="comment">#出口</span></span><br><span class="line">	<span class="keyword">if</span> num == <span class="number">1</span></span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&#x27;The &#123;0&#125; Times move:&#123;1&#125;==&gt;&#123;2&#125;&#x27;</span>.<span class="built_in">format</span>(times, src, dst))</span><br><span class="line">		times += <span class="number">1</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="comment">#先把除最后一个盘子的其他盘子通过目标柱子都移动到临时柱子上</span></span><br><span class="line">		hannoi(num-<span class="number">1</span>,src,temp,dst)</span><br><span class="line">		<span class="comment">#把最后一个盘子移到目标柱子上</span></span><br><span class="line">		hannoi(<span class="number">1</span>,src,dst)</span><br><span class="line">		<span class="comment">#把除最后一个盘子的其他盘子从临时柱子通过原来的柱子移动到目标柱子上</span></span><br><span class="line">		hannoi(num-<span class="number">1</span>,temp,dst,src)</span><br><span class="line">		</span><br><span class="line"><span class="comment">#记录移动次数的全局变量</span></span><br><span class="line">times = <span class="number">1</span></span><br><span class="line"><span class="comment">#A原来的柱子，B临时柱子，C目标柱子</span></span><br><span class="line">hannoi(<span class="number">3</span>,<span class="string">&#x27;A&#x27;</span>,<span class="string">&#x27;C&#x27;</span>,<span class="string">&#x27;B&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>值得学习的地方：</p>
+<ol>
+<li>python也支持函数递归</li>
+<li>函数开始时应该检查参数的类型和范围</li>
+</ol>
+<h1 id="面向对象程序设计"><a href="#面向对象程序设计" class="headerlink" title="面向对象程序设计"></a>面向对象程序设计</h1><p>python也是一个面向对象的编程语言，这里只做简要的介绍。</p>
+<h2 id="类的成员"><a href="#类的成员" class="headerlink" title="类的成员"></a>类的成员</h2><p>类的成员包括数据成员和成员方法。</p>
+<h3 id="数据成员"><a href="#数据成员" class="headerlink" title="数据成员"></a>数据成员</h3><p>数据成员分为私有成员和公有成员，私有成员在类的外部不能直接访问，公有成员在外部可以直接访问。</p>
+<p>私有成员以两个下划线开头但不以两个下划线结束，以两个下划线开头也以两个下划线结束的是特殊成员不多介绍。</p>
+<p>可以使用一种特殊的方式在类外访问私有成员，<code>对象名._类名__xxx</code>，但这会破坏类的封装性，不建议使用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, value1=<span class="number">0</span>, value2=<span class="number">0</span></span>):</span>	<span class="comment">#构造函数</span></span><br><span class="line">			self.value1 = value1</span><br><span class="line">			self.__value2 = value2</span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">setValue</span>(<span class="params">self, value1, value2</span>):</span></span><br><span class="line">			self.value1 = value1</span><br><span class="line">			self.value2 = value2</span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">self</span>):</span></span><br><span class="line">			<span class="built_in">print</span>(self.value1)</span><br><span class="line">			<span class="built_in">print</span>(self.__value2)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = A()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.value1			<span class="comment">#访问普通数据成员</span></span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a._A__value2		<span class="comment">#访问私有数据成员</span></span><br><span class="line"><span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>python中不存在严格意义上的私有成员。</p>
+<ul>
+<li>属于对象的数据成员一般在构造方法<code>__init__()</code>中定义，在定义和在实例方法中访问数据成员时以self座位前缀，表示对象自身。不同对象之间的数据成员互不影响。</li>
+<li>属于类的数据成员为该类所有对象共享的，定义这类数据成员时一般不在任何一个成员方法中定义。</li>
+<li>在类的外部对象数据成员只能通过对象名访问，而类数据成员可以通过类名或对象名访问。</li>
+</ul>
+<h3 id="成员方法"><a href="#成员方法" class="headerlink" title="成员方法"></a>成员方法</h3><p>python类的成员发放可以分为公有方法、私有方法、静态方法、类方法</p>
+<p>公有、私有方法一般指属于对象的实例方法，私有方法以两个下划线开头，这两类方法都可以访问属于类和对象的成员。</p>
+<p>公有方法通过对象名直接调用，私有方法不能通过对象名直接调用，只能在其他实例方法中通过前缀self进行调用，或者在外部通过特殊形式来调用。</p>
+<p><strong>关于self参数：</strong></p>
+<ul>
+<li>所有实例方法都必须至少有一个名为<code>self</code>的参数，并且必须是方法的第一个形参，<code>self</code>代表当前对象。</li>
+<li>在实例方法中访问实例成员时需要以<code>self</code>为前缀，但在外部通过对象名调用对象方法时并不需要传递这个参数。</li>
+<li>在外部通过类名调用属于对象的公有方法，需要显示的给<code>self</code>参数传递一个对象名。</li>
+</ul>
+<p><strong>静态方法、类方法：</strong></p>
+<ul>
+<li>静态方法和类方法可以通过类名和对象名调用，但不能直接访问属于对象的成员，只能访问属于类的成员</li>
+<li>类方法一般以<code>cls</code>作为类方法的第一个参数表示类本身，调用时不需要为其传参</li>
+<li>静态方法可以不接收任何参数</li>
+</ul>
+<p>简单来说，实例方法必须要有<code>self</code>参数，类方法必须要有<code>cls</code>参数，静态参数没有要求。</p>
+<p>例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">Root</span>:</span></span><br><span class="line">	__total = <span class="number">0</span>									<span class="comment">#属于类的私有成员</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, v</span>):</span>						<span class="comment">#构造方法</span></span><br><span class="line">		self.__value = v						<span class="comment">#属于对象的私有成员</span></span><br><span class="line">		Root.__total += <span class="number">1</span></span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">self</span>):</span>								<span class="comment">#普通实例方法</span></span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&#x27;self.__value:&#x27;</span>, self.__value)</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&#x27;Root.__total:&#x27;</span>, Root.__total)</span><br><span class="line">		</span><br><span class="line"><span class="meta">	@classmethod								</span><span class="comment">#修饰器，声明类方法</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">classShowTotal</span>(<span class="params">cls</span>):</span>					<span class="comment">#类方法</span></span><br><span class="line">		<span class="built_in">print</span>(cls.__total)</span><br><span class="line">		</span><br><span class="line"><span class="meta">	@staticmethod								</span><span class="comment">#修饰器，声明静态方法</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">staticShowTotal</span>():</span>						<span class="comment">#静态方法</span></span><br><span class="line">		<span class="built_in">print</span>(Root.__total)</span><br><span class="line">		</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = Root(<span class="number">3</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.classShowTotal()		<span class="comment">#通过对象名调用类方法</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.staticShowTotal()		<span class="comment">#通过对象来调用静态方法</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.show()				<span class="comment">#通过对象名调用普通实例方法</span></span><br><span class="line">self.__value:<span class="number">3</span></span><br><span class="line">self.__total:<span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>rr = Root(<span class="number">5</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>Root.classShowTotal()	<span class="comment">#通过类名调用类方法</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>Root.staticShowTotal() 	<span class="comment">#通过类名调用静态方法</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>Root.show()				<span class="comment">#通过类名直接调用实例方法，失败</span></span><br><span class="line">报错</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>Root.show(r)			<span class="comment">#可以通过类名调用实例方法传递对象参数</span></span><br><span class="line">self.__value:<span class="number">3</span></span><br><span class="line">Root.__total:<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>这部分弯弯绕可太多了，但是感觉比C++要简单一点。但是python中的变量不用事先定义，随时用随时定义，所以在类中的属性我看着感觉很怪异，对象数据成员直接在构造器中定义，怪怪的，不太适应。</p>
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><ul>
+<li><p>可读、可修改、可删除的属性</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">Test</span>:</span></span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, value</span>):</span></span><br><span class="line">			self.__value = value</span><br><span class="line">	</span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">__get</span>(<span class="params">self</span>):</span></span><br><span class="line">			<span class="keyword">return</span> self.__value</span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">__set</span>(<span class="params">self, v</span>):</span></span><br><span class="line">			self.__value = v</span><br><span class="line">	</span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">__del</span>(<span class="params">self</span>):</span></span><br><span class="line">			<span class="keyword">del</span> self.__value</span><br><span class="line">	</span><br><span class="line">		value = <span class="built_in">property</span>(__get, __<span class="built_in">set</span>, __<span class="keyword">del</span>)</span><br><span class="line">	</span><br><span class="line">		<span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">self</span>):</span></span><br><span class="line">			<span class="built_in">print</span>(self.__value)</span><br><span class="line">		</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t = Test(<span class="number">3</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.show()</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.value</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.value = <span class="number">5</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.show()</span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.value</span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">del</span> t.value		<span class="comment">#删除</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.value</span><br><span class="line">报错</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.show()</span><br><span class="line">报错</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.value = <span class="number">1</span>		<span class="comment">#动态增加属性和私有数据成员</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.show()</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t.value</span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>有点像java中的get和set函数，不过还能删除是我没想到的，删除后可以通过设置值的方式来重新定义，不知道实现的原理是不是标识脏位之类的操作。<br>属性有点像是将私有数据成员和操作封装后的一个对外可见的集合，不过顺序必须是get，set，del，缺少一个后面也不能有。</p>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/06/24/python%E6%97%A5%E8%AE%B0-2/">http://example.com/2021/06/24/python%E6%97%A5%E8%AE%B0-2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/06/26/python%E6%97%A5%E8%AE%B0-3/">python日记-3</a>
+            
+            
+            <a class="next" rel="next" href="/2021/06/17/python%E6%97%A5%E8%AE%B0-1/">python日记-1</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

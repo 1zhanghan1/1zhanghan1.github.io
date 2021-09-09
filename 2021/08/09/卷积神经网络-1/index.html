@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>卷积神经网络-1 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zhanghan&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zhanghan&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">卷积神经网络-1</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 9, 2021&nbsp;&nbsp;9:26:22</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="卷积运算"><a href="#卷积运算" class="headerlink" title="卷积运算"></a>卷积运算</h1><p>什么是卷积运算，首先以边缘检测的例子来解释。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/1.png" alt="1"></p>
+<p>上图是边缘检测的例子。边缘检测分为垂直边缘检测和水平边缘检测，分别检测图像垂直方向上和水平反向上物体的边缘。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/2.png" alt="2"></p>
+<p>以垂直边缘检测为例。假如上图$6\times 6$的矩阵是一个灰度图，中间$3\times 3$的矩阵是一个过滤器或者核。依次从上至下从左至右，每次移动一个元素，用过滤器覆盖原矩阵，计算相应位置元素的乘积再求和得到一个数值，组成的矩阵是$4\times 4$的，这一过程就是卷积运算。</p>
+<p>这个图像太小了，不能直观的看出为什么可以进行垂直边缘检测。下面用一个更加明显的例子。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/3.png" alt="3"></p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/4.png" alt="4"></p>
+<p>这是两种不同的垂直边缘，亮-&gt;暗，暗-&gt;量，通过这个过滤器都可以检测出来。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/5.png" alt="5"></p>
+<p>类似的，这是水平边缘检测的过滤器。</p>
+<h1 id="Padding"><a href="#Padding" class="headerlink" title="Padding"></a>Padding</h1><p>由上面的例子可以知道，每次经过卷积运算之后，输入的矩阵就会变小，如果神经网络的层数比较多，最后得到的结果就会非常小。另外一个缺点是，对于矩阵的边缘元素来说，参与运算的次数很少，而中间的元素参与运算次数很多，这样一说相当于丢弃掉了边缘元素的一些特征。</p>
+<p>我们可以采取在矩阵边缘填充元素的方法解决这个问题。</p>
+<p>比如上例$6\times 6$的矩阵填充成$8\times 8$的矩阵，经过卷积运算后，结果还是$6\times 6$的矩阵，并且边缘的元素也被多次运算。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/6.png" alt="6"></p>
+<p>因此衍生出两种卷积运算方法：Valid卷积和Same卷积。</p>
+<p>Valid卷积：不采取填充，直接进行卷积运算。</p>
+<p>Same卷积：采取填充，使得结果矩阵与原矩阵一样大。</p>
+<p>假设原矩阵的维度是$n\times n$，过滤器的维度是$f\times f$，填充$p$层元素，那么可以得到结果矩阵的维度是$(n+2p-f+1)\times (n+2p-f+1)$，令$n+2p-f+1=n$，解得$p=\frac{f-1}{2}$，这就是Same卷积要填充元素的层数。</p>
+<p>在计算机视觉中，通常选取的过滤器都是奇数维度的，可能的原因是在填充时可以使填充对称，或者使得过滤器有一个中心节点。</p>
+<h1 id="卷积步长"><a href="#卷积步长" class="headerlink" title="卷积步长"></a>卷积步长</h1><p>之前的卷积运算的步长都是1，即每次过滤器在原矩阵上移动的元素个数是1。如果卷积步长是2，每次移动的元素个数就是2。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/7.png" alt="7"></p>
+<p>如果设步长为s，那么得到的结果矩阵的维度就是$(\frac{n+2p-1}{s}+1)\times (\frac{n+2p-1}{s}+1)$。可能的情况是有时过滤器不能完全覆盖到矩阵的元素，惯例是不进行计算，即只计算完全覆盖时的结果，所以还要将上述结果向下取整。即<br>$$<br>\lfloor n+2p-1 \rfloor+1<br>$$<br><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/8.png" alt="8"></p>
+<h1 id="三维卷积"><a href="#三维卷积" class="headerlink" title="三维卷积"></a>三维卷积</h1><p>如果我们使用的图像不是灰度图而是彩色图，那就要用到三维卷积。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/9.png" alt="9"></p>
+<p>和前面的二维卷积非常类似，只是这是我们的过滤器也是三维的，并且深度与原矩阵的深度相同（深度的另一种叫法是通道个数）。这时过滤器只关注红色通道或者其他通道是可以的。</p>
+<p>一个三维的过滤器得到的输出是二维的矩阵。</p>
+<p>还可以使用多重过滤器。</p>
+<p>把每个过滤器得到的输出叠加在一起作为总体的输出，就可以实现一次多重检测。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/10.png" alt="10"></p>
+<p>在不填充数据，步长为1的情况下，输入矩阵的维度是$n\times n \times n_c$，过滤器的维度是$f\times f \times n_c$，结果矩阵的维度是$(n-f+1)\times (n-f+1) \times n_c^{‘}$。$n_c^{‘}$是过滤器个数。</p>
+<h1 id="单层卷积网络"><a href="#单层卷积网络" class="headerlink" title="单层卷积网络"></a>单层卷积网络</h1><p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/11.png" alt="11"></p>
+<p>继续沿用之前的例子。</p>
+<p>输入矩阵为$a^{[0]}$，经过第一个过滤器线性运算后得到结果$w^{[1]}_1a^{[0]}$，然后加上一个偏置值$b_1$，得$z^{[1]}_1=w^{[1]}_1a^{[0]}+b_1$，然后再经过一个非线性运算$g()$，得到输出$a^{[1]}_1=g(z^{[1]}_1+b_1)$。以同样的方法得到$a^{[1]}_2$。最终得到$a^{[1]}=g(z^{[1]}),z^{[1]}=w^{[1]}a^{[0]}+b^{[1]}$。输出的结果有两个特征，分别为两个过滤器得到的结果。</p>
+<p>如果我们有10个过滤器，每个过滤器是$3\times 3\times 3$的，那么每个过滤器的参数个数就是27个，另外再加上每个过滤器的偏置值，所以每个过滤器总共的参数是28个。这一层的参数个数就是280个，无论输入的图片有多大，参数个数总是那么多，这是卷积神经网络的一个特征。</p>
+<p><strong>总结：</strong></p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/12.png" alt="12"></p>
+<p>这是一些标记符号，已经互相之间的关系。</p>
+<p>首先，上标方括号内代表的是神经网络的层数。</p>
+<p>$f^{[l]}:$过滤器维数</p>
+<p>$p^{[l]}:$填充元素个数（单边）</p>
+<p>$s^{[l]}:$步长</p>
+<p>$n^{[l]}_c:$过滤器的个数</p>
+<p>输入维度：$n^{[l-1]}_H\times n^{[l-1]}_W \times n^{[l-1]}_c$</p>
+<p>输出维度：$n^{[l]}_H\times n^{[l]}_W \times n^{[l]}_c$<br>$$<br>n^{[l]}=\lfloor \frac{n^{[l-1]}+2p^{[l]}-f^{[l]}}{s^{[l]}}+1 \rfloor,n=n_H\ or \ n_W\<br>$$<br>每个过滤器的维度：$f^{[l]}\times f^{[l]} \times n^{[l-1]}_c$</p>
+<p>过滤器的权重维度：$f^{[l]}\times f^{[l]} \times n^{[l-1]}_c\times n^{[l]}_c$</p>
+<p>偏置值维度：$n^{[l]}_c–1\times 1\times 1\times n^{[l]}_c$</p>
+<h1 id="简单卷积网络示例"><a href="#简单卷积网络示例" class="headerlink" title="简单卷积网络示例"></a>简单卷积网络示例</h1><p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/13.png" alt="13"></p>
+<p>首先经过三层卷积层得到$7\times 7\times 10$的输出，然后将其平铺或展开变成一维向量，作为logistic算法或softmax算法的输入，最终得到结果。</p>
+<p>只用卷积层也可以构成很好的卷积神经网络，人们大多还添加其他的层次来帮助建立更好的神经网络系统。</p>
+<p>其他的层：池化层，全连接层</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/14.png" alt="14"></p>
+<h1 id="池化层"><a href="#池化层" class="headerlink" title="池化层"></a>池化层</h1><p>池化层通常用在卷积神经网络中用以缩减模型大小，提高计算速度，提高所提取特征的鲁棒性。</p>
+<h2 id="最大池化"><a href="#最大池化" class="headerlink" title="最大池化"></a>最大池化</h2><p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/15.png" alt="15"></p>
+<p>如上图所示。最大池化层中有一个过滤器，这个过滤器的作用是选择范围内最大的值。上图过滤器的参数是$f=2,s=2,p=0$。</p>
+<p>如果有多个信道。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/16.png" alt="16"></p>
+<p>过滤器在每个信道上都执行这个操作，同时也可以改变    参数$f,s,p$。需要注意的是，池化层中的参数是静态参数，是手工设置或通过验证集来设置的，不是训练参数的一部分。</p>
+<h2 id="平均池化"><a href="#平均池化" class="headerlink" title="平均池化"></a>平均池化</h2><p>顾名思义，平均池化是计算区域范围内的平均值。</p>
+<p>最常用的参数是$f=2,s=2,p=0$，可以将高度和宽度都缩减一半，一半不填充数据。</p>
+<p>并且输入的数据有几个信道，输入的数据就有几个信道。</p>
+<h1 id="完全连接层"><a href="#完全连接层" class="headerlink" title="完全连接层"></a>完全连接层</h1><p>完全连接层就是之前的logistic神经网络，前一层的所有结点与下一层的所有结点都有连接。</p>
+<h1 id="卷积神经网络示例"><a href="#卷积神经网络示例" class="headerlink" title="卷积神经网络示例"></a>卷积神经网络示例</h1><p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/17.png" alt="17"></p>
+<p>这里采用的是每一层卷积层和吃化层作为一个层次，经过两个层次后，展开成向量输入到两个完全连接层，将输出最终输入最后的softmax层。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/18.png" alt="18"></p>
+<p>一些数据的变化。</p>
+<p>随着深度的增加，激活值的维度在不停的下降，但下降的太快会影响整体性能。</p>
+<h1 id="卷积神经网络的优势"><a href="#卷积神经网络的优势" class="headerlink" title="卷积神经网络的优势"></a>卷积神经网络的优势</h1><p>如果输入矩阵的维度是$32\times 32 \times 3$，经过卷积层得到的输出矩阵维度是$28\times 28\times 6$，只需要6个维度是$5\times 5\times 3$的过滤器，需要训练的参数只有450个。</p>
+<p>而如果使用完全连接层，从有3072个结点的层映射到有4704个结点的层需要训练的参数个数是$3072\times 4704\approx 14000000$。</p>
+<p>卷积网络之所以只需要训练更少的参数，是因为具有两种机制。</p>
+<p><img src="/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/19.png" alt="19"></p>
+<ul>
+<li>参数共享，在层次之间计算输出值时，都是使用同一个过滤器。</li>
+<li>稀疏连接，下一层的一个计算结果只与上一层中的九个数字相关，而不是全部数字。</li>
+</ul>
+<p>这样减少了特征数可以预防过拟合。</p>
+<p>其次，卷积神经网络还善于捕捉平行不变性，即使一张图片平移了几个像素，仍然具有相似的特征。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/">http://example.com/2021/08/09/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-1/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/CNN/"># CNN</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/08/10/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-2/">卷积神经网络-2</a>
+            
+            
+            <a class="next" rel="next" href="/2021/08/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-11/">机器学习-11</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
