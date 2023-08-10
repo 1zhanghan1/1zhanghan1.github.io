@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>IO多路复用 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">ZH&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">ZH&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">IO多路复用</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 9, 2023&nbsp;&nbsp;13:11:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>参考:</p>
+<p> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/367591714">IO多路复用——深入浅出理解select、poll、epoll的实现 - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/480599209">彻底搞懂 select&#x2F;poll&#x2F;epoll，这篇就够了 - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/31cdfd6f5a48">彻底搞懂epoll高效运行的原理 - 简书 (jianshu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/430986475">【死磕 NIO】— Proactor模式是什么？很牛逼吗？ - 知乎 (zhihu.com)</a></p>
+<h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><p>在linux系统中，实际上所有的I&#x2F;O设备都被抽象为了文件这个概念，一切皆文件，Everything is File，磁盘、网络数据、终端，甚至进程间通信工具管道pipe等都被当做文件对待。</p>
+<h2 id="多路复用"><a href="#多路复用" class="headerlink" title="多路复用"></a>多路复用</h2><ul>
+<li>多路: 指的是多个socket网络连接;</li>
+<li>复用: 指的是复用一个线程、使用一个线程来检查多个文件描述符（Socket）的就绪状态</li>
+<li>多路复用主要有三种技术：select，poll，epoll。epoll是最新的, 也是目前最好的多路复用技术；</li>
+</ul>
+<h2 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h2><ol>
+<li>阻塞IO，blockingIO</li>
+<li>非阻塞IO，nonblockingIO</li>
+<li>信号驱动IO，signaldrivenIO</li>
+<li>异步IO，asynchronousIO</li>
+<li>IO多路复用，IOmultiplexing</li>
+</ol>
+<h3 id="阻塞IO"><a href="#阻塞IO" class="headerlink" title="阻塞IO"></a>阻塞IO</h3><p><img src="/v2-e340321a0d0e8bc7311e5dad107624ae_720w.webp" alt="img"></p>
+<p>进程&#x2F;线程在从调用recvfrom开始到它返回的整段时间内是被阻塞的，recvfrom成功返回后，应用进程&#x2F;线程开始处理数据报。主要特点是进程阻塞挂起不消耗CPU资源，能及时响应每个操作；实现难度低，适用并发量小的网络应用开发，不适用并发量大的应用，因为一个请求IO会阻塞进程，所以每请求分配一个处理进程（线程）去响应，系统开销大。</p>
+<p>我的理解：线程阻塞会导致进程堵塞。并发量大时，会存在大量阻塞进程，进程切换开销大。</p>
+<h3 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h3><p><img src="/v2-9fdf0ff499b2b514d1238b1fca212638_720w.webp" alt="img"></p>
+<p>进程发起IO系统调用后，如果内核缓冲区没有数据，需要到IO设备中读取，进程返回一个错误而不会被阻塞；进程发起IO系统调用后，如果内核缓冲区有数据，内核就会把数据返回进程。</p>
+<ul>
+<li>进程轮询（重复）调用，消耗CPU的资源；</li>
+<li>实现难度低、开发应用相对阻塞IO模式较难；</li>
+<li>适用并发量较小、且不需要及时响应的网络应用开发；</li>
+</ul>
+<p>我的理解：需要轮询进行系统调用，cpu开销大。</p>
+<h3 id="信号驱动IO"><a href="#信号驱动IO" class="headerlink" title="信号驱动IO"></a>信号驱动IO</h3><p><img src="/v2-4c502410a82ee33a30e1698589f8d88b_720w.webp" alt="img"></p>
+<p>当进程发起一个IO操作，会向内核注册一个信号处理函数，然后进程返回不阻塞；当内核数据就绪时会发送一个信号给进程，进程便在信号处理函数中调用IO读取数据。</p>
+<p>特点：回调机制，实现、开发应用难度大；</p>
+<p>我的理解：由内核进程进行IO，用户进程只需告诉内核进程需要IO，IO结束后内核进程发送数据IO完毕的信号通知用户进程，用户进程用回调函数将数据拷贝到进程空间。</p>
+<h3 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h3><p><img src="/v2-044ce7b648d62eaef1c1859cc6703cf8_720w.webp" alt="img"></p>
+<p>当进程发起一个IO操作，进程返回（不阻塞），但也不能返回结果；内核把整个IO处理完后，会通知进程结果。如果IO操作成功则进程直接获取到数据。</p>
+<p>特点：</p>
+<ul>
+<li>不阻塞，数据一步到位；Proactor模式；</li>
+<li>需要操作系统的底层支持，LINUX 2.5 版本内核首现，2.6 版本产品的内核标准特性；</li>
+<li>实现、开发应用难度大；</li>
+<li>非常适合高性能高并发应用；</li>
+</ul>
+<p>我的理解：由内核进程进行IO，并将数据拷贝到用户进程提供的缓冲区中，然后进行回调，处理后续的业务。</p>
+<h3 id="IO复用模型"><a href="#IO复用模型" class="headerlink" title="IO复用模型"></a>IO复用模型</h3><p><img src="/v2-c3bc4f57375fbd0dbe49692426b84dd2_1440w.webp" alt="img"></p>
+<p>大多数文件系统的默认IO操作都是缓存IO。在Linux的缓存IO机制中，操作系统会将IO的数据缓存在文件系统的页缓存（page cache）。也就是说，数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓存区拷贝到应用程序的地址空间中。这种做法的缺点就是，<strong>需要在应用程序地址空间和内核进行多次拷贝，这些拷贝动作所带来的CPU以及内存开销是非常大的</strong>。</p>
+<p>至于为什么不能直接让磁盘控制器把数据送到应用程序的地址空间中呢？<strong>最简单的一个原因就是应用程序不能直接操作底层硬件。</strong></p>
+<p>总的来说，IO分两阶段：</p>
+<p>1)数据准备阶段</p>
+<p>2)内核空间复制回用户进程缓冲区阶段。如下图：</p>
+<p><img src="/v2-89162cb4d5cc7fe4071ade36d3000d8a_1440w.webp" alt="img"></p>
+<h1 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h1><p>目前支持I&#x2F;O多路复用的系统调用有<code>select，pselect，poll，epoll。</code>与多进程和多线程技术相比，<code>I/O多路复用技术的最大优势是系统开销小，系统不必创建进程/线程</code>，也不必维护这些进程&#x2F;线程，从而大大减小了系统的开销。</p>
+<p>I&#x2F;O多路复用就是通过一种机制，<strong>一个进程可以监视多个描述符</strong>，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。但select，poll，epoll本质上都是<strong>同步I&#x2F;O</strong>，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I&#x2F;O则无需自己负责进行读写，异步I&#x2F;O的实现会负责把数据从内核拷贝到用户空间。</p>
+<h2 id="Select"><a href="#Select" class="headerlink" title="Select"></a>Select</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">select</span> <span class="params">(<span class="type">int</span> n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, <span class="keyword">struct</span> timeval *timeout)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>select 函数监视的文件描述符分3类，分别是writefds、readfds、和exceptfds，当用户process调用select的时候，select会将需要监控的readfds集合<strong>拷贝</strong>到内核空间（假设监控的仅仅是socket可读），然后<strong>遍历</strong>自己监控的skb(SocketBuffer)，挨个调用skb的poll逻辑以便检查该socket是否有可读事件，遍历完所有的skb后，如果没有任何一个socket可读，那么select会调用schedule_timeout进入schedule循环，使得process进入<strong>睡眠</strong>。如果在timeout时间内某个socket上有数据可读了，或者等待timeout了，则调用select的process会被唤醒，接下来select就是遍历监控的集合，挨个收集可读事件并返回给用户了。</p>
+<p>检查socket是否有可读事件是在内核进程中进行的，有可读事件后，用户态需要再遍历一遍确定是哪个fd有可读事件。</p>
+<p>select存在的问题：</p>
+<ol>
+<li>每次调用select，都需要把被监控的fds集合从用户态空间拷贝到内核态空间，高并发场景下这样的拷贝会使得消耗的资源是很大的。</li>
+<li>能监听端口的数量有限，单个进程所能打开的最大连接数由FD_SETSIZE宏定义，监听上限就等于<strong>fds_bits位数组</strong>中所有元素的二进制位总数，其大小是32个整数的大小（在32位的机器上，大小就是3232，同理64位机器上为3264），当然我们可以对宏FD_SETSIZE进行修改，然后重新编译内核，但是性能可能会受到影响，一般该数和系统内存关系很大，具体数目可以<code>cat /proc/sys/fs/file-max</code>察看。32位机默认1024个，64位默认2048。</li>
+<li>被监控的fds集合中，只要有一个有数据可读，整个socket集合就会被遍历一次调用sk的poll函数收集可读事件：由于当初的需求是朴素，仅仅关心是否有数据可读这样一个事件，当事件通知来的时候，由于数据的到来是异步的，我们不知道事件来的时候，有多少个被监控的socket有数据可读了，于是，只能挨个遍历每个socket来收集可读事件了。</li>
+</ol>
+<h2 id="Poll"><a href="#Poll" class="headerlink" title="Poll"></a>Poll</h2><p>poll的实现和select非常相似，只是<strong>描述fd集合</strong>的方式不同。针对select遗留的三个问题中（问题(2)是fd限制问题，问题(1)和(3)则是性能问题），poll只是使用pollfd结构而不是select的fd_set结构，这就解决了select的问题(2)fds集合大小1024限制问题。但poll和select同样存在一个性能缺点就是包含大量文件描述符的数组被整体复制于用户态和内核的地址空间之间，而不论这些文件描述符是否就绪，它的开销随着文件描述符数量的增加而线性增大。</p>
+<p>poll改变了fds集合的描述方式，使用了pollfd结构而不是select的fd_set结构，使得poll支持的fds集合限制远大于select的1024。poll虽然解决了fds集合大小1024的限制问题，从实现来看。很明显它并没优化大量描述符数组被整体复制于用户态和内核态的地址空间之间，以及个别描述符就绪触发整体描述符集合的遍历的低效问题。poll随着监控的socket集合的增加性能线性下降，使得poll也并不适合用于大并发场景。</p>
+<h2 id="Epoll"><a href="#Epoll" class="headerlink" title="Epoll"></a>Epoll</h2><p>epoll最大的好处在于它不会随着监听fd数目的增长而降低效率。</p>
+<p>回调会将当前socket加入ready_list然后唤醒epoll。同时收集到的可读的 fd 按理是要拷贝到用户空间的，这里又做了个优化，利用了 mmp，让用户空间和内核空间映射到同一块内存中，这样就避免了拷贝。</p>
+<p>创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大。epoll句柄会占用一个fd值，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。</p>
+<p>epoll接口：</p>
+<ul>
+<li>epoll_create：创建一个epoll句柄</li>
+<li>epoll_ctl：向 epoll 对象中添加&#x2F;修改&#x2F;删除要管理的连接</li>
+<li>epoll_wait：等待其管理的连接上的 IO 事件</li>
+</ul>
+<h3 id="epoll-create"><a href="#epoll-create" class="headerlink" title="epoll_create"></a>epoll_create</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_create</span><span class="params">(<span class="type">int</span> size)</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>功能：</strong>该函数生成一个 epoll 专用的文件描述符。</li>
+<li><strong>参数size:</strong> 用来告诉内核这个监听的数目一共有多大，参数 size 并不是限制了 epoll 所能监听的描述符最大个数，只是对内核初始分配内部数据结构的一个建议。自从 linux 2.6.8 之后，size 参数是被忽略的，也就是说可以填只有大于 0 的任意值。</li>
+<li><strong>返回值：</strong>如果成功，返回poll 专用的文件描述符，否者失败，返回-1。</li>
+</ul>
+<p>epoll_create的源码实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE1(epoll_create1, <span class="type">int</span>, flags)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">eventpoll</span> *<span class="title">ep</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建一个 eventpoll 对象</span></span><br><span class="line">    error = ep_alloc(&amp;ep);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//struct eventpoll 的定义</span></span><br><span class="line"><span class="comment">// file：fs/eventpoll.c</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">eventpoll</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//sys_epoll_wait用到的等待队列</span></span><br><span class="line">    <span class="type">wait_queue_head_t</span> wq;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//接收就绪的描述符都会放到这里</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">rdllist</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//每个epoll对象中都有一颗红黑树</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rb_root</span> <span class="title">rbr</span>;</span></span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">ep_alloc</span><span class="params">(<span class="keyword">struct</span> eventpoll **pep)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">eventpoll</span> *<span class="title">ep</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//申请 epollevent 内存</span></span><br><span class="line">    ep = kzalloc(<span class="keyword">sizeof</span>(*ep), GFP_KERNEL);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化等待队列头</span></span><br><span class="line">    init_waitqueue_head(&amp;ep-&gt;wq);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化就绪列表</span></span><br><span class="line">    INIT_LIST_HEAD(&amp;ep-&gt;rdllist);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化红黑树指针</span></span><br><span class="line">    ep-&gt;rbr = RB_ROOT;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中eventpoll 这个结构体中的几个成员的含义如下：</p>
+<ul>
+<li><strong>wq：</strong> 等待队列链表。软中断数据就绪的时候会通过 wq 来找到阻塞在 epoll 对象上的用户进程。</li>
+<li><strong>rbr：</strong> 红黑树。为了支持对海量连接的高效查找、插入和删除，eventpoll 内部使用的就是红黑树。通过红黑树来管理用户主进程accept添加进来的所有 socket 连接。</li>
+<li><strong>rdllist：</strong> 就绪的描述符链表。当有连接就绪的时候，内核会把就绪的连接放到 rdllist 链表里。这样应用进程只需要判断链表就能找出就绪进程，而不用去遍历红黑树的所有节点了。</li>
+</ul>
+<h3 id="epoll-ctl"><a href="#epoll-ctl" class="headerlink" title="epoll_ctl"></a><strong>epoll_ctl</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_ctl</span><span class="params">(<span class="type">int</span> epfd, <span class="type">int</span> op, <span class="type">int</span> fd, <span class="keyword">struct</span> epoll_event *event)</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>功能：</strong>epoll 的事件注册函数，它不同于 select() 是在监听事件时告诉内核要监听什么类型的事件，而是在这里先注册要监听的事件类型。</p>
+</li>
+<li><p><strong>参数epfd:</strong> epoll 专用的文件描述符，epoll_create()的返回值</p>
+</li>
+<li><p><strong>参数op:</strong> 表示动作，用三个宏来表示：</p>
+<ul>
+<li>EPOLL_CTL_ADD：注册新的 fd 到 epfd 中；</li>
+<li>EPOLL_CTL_MOD：修改已经注册的fd的监听事件；</li>
+<li>EPOLL_CTL_DEL：从 epfd 中删除一个 fd；</li>
+</ul>
+</li>
+<li><p><strong>参数fd:</strong> 需要监听的文件描述符</p>
+</li>
+<li><p><strong>参数event:</strong> 告诉内核要监听什么事件，struct epoll_event<br><strong>events</strong>可以是以下几个宏的集合：</p>
+<ul>
+<li>EPOLLIN ：表示对应的文件描述符可以读（包括对端 SOCKET 正常关闭）；</li>
+<li>EPOLLOUT：表示对应的文件描述符可以写；</li>
+<li>EPOLLPRI：表示对应的文件描述符有紧急的数据可读（这里应该表示有带外数据到来）；</li>
+<li>EPOLLERR：表示对应的文件描述符发生错误；</li>
+<li>EPOLLHUP：表示对应的文件描述符被挂断；</li>
+<li>EPOLLET ：将 EPOLL 设为边缘触发(Edge Trigger)模式，这是相对于水平触发(Level Trigger)来说的。</li>
+<li>EPOLLONESHOT：只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个 socket 的话，需要再次把这个 socket 加入到 EPOLL 队列里</li>
+</ul>
+</li>
+<li><p><strong>返回值：</strong>0表示成功，-1表示失败。</p>
+</li>
+</ul>
+<h3 id="epoll-wait"><a href="#epoll-wait" class="headerlink" title="epoll_wait"></a><strong>epoll_wait</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_wait</span><span class="params">(<span class="type">int</span> epfd, <span class="keyword">struct</span> epoll_event * events, <span class="type">int</span> maxevents, <span class="type">int</span> timeout)</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>功能：</strong>等待事件的产生，收集在 epoll 监控的事件中已经发送的事件，类似于 select() 调用。</li>
+<li><strong>参数epfd:</strong> epoll 专用的文件描述符，epoll_create()的返回值</li>
+<li><strong>参数events:</strong> 分配好的 epoll_event 结构体数组，epoll 将会把发生的事件赋值到events 数组中（events 不可以是空指针，内核只负责把数据复制到这个 events 数组中，不会去帮助我们在用户态中分配内存）。</li>
+<li><strong>参数maxevents:</strong> maxevents 告之内核这个 events 有多少个 。</li>
+<li><strong>参数timeout:</strong> 超时时间，单位为毫秒，为 -1 时，函数为阻塞。</li>
+<li><strong>返回值：</strong><ol>
+<li>如果成功，表示返回需要处理的事件数目</li>
+<li>如果返回0，表示已超时</li>
+<li>如果返回-1，表示失败</li>
+</ol>
+</li>
+</ul>
+<p>示例代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cassert&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_EVENT_NUMBER = <span class="number">10000</span>; <span class="comment">//最大事件数</span></span><br><span class="line"><span class="comment">// 设置句柄非阻塞</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">setnonblocking</span><span class="params">(<span class="type">int</span> fd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> old_option = <span class="built_in">fcntl</span>(fd, F_GETFL);</span><br><span class="line">    <span class="type">int</span> new_option = old_option | O_NONBLOCK;</span><br><span class="line">    <span class="built_in">fcntl</span>(fd, F_SETFL, new_option);</span><br><span class="line">    <span class="keyword">return</span> old_option;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建套接字</span></span><br><span class="line">    <span class="type">int</span> nRet=<span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> m_listenfd = <span class="built_in">socket</span>(PF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span>(m_listenfd&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;fail to socket!&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// </span></span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> address;</span><br><span class="line">    <span class="built_in">bzero</span>(&amp;address, <span class="built_in">sizeof</span>(address));</span><br><span class="line">    address.sin_family = AF_INET;</span><br><span class="line">    address.sin_addr.s_addr = <span class="built_in">htonl</span>(INADDR_ANY);</span><br><span class="line">    address.sin_port = <span class="built_in">htons</span>(<span class="number">6666</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> flag = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 设置ip可重用</span></span><br><span class="line">    <span class="built_in">setsockopt</span>(m_listenfd, SOL_SOCKET, SO_REUSEADDR, &amp;flag, <span class="built_in">sizeof</span>(flag));</span><br><span class="line">    <span class="comment">// 绑定端口号</span></span><br><span class="line">    <span class="type">int</span> ret = <span class="built_in">bind</span>(m_listenfd, (<span class="keyword">struct</span> sockaddr *)&amp;address, <span class="built_in">sizeof</span>(address));</span><br><span class="line">    <span class="keyword">if</span>(ret&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;fail to bind!,errno :%d&quot;</span>,errno);</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 监听连接fd</span></span><br><span class="line">    ret = <span class="built_in">listen</span>(m_listenfd, <span class="number">200</span>);</span><br><span class="line">    <span class="keyword">if</span>(ret&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;fail to listen!,errno :%d&quot;</span>,errno);</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化红黑树和事件链表结构rdlist结构</span></span><br><span class="line">    epoll_event events[MAX_EVENT_NUMBER];</span><br><span class="line">    <span class="comment">// 创建epoll实例</span></span><br><span class="line">    <span class="type">int</span> m_epollfd = <span class="built_in">epoll_create</span>(<span class="number">5</span>);</span><br><span class="line">    <span class="keyword">if</span>(m_epollfd==<span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;fail to epoll create!&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> m_epollfd;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建节点结构体将监听连接句柄</span></span><br><span class="line">    epoll_event event;</span><br><span class="line">    event.data.fd = m_listenfd;</span><br><span class="line">    <span class="comment">//设置该句柄为边缘触发（数据没处理完后续不会再触发事件，水平触发是不管数据有没有触发都返回事件），</span></span><br><span class="line">    event.events = EPOLLIN | EPOLLET | EPOLLRDHUP;</span><br><span class="line">    <span class="comment">// 添加监听连接句柄作为初始节点进入红黑树结构中，该节点后续处理连接的句柄</span></span><br><span class="line">    <span class="built_in">epoll_ctl</span>(m_epollfd, EPOLL_CTL_ADD, m_listenfd, &amp;event);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//进入服务器循环</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> number = <span class="built_in">epoll_wait</span>(m_epollfd, events, MAX_EVENT_NUMBER, <span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">if</span> (number &lt; <span class="number">0</span> &amp;&amp; errno != EINTR)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>( <span class="string">&quot;epoll failure&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; number; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> sockfd = events[i].data.fd;</span><br><span class="line">            <span class="comment">// 属于处理新到的客户连接</span></span><br><span class="line">            <span class="keyword">if</span> (sockfd == m_listenfd)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> client_address;</span><br><span class="line">                <span class="type">socklen_t</span> client_addrlength = <span class="built_in">sizeof</span>(client_address);</span><br><span class="line">                <span class="type">int</span> connfd = <span class="built_in">accept</span>(m_listenfd, (<span class="keyword">struct</span> sockaddr *)&amp;client_address, &amp;client_addrlength);</span><br><span class="line">                <span class="keyword">if</span> (connfd &lt; <span class="number">0</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">printf</span>(<span class="string">&quot;errno is:%d accept error&quot;</span>, errno);</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                epoll_event event;</span><br><span class="line">                event.data.fd = connfd;</span><br><span class="line">                <span class="comment">//设置该句柄为边缘触发（数据没处理完后续不会再触发事件，水平触发是不管数据有没有触发都返回事件），</span></span><br><span class="line">                event.events = EPOLLIN | EPOLLRDHUP;</span><br><span class="line">                <span class="comment">// 添加监听连接句柄作为初始节点进入红黑树结构中，该节点后续处理连接的句柄</span></span><br><span class="line">                <span class="built_in">epoll_ctl</span>(m_epollfd, EPOLL_CTL_ADD, connfd, &amp;event);</span><br><span class="line">                <span class="built_in">setnonblocking</span>(connfd);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (events[i].events &amp; (EPOLLRDHUP | EPOLLHUP | EPOLLERR))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//服务器端关闭连接，</span></span><br><span class="line">                <span class="built_in">epoll_ctl</span>(m_epollfd, EPOLL_CTL_DEL, sockfd, <span class="number">0</span>);</span><br><span class="line">                <span class="built_in">close</span>(sockfd);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//处理客户连接上接收到的数据</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (events[i].events &amp; EPOLLIN)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="type">char</span> buf[<span class="number">1024</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">                <span class="built_in">read</span>(sockfd,buf,<span class="number">1024</span>);</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;from client :%s&quot;</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 将事件设置为写事件返回数据给客户端</span></span><br><span class="line">                events[i].data.fd = sockfd;</span><br><span class="line">                events[i].events = EPOLLOUT | EPOLLET | EPOLLONESHOT | EPOLLRDHUP;</span><br><span class="line">                <span class="built_in">epoll_ctl</span>(m_epollfd, EPOLL_CTL_MOD, sockfd, &amp;events[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (events[i].events &amp; EPOLLOUT)</span><br><span class="line">            &#123;</span><br><span class="line">                std::string response = <span class="string">&quot;server response \n&quot;</span>;</span><br><span class="line">                <span class="built_in">write</span>(sockfd,response.<span class="built_in">c_str</span>(),response.<span class="built_in">length</span>());</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 将事件设置为读事件，继续监听客户端</span></span><br><span class="line">                events[i].data.fd = sockfd;</span><br><span class="line">                events[i].events = EPOLLIN | EPOLLRDHUP;</span><br><span class="line">                <span class="built_in">epoll_ctl</span>(m_epollfd, EPOLL_CTL_MOD, sockfd, &amp;events[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//else if 可以加管道，unix套接字等等数据</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="ET-LT"><a href="#ET-LT" class="headerlink" title="ET&amp;LT"></a><strong>ET&amp;LT</strong></h3><p><strong>水平触发 LT</strong></p>
+<ol>
+<li>对于读操作，只要缓冲内容不为空，LT模式返回读就绪。</li>
+<li>对于写操作，只要缓冲区还不满，LT模式会返回写就绪。</li>
+</ol>
+<p>当被监控的文件描述符上有可读写事件发生时，epoll_wait()会通知处理程序去读写。如果这次没有把数据一次性全部读写完(如读写缓冲区太小)，那么下次调用 epoll_wait()时，它还会通知你在上没读写完的文件描述符上<strong>继续</strong>读写，当然如果你一直不去读写，它会一直通知你。如果系统中有大量你不需要读写的就绪文件描述符，而它们每次都会返回，这样会大大降低处理程序检索自己关心的就绪文件描述符的效率。</p>
+<p><strong>边缘触发 ET</strong></p>
+<ul>
+<li>对于读操作</li>
+</ul>
+<ol>
+<li>当缓冲区由不可读变为可读的时候，即缓冲区由空变为不空的时候。</li>
+<li>当有新数据到达时，即缓冲区中的待读数据变多的时候。</li>
+<li>当缓冲区有数据可读，且应用进程对相应的描述符进行EPOLL_CTL_MOD 修改EPOLLIN事件时。</li>
+</ol>
+<ul>
+<li>对于写操作</li>
+</ul>
+<ol>
+<li>当缓冲区由不可写变为可写时。</li>
+<li>当有旧数据被发送走，即缓冲区中的内容变少的时候。</li>
+<li>当缓冲区有空间可写，且应用进程对相应的描述符进行EPOLL_CTL_MOD 修改EPOLLOUT事件时。</li>
+</ol>
+<p>当被监控的文件描述符上有可读写事件发生时，epoll_wait()会通知处理程序去读写。如果这次没有把数据全部读写完(如读写缓冲区太小)，那么下次调用epoll_wait()时，它不会通知你，也就是它只会通知你一次，直到该文件描述符上出现第二次可读写事件才会通知你。这种模式比水平触发效率高，系统不会充斥大量你不关心的就绪文件描述符。</p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><ol>
+<li><strong>用户态将文件描述符传入内核的方式</strong></li>
+</ol>
+<ul>
+<li>select：创建3个文件描述符集并拷贝到内核中，分别监听读、写、异常动作。这里受到单个进程可以打开的fd数量限制，默认是1024。</li>
+<li>poll：将传入的struct pollfd结构体数组拷贝到内核中进行监听。</li>
+<li>epoll：执行epoll_create会在内核的高速cache区中建立一颗红黑树以及就绪链表(该链表存储已经就绪的文件描述符)。接着用户执行的epoll_ctl函数添加文件描述符会在红黑树上增加相应的结点。</li>
+</ul>
+<ol start="2">
+<li><strong>内核态检测文件描述符读写状态的方式</strong></li>
+</ol>
+<ul>
+<li>select：采用轮询方式，遍历所有fd，最后返回一个描述符读写操作是否就绪的mask掩码，根据这个掩码给fd_set赋值。</li>
+<li>poll：同样采用轮询方式，查询每个fd的状态，如果就绪则在等待队列中加入一项并继续遍历。</li>
+<li>epoll：采用回调机制。在执行epoll_ctl的add操作时，不仅将文件描述符放到红黑树上，而且也注册了回调函数，内核在检测到某文件描述符可读&#x2F;可写时会调用回调函数，该回调函数将文件描述符放在就绪链表中。</li>
+</ul>
+<ol start="3">
+<li><strong>找到就绪的文件描述符并传递给用户态的方式</strong></li>
+</ol>
+<ul>
+<li>select：将之前传入的fd_set拷贝传出到用户态并返回就绪的文件描述符总数。用户态并不知道是哪些文件描述符处于就绪态，需要遍历来判断。</li>
+<li>poll：将之前传入的fd数组拷贝传出用户态并返回就绪的文件描述符总数。用户态并不知道是哪些文件描述符处于就绪态，需要遍历来判断。</li>
+<li>epoll：epoll_wait只用观察就绪链表中有无数据即可，最后将链表的数据返回给数组并返回就绪的数量。内核将就绪的文件描述符放在传入的数组中，所以只用遍历依次处理即可。这里返回的文件描述符是通过mmap让内核和用户空间共享同一块内存实现传递的，减少了不必要的拷贝。</li>
+</ul>
+<ol start="4">
+<li><strong>重复监听的处理方式</strong></li>
+</ol>
+<ul>
+<li>select：将新的监听文件描述符集合拷贝传入内核中，继续以上步骤。</li>
+<li>poll：将新的struct pollfd结构体数组拷贝传入内核中，继续以上步骤。</li>
+<li>epoll：无需重新构建红黑树，直接沿用已存在的即可。</li>
+</ul>
+<h2 id="epoll更高效的原因"><a href="#epoll更高效的原因" class="headerlink" title="epoll更高效的原因"></a>epoll更高效的原因</h2><ol>
+<li>select和poll的动作基本一致，只是poll采用链表来进行文件描述符的存储，而select采用fd标注位来存放，所以select会受到最大连接数的限制，而poll不会。</li>
+<li>select、poll、epoll虽然都会返回就绪的文件描述符数量。但是select和poll并不会明确指出是哪些文件描述符就绪，而epoll会。造成的区别就是，系统调用返回后，调用select和poll的程序需要遍历监听的整个文件描述符找到是谁处于就绪，而epoll则直接处理即可。</li>
+<li>select、poll都需要将有关文件描述符的数据结构拷贝进内核，最后再拷贝出来。而epoll创建的有关文件描述符的数据结构本身就存于内核态中，系统调用返回时利用mmap()文件映射内存加速与内核空间的消息传递：即epoll使用mmap减少复制开销。</li>
+<li>select、poll采用轮询的方式来检查文件描述符是否处于就绪态，而epoll采用回调机制。造成的结果就是，随着fd的增加，select和poll的效率会线性降低，而epoll不会受到太大影响，除非活跃的socket很多。</li>
+<li>epoll的边缘触发模式效率高，系统不会充斥大量不关心的就绪文件描述符</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/08/09/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">http://example.com/2023/08/09/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/08/05/8-3-%E5%85%83%E6%88%8E%E5%90%AF%E8%A1%8C%E4%B8%80%E9%9D%A2/">8-3-元戎启行一面</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
