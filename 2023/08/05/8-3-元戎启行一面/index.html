@@ -154,6 +154,71 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
@@ -176,10 +241,7 @@
         </header>
 
         <div class="post-content">
-            <p>秋招面试的第一个公司：元戎启行。面试官的摄像头有问题没有样子，不过听声音感觉很温和，无法开摄像头和接电话后和我道歉，给予了足够的尊重。说明这个公司的文化就尊重每个人，而且注重生活。面试的结果我觉得很不好，最后他还安慰我说不要因为一场面试就否定自己，还鼓励我多学习，真是个好人。</p>
-<ol>
-<li><p><strong>C++11,14,17都有哪些特性</strong></p>
-<p>C++ 11：auto,decltype类型推导，返回值类型后置（跟踪返回值类型），模板连续右尖括号&gt;&gt;的改进，using定义别名，函数模板的默认模板参数，函数模板和类模板中使用可变参数，tuple元组，列表初始化，lambda匿名函数，非受限联合体，基于范围的for循环，constexpr，long long，右值引用，移动构造函数，std:move，引用限定符，完美转发，nullptr，智能指针</p>
+            <h1 id="C-11-14-17都有哪些特性"><a href="#C-11-14-17都有哪些特性" class="headerlink" title="C++11,14,17都有哪些特性"></a><strong>C++11,14,17都有哪些特性</strong></h1><p>C++ 11：auto,decltype类型推导，返回值类型后置（跟踪返回值类型），模板连续右尖括号&gt;&gt;的改进，using定义别名，函数模板的默认模板参数，函数模板和类模板中使用可变参数，tuple元组，列表初始化，lambda匿名函数，非受限联合体，基于范围的for循环，constexpr，long long，右值引用，移动构造函数，std:move，引用限定符，完美转发，nullptr，智能指针</p>
 <p><strong>类型推导</strong></p>
 <ol>
 <li><p>auto<br>占位符，类型变量类型由编译器推导得出。<br>当推导类型包含引用时会抛弃引用，直接推导出原始类型。<br>与const：当类型不为引用时，auto 的推导结果将不保留表达式的 const 属性。当类型为引用时，auto 的推导结果将保留表达式的 const 属性。<br><strong>限制</strong>：不能在函数的参数中使用。 不能作用于类的非静态成员变量。不能定义数组。不能作用于模板参数。</p>
@@ -452,15 +514,13 @@
 <li><code>std::weak_ptr</code>: 是一种弱引用，它可以观测一个<code>std::shared_ptr</code>所管理的对象，但不会增加对象的引用计数。当最后一个<code>std::shared_ptr</code>对象超出作用域时，被观测的<code>std::weak_ptr</code>会自动失效。<code>std::weak_ptr</code>的主要用途是解决循环引用问题。当多个对象之间存在循环引用时，可以使用<code>std::weak_ptr</code>来打破循环引用，从而正确释放内存。通过将其中一个<code>std::shared_ptr</code>对象替换为<code>std::weak_ptr</code>，可以确保循环引用不会导致内存泄漏。<code>std::weak_ptr</code>不能直接访问被观测的对象，必须通过<code>lock()</code>函数获取一个有效的<code>std::shared_ptr</code>才能访问。此外，由于<code>std::weak_ptr</code>不会增加引用计数，所以需要注意在使用<code>std::weak_ptr</code>时，被观测的对象可能已经被释放的情况。</li>
 </ol>
 <hr>
-<p>C++ 14：变量模板，泛型lambda表达式，更宽松的constexpr限制，返回值自动类型推导，二进制字面量，std::make_unique，std::exchange</p>
-<p><strong>变量模板</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="keyword">constexpr</span> T pi = <span class="built_in">T</span>(<span class="number">3.1415926535897932385L</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; pi&lt;<span class="type">int</span>&gt; &lt;&lt; endl; <span class="comment">// 3</span></span><br><span class="line">    cout &lt;&lt; pi&lt;<span class="type">double</span>&gt; &lt;&lt; endl; <span class="comment">// 3.14159</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>   C++ 14：变量模板，泛型lambda表达式，更宽松的constexpr限制，返回值自动类型推导，二进制字面量，std::make_unique，std::exchange</p>
+<p>   <strong>变量模板</strong></p>
+   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="keyword">constexpr</span> T pi = <span class="built_in">T</span>(<span class="number">3.1415926535897932385L</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; pi&lt;<span class="type">int</span>&gt; &lt;&lt; endl; <span class="comment">// 3</span></span><br><span class="line">    cout &lt;&lt; pi&lt;<span class="type">double</span>&gt; &lt;&lt; endl; <span class="comment">// 3.14159</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p><strong>泛型lambda表达式</strong></p>
-</li>
-</ol>
+<p>   <strong>泛型lambda表达式</strong></p>
 <p>lambda中的形参可以用auto</p>
    <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> lam = [](<span class="keyword">auto</span> x, <span class="keyword">auto</span> y)&#123;</span><br><span class="line">    <span class="keyword">return</span> x+y;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
@@ -520,9 +580,7 @@
 <p>   <strong>std::string_view</strong></p>
 <p>   <strong>file_system</strong></p>
 <p>   <strong>std::shared_mutex</strong></p>
-<ol start="2">
-<li><p><strong>智能指针是怎么实现的</strong></p>
-<ul>
+<h1 id="智能指针是怎么实现的"><a href="#智能指针是怎么实现的" class="headerlink" title="智能指针是怎么实现的"></a><strong>智能指针是怎么实现的</strong></h1><ul>
 <li><p><code>unique_ptr</code>：拥有对持有对象的唯一所有权。</p>
 <p>1、get() 获取其保存的原生指针，尽量不要使用</p>
 <p>2、bool() 判断是否拥有指针</p>
@@ -553,9 +611,7 @@
 </li>
 </ul>
 <p><code>-&gt;</code>表示用于调用指针原有的方法，而<code>.</code>则表示调用智能指针本身的方法。</p>
-</li>
-<li><p>STL都有哪些容器，底层实现是什么</p>
-<ol>
+<h1 id="STL都有哪些容器，底层实现是什么"><a href="#STL都有哪些容器，底层实现是什么" class="headerlink" title="STL都有哪些容器，底层实现是什么"></a>STL都有哪些容器，底层实现是什么</h1><ol>
 <li><strong>vector</strong>（动态数组）：vector是一个<strong>动态数组</strong>，底层实现是使用连续的内存块存储元素。当元素数量超过当前分配的内存空间时，会重新分配更大的内存空间，并将原来的元素复制到新的内存空间中。</li>
 <li><strong>list</strong>（双向链表）：list是一个<strong>双向链表</strong>，底层实现是使用节点来存储元素，并使用指针链接节点。由于是链表结构，list在插入和删除元素时效率较高，但随机访问元素的效率较低。</li>
 <li><strong>forward_list</strong>（单向链表）：forward_list底层是使用单向链表实现。</li>
@@ -569,17 +625,14 @@
 <li><strong>multimap</strong>（多重映射）：multimap是一个有序的多重映射，底层实现与map相同，但允许存储重复的键值对。</li>
 <li><strong>unordered_set,unordered_map,unordered_multiset,uordered_multimap</strong>：底层使用hash表实现。</li>
 </ol>
-</li>
-<li><p>移动语义是什么，std:move，std:forward</p>
-<p>通过引入右值引用，移动构造函数，移动赋值运算符来避免拷贝操作，这就是移动语义。移动语义实际上是改变对象的所有权，适用于原变量不会再使用的情况。<br><code>std::move</code>将左值转换为右值。</p>
+<h1 id="移动语义是什么，std-move，std-forward"><a href="#移动语义是什么，std-move，std-forward" class="headerlink" title="移动语义是什么，std:move，std:forward"></a>移动语义是什么，std:move，std:forward</h1><p>通过引入右值引用，移动构造函数，移动赋值运算符来避免拷贝操作，这就是移动语义。移动语义实际上是改变对象的所有权，适用于原变量不会再使用的情况。<br><code>std::move</code>将左值转换为右值。</p>
 <p><code>std::forward</code>还原参数的左右值属性。因为在函数体中，不管是左值引用还是右值引用都是左值。</p>
 <p>源码</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// remove_reference, 模板特化实现去除引用</span></span><br><span class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">remove_reference</span></span><br><span class="line">    &#123; <span class="keyword">typedef</span> _Tp   type; &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">remove_reference</span>&lt;_Tp&amp;&gt;</span><br><span class="line">    &#123; <span class="keyword">typedef</span> _Tp   type; &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">remove_reference</span>&lt;_Tp&amp;&amp;&gt;</span><br><span class="line">    &#123; <span class="keyword">typedef</span> _Tp   type; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//std::move， static_cast强制转换为右值</span></span><br><span class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp&gt;</span><br><span class="line">    <span class="keyword">constexpr</span> <span class="keyword">typename</span> std::remove_reference&lt;_Tp&gt;::<span class="function">type&amp;&amp;</span></span><br><span class="line"><span class="function">    <span class="title">move</span><span class="params">(_Tp&amp;&amp; <span class="type">__t</span>)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">    </span>&#123; <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;<span class="keyword">typename</span> std::remove_reference&lt;_Tp&gt;::type&amp;&amp;&gt;(<span class="type">__t</span>); &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//std::forward，模板特化，引用折叠，static_cast负责转换</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp&gt;</span></span><br><span class="line"><span class="function">    <span class="keyword">constexpr</span> _Tp&amp;&amp;</span></span><br><span class="line"><span class="function">    <span class="title">forward</span><span class="params">(<span class="keyword">typename</span> std::remove_reference&lt;_Tp&gt;::type&amp; <span class="type">__t</span>)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">    </span>&#123; <span class="keyword">return</span> <span class="built_in">static_cast</span>&lt;_Tp&amp;&amp;&gt;(<span class="type">__t</span>); &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp&gt;</span></span><br><span class="line"><span class="function">    <span class="keyword">constexpr</span> _Tp&amp;&amp;</span></span><br><span class="line"><span class="function">    <span class="title">forward</span><span class="params">(<span class="keyword">typename</span> std::remove_reference&lt;_Tp&gt;::type&amp;&amp; <span class="type">__t</span>)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">      <span class="built_in">static_assert</span>(!std::is_lvalue_reference&lt;_Tp&gt;::value, <span class="string">&quot;template argument&quot;</span></span><br><span class="line">		    <span class="string">&quot; substituting _Tp is an lvalue reference type&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">static_cast</span>&lt;_Tp&amp;&amp;&gt;(<span class="type">__t</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
-</li>
-<li><p><strong>你知道设计模式吗</strong></p>
-<p>设计模式是前人经验总结的常用编码模板，有助于设计出可维护、可扩展、可重用的代码。</p>
+
+<h1 id="你知道设计模式吗"><a href="#你知道设计模式吗" class="headerlink" title="你知道设计模式吗"></a><strong>你知道设计模式吗</strong></h1><p>设计模式是前人经验总结的常用编码模板，有助于设计出可维护、可扩展、可重用的代码。</p>
 <ul>
 <li><strong>创建型模式</strong>：对类的实例化过程进行了抽象，能够将软件模块中<strong>对象的创建</strong>和对象的使用分离。<br>工厂模式、抽象工厂模式、单例模式、建造者模式、原型模式</li>
 <li><strong>结构性模式</strong>：关注于对象的组成以及对象之间的依赖关系，描述如何将类或者对象结合在一起形成更大的结构，就像<strong>搭积木</strong>，可以通过简单积木的组合形成复杂的、功能更为强大的结构。<br>适配器模式、装饰者模式、代理模式、外观模式、桥接模式、组合模式、享元模式</li>
@@ -674,13 +727,9 @@
 <p><strong>解释器模式</strong></p>
 <p>解释器模式（Interpreter Pattern）提供了评估语言的语法或表达式的方式。这种模式实现了一个表达式接口，该接口解释一个特定的上下文。这种模式被用在SQL解析、符号处理引擎等。</p>
 <p>给定一个语言，定义它的文法表示，并定义一个解释器，这个解释器使用该标识来解释语言中的句子。</p>
-</li>
-<li><p><code>std:lock_guard</code>和<code>std::unique_lock</code></p>
-<p>相同点：通过构造函数和析构函数控制锁的作用范围。创建时加锁，离开作用域时解锁。</p>
+<h1 id="std-lock-guard和std-unique-lock"><a href="#std-lock-guard和std-unique-lock" class="headerlink" title="std:lock_guard和std::unique_lock"></a><code>std:lock_guard</code>和<code>std::unique_lock</code></h1><p>相同点：通过构造函数和析构函数控制锁的作用范围。创建时加锁，离开作用域时解锁。</p>
 <p>不同点：<code>std::unique_lock</code>可以在构造函数中延时加锁，在需要时可以手动加锁和解锁。<code>std::locak_guard</code>不支持赋值操作。<code>std::unique_lock</code>支持可移动赋值，若占有互斥量则解锁并取得另一者的所有权。<code>std::unique_lock</code>更加灵活，但消耗的资源要多一些，因为要维持mutex的状态。<code>std::locak_guard</code>资源消耗相对小一点。</p>
-</li>
-<li><p>红黑树是什么</p>
-<p>红黑树是一种自平衡的二叉搜索树，它在每个节点上增加了一个额外的属性，用于表示节点的颜色，可以是红色或黑色。</p>
+<h1 id="红黑树是什么"><a href="#红黑树是什么" class="headerlink" title="红黑树是什么"></a>红黑树是什么</h1><p>红黑树是一种自平衡的二叉搜索树，它在每个节点上增加了一个额外的属性，用于表示节点的颜色，可以是红色或黑色。</p>
 <p>本质上是B树的二叉化，B树的某个节点中一个元素转化为黑节点，其他元素转化为红节点。</p>
 <p>性质：</p>
 <ol>
@@ -689,9 +738,7 @@
 <li>树中不存在两个相邻的红色结点（即红色结点的父结点和孩子结点均不能是红色）；</li>
 <li>从任意一个结点（包括根结点）到其任何后代 NULL 结点（默认是黑色的）的每条路径都具有相同数量的黑色结点。<br>与AVL树不同的是：插入删除不需要频繁的旋转，AVL树更平衡。</li>
 </ol>
-</li>
-<li><p>算法题：环形子数组的最大和，力扣918原题，<strong>42&#x2F;43</strong></p>
-<ul>
+<h1 id="算法题：环形子数组的最大和，力扣918原题，42-43"><a href="#算法题：环形子数组的最大和，力扣918原题，42-43" class="headerlink" title="算法题：环形子数组的最大和，力扣918原题，42&#x2F;43"></a>算法题：环形子数组的最大和，力扣918原题，<strong>42&#x2F;43</strong></h1><ul>
 <li>思路：不考虑首尾相连计算得到一个结果，只考虑首尾相连计算得到一个结果，取较大值<br>用dp得到单个数组中最大子数组和。<strong>maxSuffix存储当前下标之后的后缀最大子数组和</strong>，每个元素与前缀计算首尾相连的子数组和。二者取较大值。</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">maxSubarraySumCircular</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> dp = <span class="number">-1</span>, res = INT_MIN;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">maxSuffix</span><span class="params">(nums.size())</span></span>;</span><br><span class="line">        <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = nums.<span class="built_in">size</span>()<span class="number">-1</span>; i &gt;= <span class="number">0</span>; --i)&#123;</span><br><span class="line">            sum += nums[i];</span><br><span class="line">            <span class="keyword">if</span>(i == nums.<span class="built_in">size</span>()<span class="number">-1</span>)&#123;</span><br><span class="line">                maxSuffix[i] = nums[i];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                maxSuffix[i] = <span class="built_in">max</span>(sum, maxSuffix[i+<span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> prefix = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); ++i)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dp &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                dp += nums[i];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                dp = nums[i];</span><br><span class="line">            &#125;</span><br><span class="line">            res = <span class="built_in">max</span>(res, dp);</span><br><span class="line">            <span class="keyword">if</span>(i &lt; nums.<span class="built_in">size</span>()<span class="number">-1</span>)&#123;</span><br><span class="line">                prefix += nums[i];</span><br><span class="line">                res = <span class="built_in">max</span>(res, prefix + maxSuffix[i+<span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
@@ -702,8 +749,6 @@
 </li>
 <li></li>
 </ul>
-</li>
-</ol>
 <p><img src="/R.b49dbddffaa692d75988e0c5882daccarik=r6IIYs2muimY7A&riu=http://www.quazero.com/uploads/allimg/140529/1-140529145A4.jpeg" alt="美丽自然山水美景高清图片,高清图片,手机锁屏桌面-壁纸族"></p>
 
         </div>
@@ -758,8 +803,6 @@
             
                 <a class="prev" rel="prev" href="/2023/08/09/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">IO多路复用</a>
             
-            
-            <a class="next" rel="next" href="/2023/08/05/hello-world/">Hello World</a>
             
         </section>
 
