@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>8-17-元戎启行二面 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">ZH&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">ZH&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">8-17-元戎启行二面</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 17, 2023&nbsp;&nbsp;22:07:10</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>主要问了一些c++的八股，没涉及项目。</p>
+<p>问的题目有：</p>
+<ol>
+<li>右值，右值引用<br>加问：右值引用避免拷贝是编译器级别实现的还是系统级别实现的</li>
+<li>完美转发</li>
+<li>智能指针</li>
+<li>map和unordered_map的区别<br>加问：说一下红黑树的性质</li>
+<li><strong>操作系统中的锁</strong></li>
+<li><strong>策略模式和工厂模式</strong>。</li>
+</ol>
+<p>算法题两个easy，链表有没有环和树的路径和。</p>
+<p>记录一下没答出来的题目吧。</p>
+<h1 id="操作系统中的锁"><a href="#操作系统中的锁" class="headerlink" title="操作系统中的锁"></a>操作系统中的锁</h1><ul>
+<li>自旋锁 <code>spinlock</code><br>自旋锁的主要特征是使用者在想要获得临界区执行权限时，如果临界区已经被加锁，那么自旋锁并不会阻塞睡眠，等待系统来主动唤醒，而是原地忙<strong>轮询</strong>资源是否被释放加锁。自旋锁的主要特征是使用者在想要获得临界区执行权限时，如果临界区已经被加锁，那么自旋锁并不会阻塞睡眠，等待系统来主动唤醒，而是原地忙轮询资源是否被释放加锁</li>
+<li>互斥锁 <code>mutex</code><br>使用者使用互斥锁时在访问共享资源之前对进行加锁操作，在访问完成之后进行解锁操作，谁加锁谁释放，其他使用者没有释放权限。 加锁后，任何其他试图再次加锁的线程会被<strong>阻塞</strong>，直到当前进程解锁，系统将阻塞的线程进行唤醒。</li>
+<li>读写锁 <code>rwlock</code><br>读写锁也叫<strong>共享互斥锁</strong>：读模式共享和写模式互斥。读写锁有读加锁状态、写加锁状态和不加锁状态三种状态，当读写锁在写加锁模式下，任何试图对这个锁进行加锁的线程都会被阻塞，直到写进程对其解锁。<br><strong>读优先的读写锁</strong>：读写锁rwlock默认的也是读优先，也就是:当读写锁在读加锁模式先，任何线程都可以对其进行读加锁操作，但是所有试图进行写加锁操作的线程都会被阻塞，直到所有的读线程都解锁，因此读写锁很适合读次数远远大于写的情况。这种情况需要考虑写饥饿问题，也就是大量的读一直轮不到写，因此需要设置公平的读写策略。</li>
+<li>RCU锁<br>RCU锁是读写锁的扩展版本，简单来说就是支持多读多写同时加锁。RCU锁翻译为Read Copy Update Lock，读-拷贝-更新 锁。<br>Copy：写者在访问临界区时，写者将先拷贝一个临界区副本，然后对副本进行修改；<br>Update：RCU机制将在在适当时机使用一个回调函数把指向原来临界区的指针重新指向新的被修改的临界区，锁机制中的垃圾收集器负责回调函数的调用。<br>更新时机：没有CPU再去操作这段被RCU保护的临界区后，这段临界区即可回收了，此时回调函数即被调用。<br>写拷贝开销较大，适合读多写少（路由表的查询更新、设备状态表更新）。</li>
+<li>条件变量 <code>condition variables</code><br>条件变量本身不是锁，条件变量可以主动等待和唤醒，通常和互斥锁配合使用。可以实现基于业务逻辑，将阻塞的互斥锁进行异步唤醒。</li>
+<li>可重入锁和不可重入锁(递归锁和非递归锁)<br>两个函数都需要加同一把锁，而这两个函数之间有调用关系。如果锁是不可重入的，那么执行到被调用的函数加锁处时就会死锁。而可重入锁不会，允许递归获取同一个锁。<br>Windows中的<code>Mutex</code>和<code>Critical Section</code>是可递归的，Linux下的<code>pthread_mutex_t</code>默认是非递归的，可以显示设置<code>PTHREAD_MUTEX_RECURSIVE</code>属性更改为可递归的。</li>
+</ul>
+<p>C++11中的锁</p>
+<ol>
+<li><p><code>std::mutex</code><br>在头文件<code>&lt;mutex&gt;</code>里，可以上锁<code>lock()</code>和解锁<code>unlock()</code>，不过不建议这样做。可以用RAII的<code>std::lock_guard()</code>和<code>std::unique_lock()</code>来自动管理<code>std::mutex</code>的上锁和解锁。底层封装<code>pthread_mutex_t</code>。</p>
+</li>
+<li><p><code>std::timed_mutex</code><br>额外提供了<code>try_lock_for()</code>和<code>try_lock_until()</code></p>
+</li>
+<li><p><code>std::recursive_mutex</code><br>可重入锁，递归锁。<strong>底层实现好像和<code>std::mutex</code>一样？</strong>应该因为Linux底层的<code>pthread_mutex_t</code>的类型属性被设置为<code>PTHREAD_MUTEX_RECURSIVE</code>，已经是可重入锁了，所以是一样的。</p>
+</li>
+<li><p><code>std::recursive_timed_mutex</code><br>额外提供超时功能。</p>
+</li>
+<li><p><code>std::shared_mutex</code>  c++17<br>共享锁，允许以共享模式加互斥锁。额外有<code>lock_shared()</code>和<code>try_lock_shared()</code>。当有线程获得独占模式的锁时其他线程都不能获得锁，当有线程获得共享模式的锁时，其他线程不能获得独占锁但能获得共享锁。</p>
+</li>
+<li><p><code>std::condition_variable</code><br>在头文件<code>&lt;condition_variable&gt;</code>里，配合互斥锁使用，实现同步机制。可以实现线程等待某一事件发生，才会继续执行。</p>
+<p>如果想让线程等待一次性事件，使用<code>std::future</code>。代表未来事件，可以选择转换运行模式。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(args...)</span></span>&#123;&#125;</span><br><span class="line">std::future&lt;<span class="type">void</span>&gt; fu = std::<span class="built_in">async</span>([std::launch::async | std::launch::deferred,] f, args...)</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数可以指定运行模式，<code>std::launch::async</code>表示必须另外开启新线程执行任务函数，通过<code>get()</code>获取返回值。<code>std::launch::deferred</code>指定在当前线程上延后调用，通过<code>wait()</code>进行调用，同样用<code>get()</code>获取返回值。</p>
+</li>
+</ol>
+<p>通用互斥管理</p>
+<ol>
+<li><p><code>std::lock_guard</code>  c++11<br>提供RAII机制，创建时加锁（等效调用<code>lock()</code>），销毁时解锁（等效调用<code>unlock()</code>）。不可移动，不可复制。</p>
+</li>
+<li><p><code>std::unique_lock</code>  c++11<br><code>std::lock_guard</code>拥有的功能它都有。额外提供更多的灵活性，可以自己选择关不关联互斥量以及何时加锁何时解锁。可移动，不可复制。移动时，转换锁的所有权。</p>
+</li>
+<li><p><code>std::shared_lock</code>  c++14<br>创建时执行<code>lock_shared()</code>，销毁时执行<code>unlock_shared()</code>。且提供足够的灵活性。可移动，不可复制。移动时，转换锁的所有权。</p>
+</li>
+<li><p><code>std::scoped_lock</code>  c++17</p>
+<p>是<code>std::lock_guard</code>的多锁版本，构造函数接收可变数量的锁。构造时等效对所有锁加锁，析构时对所有锁解锁。<br>底层实现是，对第一个锁用<code>unique_lock</code>上锁，如果成功就不断递归地用<code>unique_lock</code>获取下一个锁，只要有一个<code>unique_guard</code>调用<code>owns_lock()</code>返回false则直接<code>release()</code>。</p>
+</li>
+</ol>
+<h1 id="策略模式和工厂模式"><a href="#策略模式和工厂模式" class="headerlink" title="策略模式和工厂模式"></a>策略模式和工厂模式</h1><h2 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h2><p>在策略模式中一个类的行为或算法可以在运行时更改。定义了一系统算法或策略，并将算法封装在独立的类中，使得他们可以互相替换。可以在运行时根据需要选择不同的算法，而不用修改代码。</p>
+<p>解决多种算法相似的情况下，使用if else带来的复杂和难以维护。</p>
+<p>本质上就是定义一个基类和虚函数，每种不同的策略去继承这个基类，重写虚函数，然后定义一个包装类，封装基类，只要通过包装类创建不同策略对象，用包装类中封装的基类指向策略类，去执行相应算法。</p>
+<h1 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h1><p>工厂模式是将对象的实例化过程抽象成流水线生产，将具体的实例化过程封装在工厂类中，这样就可以将对象的创建与使用的代码分离，避免繁琐的创建暴露在业务代码中。因为有的对象在创建前需要一些准备工作，封装在一起模块化更高。</p>
+<p>具体来说，所有”产品“都继承自一个基类作为流水线，设置一个工厂类，每个流水线设置一个生产的方法，生产该流水线上的”产品“，流水线根据传递的消息生产不同的”产品“。</p>
+<h1 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h1><p>流水线太多的话，工厂难以管理，而且耦合性太高，不易维护。</p>
+<p>将不同的流水线抽象出来成为一个工厂，即一个工厂只管理一个流水线，每个工厂生产不同类型的产品。需要有一个超级工厂，来生产工厂。超级工厂就是所谓的抽象工厂，他的产品是具体的工厂即一条流水线。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/08/17/8-17-%E5%85%83%E6%88%8E%E5%90%AF%E8%A1%8C%E4%BA%8C%E9%9D%A2/">http://example.com/2023/08/17/8-17-%E5%85%83%E6%88%8E%E5%90%AF%E8%A1%8C%E4%BA%8C%E9%9D%A2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/08/16/MySQL%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/">MySQL相关知识</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

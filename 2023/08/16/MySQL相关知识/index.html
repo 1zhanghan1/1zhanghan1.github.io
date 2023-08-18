@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>MySQL相关知识 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">ZH&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">ZH&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">MySQL相关知识</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 16, 2023&nbsp;&nbsp;20:00:02</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>asdgsdgsdgg</p>
+<h1 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h1><p>一组DML语句组成一个事务，保证执行的安全性。</p>
+<h2 id="四大特性：ACID"><a href="#四大特性：ACID" class="headerlink" title="四大特性：ACID"></a>四大特性：ACID</h2><ol>
+<li><p>Atomicity 原子性<br>事务的执行要么全部成功，要么全部失败。基于底层undo log日志实现，基于undolog日志进行反向操作完成回滚。</p>
+</li>
+<li><p>Consistency 一致性</p>
+<p>事务的执行前后都要保持一致性的状态。不会破坏数据库的完整性约束和业务规则。一致性是天然的，数据与外界是有约束的，其他三个特性就可以保证一致性。</p>
+<p>底层主要是基于日志和锁实现。</p>
+<p>日志主要是重做日志redo log和回滚日志undo log。redo log记录已经提交的事务对数据库所作的修改，当系统发生意外崩溃或者故障，根据redo log进行重新提交。undo log记录事务执行过程中所做的修改，用于回滚未提交的事务。</p>
+</li>
+<li><p>Isolation 隔离性</p>
+<p>分为不同级别的隔离性，不同级别的隔离性的实现也是不同的。主要是通过MVCC和加锁来实现的。不同隔离级别下，加的锁的表现形式和锁的粒度是不一样的，要具体情况具体分析。</p>
+</li>
+<li><p>Durability 持久性</p>
+<p>事务一旦提交，就会落盘，对数据库的改变就是永久性的。底层基于redo log实现。以InnoDB为例，有Buffer Pool机制，提交的事务并不会直接存到磁盘，而是先操作Buffer pool，最后在合适的时间将缓冲写入磁盘。当MySQL接收到写操作时，先将操作写入redo log的缓冲，事务提交时异步的将redo log的缓冲写入磁盘中。</p>
+<p>redo log保证了crash safe的能力，事务一旦提交，就算发生断电，数据也可以正确的保存在数据库中。</p>
+</li>
+</ol>
+<h2 id="事务的一些问题"><a href="#事务的一些问题" class="headerlink" title="事务的一些问题"></a>事务的一些问题</h2><h3 id="更新丢失"><a href="#更新丢失" class="headerlink" title="更新丢失"></a>更新丢失</h3><p>两个不同的事务（或者Java程序线程）在某一时刻对同一数据进行读取后，先后进行修改。导致第一次操作数据丢失。</p>
+<p>「</p>
+<p>第一类丢失更新 ：A，B 事务同时操作同一数据，A先对改数据进行了更改，B再次更改时失败然后回滚，把A更新的数据也回滚了。（事务撤销造成的撤销丢失）</p>
+<p>第二类丢失更新：A，B 事务同时操作同一数据，A先对改数据进行了更改，B再次更改并且提交，把A提交的数据给覆盖了。（事务提交造成的覆盖丢失）</p>
+<p>」</p>
+<h3 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h3><p>一个事务在执行的过程中读取到了其他事务还没有提交的数据。</p>
+<h3 id="读已提交"><a href="#读已提交" class="headerlink" title="读已提交"></a>读已提交</h3><p>一个事务操作过程中可以读取到其他事务已经提交的数据。</p>
+<h3 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h3><p>在同一事务中，多次读取同一数据返回的结果有所不同，换句话说，后续读取可以读到另一事务已提交的更新数据。</p>
+<h3 id="可重复读"><a href="#可重复读" class="headerlink" title="可重复读"></a>可重复读</h3><p>在同一事务中多次读取数据时, 能够保证所读数据一样, 也就是后续读取不能读到另一事务已提交的更新数据。</p>
+<h3 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h3><p>查询数据时发现不存在，插入数据时显示数据已存在。存在幻影数据。</p>
+<h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>MVCC(Multi Version Concurrency Control)，中文名是多版本并发控制，简单来说就是<strong>通过维护数据历史版本，从而解决并发访问情况下的读一致性问题。</strong></p>
+<p>InnoDB引擎的每行记录都包含两个隐藏字段，一个字段存储每次修改改行的事务id，另一个字段存储该次修改对应的undo log地址，该条记录的undo log串联起来就形成了一个版本链。通过undo log来查找当前事务可见的版本。</p>
+<p>判断是否可见的机制是<strong>readview</strong>。当一个事务开始执行的时候，创建<strong>快照</strong>，就是<strong>readview！！！！！！！！！！</strong>。</p>
+<p>如果一个查询操作需要读取数据，会根据readview记录的信息，判断应该读取数据的版本号。如果数据版本号小于最小活跃事务版本号，则可见。如果大于最大活跃事务的版本号在，则不可见。如果该数据的事务在活跃列表里，那么就根据不同隔离策略选择可见的版本。</p>
+<p>读未提交：可见。</p>
+<p>读已提交：每次查询都会动态更新readview，可见已提交，不可见未提交的。</p>
+<p>可重复读：readview复用，不可见。</p>
+<p>串行：不可见。</p>
+<h2 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h2><ol>
+<li><p>读未提交<br>一个事务会读取到另一个事务更新后但未提交的数据，如果另一个事务回滚，当前事务读到的数据就是脏数据，出现了<strong>脏读</strong>。也会不可重复读，幻读。</p>
+</li>
+<li><p>读已提交</p>
+<p>一个事务能读到其他事务提交后的数据。如果一个事务读取一个数据后，另一个事务对这条数据做了修改并提交，之前的事务再读取这个数据一遍与第一次读取的数据不同，出现了<strong>不可重复读</strong>的问题。</p>
+</li>
+<li><p>可重复读</p>
+<p>在一个事务内部读取同一数据是可重复的，即读出的操作不会被其他事务影响。当前事务无法读取事务创建后其他事务对数据库做出的任何修改。可是仍然会出现幻读的问题。<strong>为什么？</strong>readview复用事务开始时创建的readview，而readview只会记录创建时已有数据的状态。一个事务在执行期间，另一个事务新增了一个数据，则原事务查询这个数据发现不存在，是因为创建readview时这个数据不存在， 然后原事务执行插入这个数据的操作，发现插入不了，因为数据已经存在了。</p>
+</li>
+<li><p>串行</p>
+</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/08/16/MySQL%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/">http://example.com/2023/08/16/MySQL%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/08/17/8-17-%E5%85%83%E6%88%8E%E5%90%AF%E8%A1%8C%E4%BA%8C%E9%9D%A2/">8-17-元戎启行二面</a>
+            
+            
+            <a class="next" rel="next" href="/2023/08/12/c-%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E8%BF%9E%E6%8E%A5%E6%B1%A0%E6%97%B6%E6%97%A0%E6%B3%95%E5%85%B3%E9%97%AD%E4%B8%80%E6%AE%B5%E6%97%B6%E9%97%B4%E5%90%8Ecore-dump/">c++实现数据连接池时无法关闭一段时间后core dump</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
