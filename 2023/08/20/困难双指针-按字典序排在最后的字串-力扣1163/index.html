@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>困难双指针-按字典序排在最后的字串-力扣1163 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">ZH&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">ZH&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">困难双指针-按字典序排在最后的字串-力扣1163</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 20, 2023&nbsp;&nbsp;15:27:37</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><strong>题目描述</strong>：给你一个字符串 <code>s</code> ，找出它的所有子串并按字典序排列，返回排在最后的那个子串。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;abab&quot;</span><br><span class="line">输出：&quot;bab&quot;</span><br><span class="line">解释：我们可以找出 7 个子串 [&quot;a&quot;, &quot;ab&quot;, &quot;aba&quot;, &quot;abab&quot;, &quot;b&quot;, &quot;ba&quot;, &quot;bab&quot;]。按字典序排在最后的子串是 &quot;bab&quot;。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;leetcode&quot;</span><br><span class="line">输出：&quot;tcode&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>解法</strong>：答案一定是后缀字符串。可以用反证法证明。</p>
+<p>因此只要找到后缀字符串的开始位置就可以了，第一想法是遍历，会存在重复对比的问题。模仿KMP算法，尽可能跳过已经对比过的字符，演变成双指针遍历，跳过一定不是答案的位置。</p>
+<p>假设以<code>x</code>为开始位置的后缀字串设为$s_x$。</p>
+<p>设<code>i</code>为最大的后缀字串的起点的备选，<code>j</code>是要比较的后缀子串的起点。比较过程中的偏移为<code>k</code>。因为是后缀子串，因此从左向右遍历，即**对任意的<code>m &lt; j</code>，满足$s_m &lt; s_i$**。初始条件是<code>i=0,j=1</code>，在遍历过程中维护上述定义。结束条件是<code>j</code>越过右边界。</p>
+<p>在没有达到遍历的结束条件时，重复执行以下流程：</p>
+<ol>
+<li>如果<code>s[i+k]==s[j+k]</code>，则<code>k = k+1</code>，继续对比下一字符。</li>
+<li>如果<code>s[i+k]&gt;s[j+k]</code>，则对于任意的<code>j&lt; m &lt;= j+k</code>，至少会有$s_{i+m-j} &gt; s_m$，因此，下一个要<code>j</code>遍历的位置是<code>j+k+1</code>，同时要将偏移<code>k</code>置0。</li>
+<li>如果<code>s[i+k]&lt;s[j+k]</code>，说明$s_j &gt; s_i$，那么<code>i</code>的值需要更新为<code>j</code>。<code>j</code>需要跳过一定不是答案的位置。<br>设上一个<code>i</code>的值为<code>t</code>，有$s_t &lt; s_i$，对于任意的$m&lt;i$，有$s_m &lt; s_t$，能推出$s_m&lt;s_i$，得出<code>j</code>要大于<code>i</code>，**上面的定义**也能得出<code>j&gt;i</code>。<br>对于任意的$i &lt; m &lt;&#x3D; i+k$，至少存在$s_m &gt;s_{t+m-i}$，因此<code>j</code>一定要大于<code>t+m-i</code>的最大值，即<code>j &gt; t+k</code>。<br>综合两个两个条件，j的取值为<code>max(i+1, t+k+1)</code>，<code>k</code>置0。</li>
+</ol>
+<p>代码实现就是</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">lastSubstring</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">1</span>, n = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">while</span> (j &lt; n) &#123;</span><br><span class="line">            <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (j + k &lt; n &amp;&amp; s[i + k] == s[j + k]) &#123;</span><br><span class="line">                k++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (j + k &lt; n &amp;&amp; s[i + k] &lt; s[j + k]) &#123;</span><br><span class="line">                <span class="type">int</span> t = i;</span><br><span class="line">                i = j;</span><br><span class="line">                j = <span class="built_in">max</span>(j + <span class="number">1</span>, t + k + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                j = j + k + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.<span class="built_in">substr</span>(i, n - i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/08/20/%E5%9B%B0%E9%9A%BE%E5%8F%8C%E6%8C%87%E9%92%88-%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E6%8E%92%E5%9C%A8%E6%9C%80%E5%90%8E%E7%9A%84%E5%AD%97%E4%B8%B2-%E5%8A%9B%E6%89%A31163/">http://example.com/2023/08/20/%E5%9B%B0%E9%9A%BE%E5%8F%8C%E6%8C%87%E9%92%88-%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E6%8E%92%E5%9C%A8%E6%9C%80%E5%90%8E%E7%9A%84%E5%AD%97%E4%B8%B2-%E5%8A%9B%E6%89%A31163/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2023/08/17/8-17-%E5%85%83%E6%88%8E%E5%90%AF%E8%A1%8C%E4%BA%8C%E9%9D%A2/">8-17-元戎启行二面</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
