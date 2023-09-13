@@ -13,7 +13,7 @@
 
 
 
-<title>困难双指针-按字典序排在最后的字串-力扣1163 | Hexo</title>
+<title>腾讯qq浏览器一面 | Hexo</title>
 
 
 
@@ -154,11 +154,76 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">困难双指针-按字典序排在最后的字串-力扣1163</h1>
+            <h1 class="post-title">腾讯qq浏览器一面</h1>
             
                 <div class="post-meta">
                     
@@ -167,7 +232,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">August 20, 2023&nbsp;&nbsp;15:27:37</a>
+                        Date: <a href="#">September 4, 2023&nbsp;&nbsp;22:18:42</a>
                         </span>
                     
                     
@@ -176,28 +241,42 @@
         </header>
 
         <div class="post-content">
-            <p><strong>题目描述</strong>：给你一个字符串 <code>s</code> ，找出它的所有子串并按字典序排列，返回排在最后的那个子串。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;abab&quot;</span><br><span class="line">输出：&quot;bab&quot;</span><br><span class="line">解释：我们可以找出 7 个子串 [&quot;a&quot;, &quot;ab&quot;, &quot;aba&quot;, &quot;abab&quot;, &quot;b&quot;, &quot;ba&quot;, &quot;bab&quot;]。按字典序排在最后的子串是 &quot;bab&quot;。</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 2：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;leetcode&quot;</span><br><span class="line">输出：&quot;tcode&quot;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>解法</strong>：答案一定是后缀字符串。可以用反证法证明。</p>
-<p>因此只要找到后缀字符串的开始位置就可以了，第一想法是遍历，会存在重复对比的问题。模仿KMP算法，尽可能跳过已经对比过的字符，演变成双指针遍历，跳过一定不是答案的位置。</p>
-<p>假设以<code>x</code>为开始位置的后缀字串设为$s_x$。</p>
-<p>设<code>i</code>为最大的后缀字串的起点的备选，<code>j</code>是要比较的后缀子串的起点。比较过程中的偏移为<code>k</code>。因为是后缀子串，因此从左向右遍历，即**对任意的<code>m &lt; j</code>，满足$s_m &lt; s_i$**。初始条件是<code>i=0,j=1</code>，在遍历过程中维护上述定义。结束条件是<code>j</code>越过右边界。</p>
-<p>在没有达到遍历的结束条件时，重复执行以下流程：</p>
+            <h1 id="项目相关"><a href="#项目相关" class="headerlink" title="项目相关"></a>项目相关</h1><h2 id="日志的双缓冲技术有什么优缺点"><a href="#日志的双缓冲技术有什么优缺点" class="headerlink" title="日志的双缓冲技术有什么优缺点"></a>日志的双缓冲技术有什么优缺点</h2><p>优点：效率高，异步刷盘。</p>
+<p>缺点：消耗双倍内存。数据不一致的问题。</p>
+<p>优化方向：</p>
 <ol>
-<li>如果<code>s[i+k]==s[j+k]</code>，则<code>k = k+1</code>，继续对比下一字符。</li>
-<li>如果<code>s[i+k]&gt;s[j+k]</code>，则对于任意的<code>j&lt; m &lt;= j+k</code>，至少会有$s_{i+m-j} &gt; s_m$，因此，下一个要<code>j</code>遍历的位置是<code>j+k+1</code>，同时要将偏移<code>k</code>置0。</li>
-<li>如果<code>s[i+k]&lt;s[j+k]</code>，说明$s_j &gt; s_i$，那么<code>i</code>的值需要更新为<code>j</code>。<code>j</code>需要跳过一定不是答案的位置。<br>设上一个<code>i</code>的值为<code>t</code>，有$s_t &lt; s_i$，对于任意的$m&lt;i$，有$s_m &lt; s_t$，能推出$s_m&lt;s_i$，得出<code>j</code>要大于<code>i</code>，**上面的定义**也能得出<code>j&gt;i</code>。<br>对于任意的$i &lt; m &lt;&#x3D; i+k$，至少存在$s_m &gt;s_{t+m-i}$，因此<code>j</code>一定要大于<code>t+m-i</code>的最大值，即<code>j &gt; t+k</code>。<br>综合两个两个条件，j的取值为<code>max(i+1, t+k+1)</code>，<code>k</code>置0。</li>
+<li>刷新策略：同、异步混用<br>例如：每过100ms，就会执行一次同步刷盘</li>
+<li>增加容错机制</li>
 </ol>
-<p>代码实现就是</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">lastSubstring</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">1</span>, n = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">while</span> (j &lt; n) &#123;</span><br><span class="line">            <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (j + k &lt; n &amp;&amp; s[i + k] == s[j + k]) &#123;</span><br><span class="line">                k++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (j + k &lt; n &amp;&amp; s[i + k] &lt; s[j + k]) &#123;</span><br><span class="line">                <span class="type">int</span> t = i;</span><br><span class="line">                i = j;</span><br><span class="line">                j = <span class="built_in">max</span>(j + <span class="number">1</span>, t + k + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                j = j + k + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.<span class="built_in">substr</span>(i, n - i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
+<h2 id="布隆过滤器有什么缺点，怎么优化"><a href="#布隆过滤器有什么缺点，怎么优化" class="headerlink" title="布隆过滤器有什么缺点，怎么优化"></a>布隆过滤器有什么缺点，怎么优化</h2><p>缺点：需要选择合适的哈希函数。有一定的误报率。静态的，一经创建不能修改。</p>
+<p>优化方向：</p>
+<ol>
+<li><p>用特殊的方法变成动态的</p>
+</li>
+<li><p>缓存空对象避免误报造成的缓存穿透</p>
+</li>
+</ol>
+<h2 id="redis二级缓存有什么缺点"><a href="#redis二级缓存有什么缺点" class="headerlink" title="redis二级缓存有什么缺点"></a>redis二级缓存有什么缺点</h2><p>缺点：内存开销。数据一致性。</p>
+<h2 id="brpc有哪些模块组成"><a href="#brpc有哪些模块组成" class="headerlink" title="brpc有哪些模块组成"></a>brpc有哪些模块组成</h2><p>暂定。。。。。。。。。。。</p>
+<h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><ol>
+<li>字符串处理：string数组，去除注释</li>
+<li>数字编码：0-&gt;a，…，25-&gt;z，求一个数字有多少种编码种类</li>
+</ol>
+<h1 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h1><h2 id="析构函数可以是虚函数吗"><a href="#析构函数可以是虚函数吗" class="headerlink" title="析构函数可以是虚函数吗"></a>析构函数可以是虚函数吗</h2><p>可以是虚函数，构造函数初始化虚表指针完毕，析构函数可以是虚函数。</p>
+<p>当有继承关系时，析构函数必须是虚函数，否则在多态的情况下，派生类的析构函数不会调用从而导致内存泄漏。</p>
+<h2 id="析构函数可以抛出异常吗"><a href="#析构函数可以抛出异常吗" class="headerlink" title="析构函数可以抛出异常吗"></a>析构函数可以抛出异常吗</h2><p>不可以。</p>
+<ol>
+<li>析构函数一般用来释放申请的资源。如果抛出异常，后续的资源就不会得到释放，造成内存泄漏。</li>
+<li>c++的机制是在抛出异常后自动调用对象析构函数进行资源释放，如果析构函数抛出异常，会造成循环调用析构函数，无限递归，最终栈溢出。</li>
+</ol>
+<h2 id="lambda优缺点"><a href="#lambda优缺点" class="headerlink" title="lambda优缺点"></a>lambda优缺点</h2><p>优点：间接，方便使用，可重用</p>
+<p>缺点：调试困难，因为是匿名类</p>
+<p>效率方面：自动内联，效率挺高</p>
+<h2 id="智能指针的应用场景"><a href="#智能指针的应用场景" class="headerlink" title="智能指针的应用场景"></a>智能指针的应用场景</h2><ol>
+<li><code>unique_ptr</code>：适用于独占资源的情况，提供了对单个对象的所有权管理。<code>unique_ptr</code>不能被复制或共享，只能通过移动语义进行对象所有权的转移。</li>
+<li><code>share_ptr</code>：适用于共享资源的情况，提供了引用计数的所有权管理。最后一个引用对象被释放时，指向的对象才会被销毁。复制会增加引用计数，而不会真的复制对象。</li>
+<li><code>weak_ptr</code>：用于解决对象之间<code>share_ptr</code>循环引用的问题。将其中一个改为<code>weak_ptr</code>。<code>weak_ptr</code>可以引用<code>share_ptr</code>管理的对象，但不会增加引用计数，是一种弱引用。</li>
+</ol>
 
         </div>
 
@@ -212,7 +291,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2023/08/20/%E5%9B%B0%E9%9A%BE%E5%8F%8C%E6%8C%87%E9%92%88-%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E6%8E%92%E5%9C%A8%E6%9C%80%E5%90%8E%E7%9A%84%E5%AD%97%E4%B8%B2-%E5%8A%9B%E6%89%A31163/">http://example.com/2023/08/20/%E5%9B%B0%E9%9A%BE%E5%8F%8C%E6%8C%87%E9%92%88-%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E6%8E%92%E5%9C%A8%E6%9C%80%E5%90%8E%E7%9A%84%E5%AD%97%E4%B8%B2-%E5%8A%9B%E6%89%A31163/</a></span>
+                        <span><a href="http://example.com/2023/09/04/%E8%85%BE%E8%AE%AFqq%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%80%E9%9D%A2/">http://example.com/2023/09/04/%E8%85%BE%E8%AE%AFqq%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%80%E9%9D%A2/</a></span>
                     </p>
                 
                 
@@ -245,10 +324,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/08/21/Redis%E7%9B%B8%E5%85%B3/">Redis相关</a>
+                <a class="prev" rel="prev" href="/2023/09/05/%E5%AD%97%E8%8A%82%E4%B8%80%E9%9D%A2/">字节一面</a>
             
             
-            <a class="next" rel="next" href="/2023/08/17/8-17-%E5%85%83%E6%88%8E%E5%90%AF%E8%A1%8C%E4%BA%8C%E9%9D%A2/">8-17-元戎启行二面</a>
+            <a class="next" rel="next" href="/2023/08/26/%E7%99%BE%E5%BA%A6%E4%B8%80%E9%9D%A2/">百度一面</a>
             
         </section>
 

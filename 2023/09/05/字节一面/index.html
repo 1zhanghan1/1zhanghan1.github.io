@@ -13,7 +13,7 @@
 
 
 
-<title>困难双指针-按字典序排在最后的字串-力扣1163 | Hexo</title>
+<title>字节一面 | Hexo</title>
 
 
 
@@ -154,11 +154,76 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">困难双指针-按字典序排在最后的字串-力扣1163</h1>
+            <h1 class="post-title">字节一面</h1>
             
                 <div class="post-meta">
                     
@@ -167,7 +232,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">August 20, 2023&nbsp;&nbsp;15:27:37</a>
+                        Date: <a href="#">September 5, 2023&nbsp;&nbsp;20:49:24</a>
                         </span>
                     
                     
@@ -176,28 +241,24 @@
         </header>
 
         <div class="post-content">
-            <p><strong>题目描述</strong>：给你一个字符串 <code>s</code> ，找出它的所有子串并按字典序排列，返回排在最后的那个子串。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;abab&quot;</span><br><span class="line">输出：&quot;bab&quot;</span><br><span class="line">解释：我们可以找出 7 个子串 [&quot;a&quot;, &quot;ab&quot;, &quot;aba&quot;, &quot;abab&quot;, &quot;b&quot;, &quot;ba&quot;, &quot;bab&quot;]。按字典序排在最后的子串是 &quot;bab&quot;。</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 2：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;leetcode&quot;</span><br><span class="line">输出：&quot;tcode&quot;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>解法</strong>：答案一定是后缀字符串。可以用反证法证明。</p>
-<p>因此只要找到后缀字符串的开始位置就可以了，第一想法是遍历，会存在重复对比的问题。模仿KMP算法，尽可能跳过已经对比过的字符，演变成双指针遍历，跳过一定不是答案的位置。</p>
-<p>假设以<code>x</code>为开始位置的后缀字串设为$s_x$。</p>
-<p>设<code>i</code>为最大的后缀字串的起点的备选，<code>j</code>是要比较的后缀子串的起点。比较过程中的偏移为<code>k</code>。因为是后缀子串，因此从左向右遍历，即**对任意的<code>m &lt; j</code>，满足$s_m &lt; s_i$**。初始条件是<code>i=0,j=1</code>，在遍历过程中维护上述定义。结束条件是<code>j</code>越过右边界。</p>
-<p>在没有达到遍历的结束条件时，重复执行以下流程：</p>
+            <h1 id="redis中zset怎么实现的"><a href="#redis中zset怎么实现的" class="headerlink" title="redis中zset怎么实现的"></a>redis中zset怎么实现的</h1><p>ZSet的底层实现是<code>ziplist</code>和<code>skiplist</code>实现。</p>
+<h1 id="实现一个计数器需要考虑哪些"><a href="#实现一个计数器需要考虑哪些" class="headerlink" title="实现一个计数器需要考虑哪些"></a>实现一个计数器需要考虑哪些</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/348416892">计数系统设计（一）：面对海量数据的计数器要如何做？ - 知乎 (zhihu.com)</a></p>
+<p>首先，一个简单的计数器系统可以直接使用mysql作为计数数据的存储。表中主要的两个字段是id和计数的值。</p>
+<p>然后，数据量级和访问量级较大后，采用分库分表的方式分散数据量，提升计数的性能。主要采用水平分表的形式划分。可以的方式：</p>
 <ol>
-<li>如果<code>s[i+k]==s[j+k]</code>，则<code>k = k+1</code>，继续对比下一字符。</li>
-<li>如果<code>s[i+k]&gt;s[j+k]</code>，则对于任意的<code>j&lt; m &lt;= j+k</code>，至少会有$s_{i+m-j} &gt; s_m$，因此，下一个要<code>j</code>遍历的位置是<code>j+k+1</code>，同时要将偏移<code>k</code>置0。</li>
-<li>如果<code>s[i+k]&lt;s[j+k]</code>，说明$s_j &gt; s_i$，那么<code>i</code>的值需要更新为<code>j</code>。<code>j</code>需要跳过一定不是答案的位置。<br>设上一个<code>i</code>的值为<code>t</code>，有$s_t &lt; s_i$，对于任意的$m&lt;i$，有$s_m &lt; s_t$，能推出$s_m&lt;s_i$，得出<code>j</code>要大于<code>i</code>，**上面的定义**也能得出<code>j&gt;i</code>。<br>对于任意的$i &lt; m &lt;&#x3D; i+k$，至少存在$s_m &gt;s_{t+m-i}$，因此<code>j</code>一定要大于<code>t+m-i</code>的最大值，即<code>j &gt; t+k</code>。<br>综合两个两个条件，j的取值为<code>max(i+1, t+k+1)</code>，<code>k</code>置0。</li>
+<li>将id进行hash，根据这个hash值计算出需要存储到哪一个库哪一个表中。</li>
+<li>直接创建新表。一天一张表或者一个月一张表。可能会不均匀。</li>
 </ol>
-<p>代码实现就是</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">lastSubstring</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">1</span>, n = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">while</span> (j &lt; n) &#123;</span><br><span class="line">            <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (j + k &lt; n &amp;&amp; s[i + k] == s[j + k]) &#123;</span><br><span class="line">                k++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (j + k &lt; n &amp;&amp; s[i + k] &lt; s[j + k]) &#123;</span><br><span class="line">                <span class="type">int</span> t = i;</span><br><span class="line">                i = j;</span><br><span class="line">                j = <span class="built_in">max</span>(j + <span class="number">1</span>, t + k + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                j = j + k + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.<span class="built_in">substr</span>(i, n - i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
+<p>随着数据量级再提升，可以用redis做缓存，但是可能会导致数据不一致的问题。可以不使用mysql，直接使用redis，利用redis的持久化机制永久保存计数。同时可以同时部署多个redis从节点来提升可用性和性能，并通过hash 的方式对数据做分片。</p>
+<p>除了考虑计数的<strong>读取</strong>性能外，还需要考虑<strong>写入</strong>的性能。可以通过消息队列进行削峰填谷，每次计数加1，向消息队列中写入一条消息。然后通过批量处理消息的方式进一步压缩redis的写压力，例如可以将三次加1的操作压缩成一次加3的操作，不过有查询操作在中间时不能压缩。</p>
+<p><strong>降低存储成本</strong></p>
+<p>redis基于通用性的考虑，对内存的使用比较粗放，存在大量的指针以及额外数据结构的开销。需要改造原生redis，采用新的数据结构和数据类型。</p>
+<p>比如：</p>
+<ol>
+<li>redis的key时按照字符串来存储的，字符串时sds结构，可以只用long来存。</li>
+<li>去除原生redis中多余的指针。</li>
+</ol>
+<p>最后可以根据不同的业务需求，划分热数据和冷数据，热数据存储在内存中，冷数据存储在磁盘中，在读冷数据时由一个异步的IO线程加载到单独的cold cache中。</p>
 
         </div>
 
@@ -212,7 +273,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2023/08/20/%E5%9B%B0%E9%9A%BE%E5%8F%8C%E6%8C%87%E9%92%88-%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E6%8E%92%E5%9C%A8%E6%9C%80%E5%90%8E%E7%9A%84%E5%AD%97%E4%B8%B2-%E5%8A%9B%E6%89%A31163/">http://example.com/2023/08/20/%E5%9B%B0%E9%9A%BE%E5%8F%8C%E6%8C%87%E9%92%88-%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E6%8E%92%E5%9C%A8%E6%9C%80%E5%90%8E%E7%9A%84%E5%AD%97%E4%B8%B2-%E5%8A%9B%E6%89%A31163/</a></span>
+                        <span><a href="http://example.com/2023/09/05/%E5%AD%97%E8%8A%82%E4%B8%80%E9%9D%A2/">http://example.com/2023/09/05/%E5%AD%97%E8%8A%82%E4%B8%80%E9%9D%A2/</a></span>
                     </p>
                 
                 
@@ -245,10 +306,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/08/21/Redis%E7%9B%B8%E5%85%B3/">Redis相关</a>
+                <a class="prev" rel="prev" href="/2023/09/05/%E5%BF%AB%E6%89%8B%E4%B8%80%E9%9D%A2/">快手一面</a>
             
             
-            <a class="next" rel="next" href="/2023/08/17/8-17-%E5%85%83%E6%88%8E%E5%90%AF%E8%A1%8C%E4%BA%8C%E9%9D%A2/">8-17-元戎启行二面</a>
+            <a class="next" rel="next" href="/2023/09/04/%E8%85%BE%E8%AE%AFqq%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%80%E9%9D%A2/">腾讯qq浏览器一面</a>
             
         </section>
 

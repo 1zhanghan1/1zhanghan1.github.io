@@ -13,7 +13,7 @@
 
 
 
-<title>困难双指针-按字典序排在最后的字串-力扣1163 | Hexo</title>
+<title>富途一面 | Hexo</title>
 
 
 
@@ -154,11 +154,76 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">困难双指针-按字典序排在最后的字串-力扣1163</h1>
+            <h1 class="post-title">富途一面</h1>
             
                 <div class="post-meta">
                     
@@ -167,7 +232,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">August 20, 2023&nbsp;&nbsp;15:27:37</a>
+                        Date: <a href="#">September 13, 2023&nbsp;&nbsp;21:06:20</a>
                         </span>
                     
                     
@@ -176,29 +241,23 @@
         </header>
 
         <div class="post-content">
-            <p><strong>题目描述</strong>：给你一个字符串 <code>s</code> ，找出它的所有子串并按字典序排列，返回排在最后的那个子串。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;abab&quot;</span><br><span class="line">输出：&quot;bab&quot;</span><br><span class="line">解释：我们可以找出 7 个子串 [&quot;a&quot;, &quot;ab&quot;, &quot;aba&quot;, &quot;abab&quot;, &quot;b&quot;, &quot;ba&quot;, &quot;bab&quot;]。按字典序排在最后的子串是 &quot;bab&quot;。</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 2：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：s = &quot;leetcode&quot;</span><br><span class="line">输出：&quot;tcode&quot;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>解法</strong>：答案一定是后缀字符串。可以用反证法证明。</p>
-<p>因此只要找到后缀字符串的开始位置就可以了，第一想法是遍历，会存在重复对比的问题。模仿KMP算法，尽可能跳过已经对比过的字符，演变成双指针遍历，跳过一定不是答案的位置。</p>
-<p>假设以<code>x</code>为开始位置的后缀字串设为$s_x$。</p>
-<p>设<code>i</code>为最大的后缀字串的起点的备选，<code>j</code>是要比较的后缀子串的起点。比较过程中的偏移为<code>k</code>。因为是后缀子串，因此从左向右遍历，即**对任意的<code>m &lt; j</code>，满足$s_m &lt; s_i$**。初始条件是<code>i=0,j=1</code>，在遍历过程中维护上述定义。结束条件是<code>j</code>越过右边界。</p>
-<p>在没有达到遍历的结束条件时，重复执行以下流程：</p>
-<ol>
-<li>如果<code>s[i+k]==s[j+k]</code>，则<code>k = k+1</code>，继续对比下一字符。</li>
-<li>如果<code>s[i+k]&gt;s[j+k]</code>，则对于任意的<code>j&lt; m &lt;= j+k</code>，至少会有$s_{i+m-j} &gt; s_m$，因此，下一个要<code>j</code>遍历的位置是<code>j+k+1</code>，同时要将偏移<code>k</code>置0。</li>
-<li>如果<code>s[i+k]&lt;s[j+k]</code>，说明$s_j &gt; s_i$，那么<code>i</code>的值需要更新为<code>j</code>。<code>j</code>需要跳过一定不是答案的位置。<br>设上一个<code>i</code>的值为<code>t</code>，有$s_t &lt; s_i$，对于任意的$m&lt;i$，有$s_m &lt; s_t$，能推出$s_m&lt;s_i$，得出<code>j</code>要大于<code>i</code>，**上面的定义**也能得出<code>j&gt;i</code>。<br>对于任意的$i &lt; m &lt;&#x3D; i+k$，至少存在$s_m &gt;s_{t+m-i}$，因此<code>j</code>一定要大于<code>t+m-i</code>的最大值，即<code>j &gt; t+k</code>。<br>综合两个两个条件，j的取值为<code>max(i+1, t+k+1)</code>，<code>k</code>置0。</li>
+            <h1 id="有哪些垃圾回收机制"><a href="#有哪些垃圾回收机制" class="headerlink" title="有哪些垃圾回收机制"></a>有哪些垃圾回收机制</h1><ol>
+<li>标记-清除<br>两个阶段：标记和清除<br>第一阶段先标记出引用为0的对象，第二阶段将标记的对象清除。<br>缺点：会有很多内存碎片无法利用。效率不高。</li>
+<li>标记-整理<br>每次清除标记的对象后，把存活的对象进行整理。结合了标记-清除算法和复制算法。<br>优点：不会有内存碎片，有大空间可以使用。<br>缺点：开销大。</li>
+<li>复制算法<br>将内存划分成两块。每次只使用其中一块，当存满之后将还存活的对象（通过标记算法标记不使用的对象）复制到另外一半。<br>缺点：只能用一半内存<br>优点：没有内存碎片。<br>由于绝大部分对象的生命周期很短，因此可以不用1：1的划分，商业虚拟机采用8：1：1的方式进行划分，分别为Eden和Survivor，每次只使用Eden和一个Survivor，复制时将存活的对象复制到另外一个survivor，可利用的内存为90%。</li>
+<li>分代收集算法<br>新生代对象的生命周期比较短，老生代对象可能会继续存活。因此针对不同的对象采用不同的GC算法。新生代由于存活的对象比较少一般采用复制算法。老生代大多继续存活，因此采用标记-清除或标记-整理算法。</li>
 </ol>
-<p>代码实现就是</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">lastSubstring</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">1</span>, n = s.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">while</span> (j &lt; n) &#123;</span><br><span class="line">            <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (j + k &lt; n &amp;&amp; s[i + k] == s[j + k]) &#123;</span><br><span class="line">                k++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (j + k &lt; n &amp;&amp; s[i + k] &lt; s[j + k]) &#123;</span><br><span class="line">                <span class="type">int</span> t = i;</span><br><span class="line">                i = j;</span><br><span class="line">                j = <span class="built_in">max</span>(j + <span class="number">1</span>, t + k + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                j = j + k + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.<span class="built_in">substr</span>(i, n - i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
+<h1 id="有个论坛，有很多小号频繁发送广告，采取什么手段避免"><a href="#有个论坛，有很多小号频繁发送广告，采取什么手段避免" class="headerlink" title="有个论坛，有很多小号频繁发送广告，采取什么手段避免"></a>有个论坛，有很多小号频繁发送广告，采取什么手段避免</h1><p>有三个特点：小号，频繁，广告。</p>
+<p>针对这三个特点进行限制。</p>
+<ol>
+<li>首先将创建不久的账号设为重点关注对象。</li>
+<li>限制重点关注对象的发送频率，比如一分钟之内最多发5条。</li>
+<li>对重点关注对象的发送内容进行检测，根据广告的关键词或者使用AI的方法进行检测。</li>
+</ol>
+<p>延申：怎么设计数据结构限制发帖的频率，以一分钟最多发5条为例。</p>
+<p>将用户唯一的id作为键，这个用户每次发帖的时间队列为值组成hash表。</p>
+<p>用户发帖时，将发帖的时间戳与队头的时间进行对比，如果大于1分钟则弹出直至队头时间与当前时间差值小于1分钟，然后将当前时间入队，判断队列长度是否大于10，是就限制发帖。</p>
+<h1 id="怎么解决超卖问题"><a href="#怎么解决超卖问题" class="headerlink" title="怎么解决超卖问题"></a>怎么解决超卖问题</h1>
         </div>
 
         
@@ -212,7 +271,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2023/08/20/%E5%9B%B0%E9%9A%BE%E5%8F%8C%E6%8C%87%E9%92%88-%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E6%8E%92%E5%9C%A8%E6%9C%80%E5%90%8E%E7%9A%84%E5%AD%97%E4%B8%B2-%E5%8A%9B%E6%89%A31163/">http://example.com/2023/08/20/%E5%9B%B0%E9%9A%BE%E5%8F%8C%E6%8C%87%E9%92%88-%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E6%8E%92%E5%9C%A8%E6%9C%80%E5%90%8E%E7%9A%84%E5%AD%97%E4%B8%B2-%E5%8A%9B%E6%89%A31163/</a></span>
+                        <span><a href="http://example.com/2023/09/13/%E5%AF%8C%E9%80%94%E4%B8%80%E9%9D%A2/">http://example.com/2023/09/13/%E5%AF%8C%E9%80%94%E4%B8%80%E9%9D%A2/</a></span>
                     </p>
                 
                 
@@ -245,10 +304,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2023/08/21/Redis%E7%9B%B8%E5%85%B3/">Redis相关</a>
             
-            
-            <a class="next" rel="next" href="/2023/08/17/8-17-%E5%85%83%E6%88%8E%E5%90%AF%E8%A1%8C%E4%BA%8C%E9%9D%A2/">8-17-元戎启行二面</a>
+            <a class="next" rel="next" href="/2023/09/12/%E5%B0%8F%E7%B1%B3%E4%B8%80%E9%9D%A2/">小米一面</a>
             
         </section>
 

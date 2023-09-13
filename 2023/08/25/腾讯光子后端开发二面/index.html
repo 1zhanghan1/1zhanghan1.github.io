@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>腾讯光子后端开发二面 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">ZH&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">ZH&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">腾讯光子后端开发二面</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 25, 2023&nbsp;&nbsp;20:46:25</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="用memset初始化对象"><a href="#用memset初始化对象" class="headerlink" title="用memset初始化对象"></a>用memset初始化对象</h1><ol>
+<li>对象的非POD类型成员未正确初始化：memset函数是用字节填充的方式来初始化对象，它只会将对象的每个字节都设置为指定的值。对于非POD类型的成员（如类对象、指针等），仅仅将字节设置为某个值是不够的，这可能导致非POD类型成员的构造函数、析构函数、拷贝构造函数等没有正确调用。</li>
+<li>对象的虚函数表指针被破坏：虚函数表指针是一个指向虚函数表的指针，用于实现多态。memset函数会将虚函数表指针也设置为指定的值，这会破坏虚函数表的正确指向，导致虚函数调用出错。</li>
+<li>对象的内存布局可能被破坏：C++对象的内存布局是由编译器自动生成的，其中包括对象的成员变量、虚函数表指针等。使用memset函数来初始化对象可能会破坏对象的内存布局，导致对象的成员变量错位、虚函数表指针指向错误的位置等。</li>
+</ol>
+<h1 id="Linux内存分配"><a href="#Linux内存分配" class="headerlink" title="Linux内存分配"></a>Linux内存分配</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/452139283">一文读懂 Linux 内存分配全过程 - 知乎 (zhihu.com)</a></p>
+<p>Linux 会把进程虚拟内存空间划分为多个分区，在 Linux 内核中使用 <code>vm_area_struct</code> 对象来表示，其定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">vm_area_struct</span> &#123;</span><br><span class="line">   <span class="keyword">struct</span> <span class="title class_">mm_struct</span> *vm_mm;        <span class="comment">// 分区所属的内存管理对象</span></span><br><span class="line"></span><br><span class="line">   <span class="type">unsigned</span> <span class="type">long</span> vm_start;         <span class="comment">// 分区的开始地址</span></span><br><span class="line">   <span class="type">unsigned</span> <span class="type">long</span> vm_end;           <span class="comment">// 分区的结束地址</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">struct</span> <span class="title class_">vm_area_struct</span> *vm_next; <span class="comment">// 通过这个指针把进程所有的内存分区连接成一个链表</span></span><br><span class="line">  ...</span><br><span class="line">   <span class="keyword">struct</span> <span class="title class_">rb_node</span> vm_rb;           <span class="comment">// 红黑树的节点, 用于保存到内存分区红黑树中</span></span><br><span class="line">  ...</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>内核就是使用 <code>vm_area_struct</code> 对象来记录一个内存分区。</p>
+<p>各个字段的作用</p>
+<ul>
+<li><code>vm_mm</code>：指定了当前内存分区所属的内存管理对象。</li>
+<li><code>vm_start</code>：内存分区的开始地址。</li>
+<li><code>vm_end</code>：内存分区的结束地址。</li>
+<li><code>vm_next</code>：通过这个指针把进程中所有的内存分区连接成一个链表。</li>
+<li><code>vm_rb</code>：另外，为了快速查找内存分区，内核还把进程的所有内存分区保存到一棵红黑树中。<code>vm_rb</code> 就是红黑树的节点，用于把内存分区保存到红黑树中。</li>
+</ul>
+<p>假如进程 A 现在有 4 个内存分区，它们的范围如下：</p>
+<ul>
+<li><code>代码段</code>：00400000 ~ 00401000</li>
+<li><code>数据段</code>：00600000 ~ 00601000</li>
+<li><code>堆空间</code>：00983000 ~ 009a4000</li>
+<li><code>栈空间</code>：7f37ce866000 ~ 7f3fce867000</li>
+</ul>
+<p><img src="/v2-2fad1432be31ac921d79d2b4d61a7e4b_720w.webp" alt="img"></p>
+<p>有个 <code>mm_struct</code> 的对象，此对象每个进程都持有一个，是进程虚拟内存空间和物理内存空间的管理对象。我们简单介绍一下这个对象，其定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">mm_struct</span> &#123;</span><br><span class="line">   <span class="keyword">struct</span> <span class="title class_">vm_area_struct</span> *mmap;  <span class="comment">// 指向由进程内存分区连接成的链表</span></span><br><span class="line">   <span class="keyword">struct</span> <span class="title class_">rb_root</span> mm_rb;         <span class="comment">// 内核使用红黑树保存进程的所有内存分区, 这个是红黑树的根节点</span></span><br><span class="line">   <span class="type">unsigned</span> <span class="type">long</span> start_brk, brk; <span class="comment">// 堆空间的开始地址和结束地址</span></span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>各个字段的作用：</p>
+<ul>
+<li><code>mmap</code>：指向由进程所有内存分区连接成的链表。</li>
+<li><code>mm_rb</code>：内核为了加快查找内存分区的速度，使用了红黑树保存所有内存分区，这个就是红黑树的根节点。</li>
+<li><code>start_brk</code>：堆空间的开始内存地址。</li>
+<li><code>brk</code>：堆空间的顶部内存地址。</li>
+</ul>
+<h2 id="分配堆空间的过程"><a href="#分配堆空间的过程" class="headerlink" title="分配堆空间的过程"></a><strong>分配堆空间的过程</strong></h2><p>调用 <code>malloc</code> 申请内存时，最终会调用 <code>brk</code> 系统调用来从堆空间中分配内存。 <code>brk</code> 系统调用主要有一下几个步骤：</p>
+<p>1、判断堆空间的大小是否超出限制，如果超出限制，就不作任何处理，直接返回旧的 <code>brk</code> 值。</p>
+<p>2、如果新的 <code>brk</code> 值跟旧的 <code>brk</code> 值一致，那么也不用作任何处理。</p>
+<p>3、如果新的 <code>brk</code> 值发生变化，那么就调用 <code>do_brk</code> 函数进行下一步处理。</p>
+<p>4、设置进程的 <code>brk</code> 指针（堆空间顶部）为新的 <code>brk</code> 的值。</p>
+<p><code>do_brk</code> 函数的实现有点小复杂，所以这里介绍一下大概处理流程：</p>
+<ul>
+<li>通过堆空间的起始地址 <code>start_brk</code> 从进程内存分区红黑树中找到其对应的内存分区对象（也就是 <code>vm_area_struct</code>）。</li>
+<li>把堆空间的内存分区对象的 <code>vm_end</code> 字段设置为新的 <code>brk</code> 值。</li>
+</ul>
+<p>总的来说：</p>
+<ol>
+<li>把进程的 <code>brk</code> 指针设置为新的 <code>brk</code> 值。</li>
+<li>把堆空间的内存分区对象的 <code>vm_end</code> 字段设置为新的 <code>brk</code> 值。</li>
+</ol>
+<h1 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h1><p>跳表全称为跳跃列表，它允许快速查询，插入和删除一个有序连续元素的数据链表。跳跃列表的平均查找和插入时间复杂度都是O(logn)。快速查询是通过维护一个多层次的链表，且每一层链表中的元素是前一层链表元素的子集（见右边的示意图）。一开始时，算法在最稀疏的层次进行搜索，直至需要查找的元素在该层两个相邻的元素中间。这时，算法将跳转到下一个层次，重复刚才的搜索，直到找到需要查找的元素为止。</p>
+<p><img src="/v2-406ac352da4f3c45da01ba5e2c168d9d_720w.webp" alt="img"></p>
+<h1 id="进程cpu占用太高怎么排查"><a href="#进程cpu占用太高怎么排查" class="headerlink" title="进程cpu占用太高怎么排查"></a>进程cpu占用太高怎么排查</h1><p>主进程fork的子进程再top中看不到，因此无法通过top或htop排查。可以用gdb进行调试</p>
+<p><strong>设置</strong></p>
+<p>GDB调试子进程主要用到两个设置，一个是 <code>set follow-fork-mode [parent|child]</code> ，另外一个是 <code>set detach-on-fork [on|off]</code> 。</p>
+<ol>
+<li><code>follow-fork-mode</code><br>设置默认的是parent，即追踪父进程，如果设置为child之后，便会追踪子进程。但是只会追踪第一个fork的子进程，<strong>整个过程follow-fork-mode不会暂停子进程的执行</strong>。</li>
+<li><code>detach-on-fork</code><br>默认是no。当设置为off时，便会触发对子进程的追踪，并且当子进程生成之后，便会<strong>暂停在子进程的开始的地方</strong>。</li>
+</ol>
+<p><strong><code>inferior</code></strong></p>
+<p>GDB的inferior指令用于子进程的调试，通过 <code>info inferiors</code> 指令能够查看当前的所有进程信息，使用 <code>inferior [ID]</code> 能够attach到对应的进程并进行调试。</p>
+<p><strong>总结</strong></p>
+<p>同时设置 <code>set follow-fork-mode child</code> 和 <code>set detach-on-fork off</code> 便能够对所有进程进行追踪，并且避免仅设置detach-on-fork为off之后需要手动去子进程开始的地方continue。之后使用 <code>info inferiors</code> 和 <code>inferior</code> 指令对多个进程进行切换并调试。</p>
+<h1 id="菱形继承，虚函数表"><a href="#菱形继承，虚函数表" class="headerlink" title="菱形继承，虚函数表"></a>菱形继承，虚函数表</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42837885/article/details/102985580?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-1-102985580-blog-56496020.235%5Ev38%5Epc_relevant_sort_base2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-1-102985580-blog-56496020.235%5Ev38%5Epc_relevant_sort_base2&utm_relevant_index=2">C++菱形继承和菱形虚拟继承关系的虚函数表详解_菱形继承有几张虚函数表_隽永啊的博客-CSDN博客</a></p>
+<p><strong>普通继承</strong></p>
+<p>内存分布为：b的变量（虚表指针，a的变量，b的变量），c的变量（虚表指针，a的变量，c的变量），最后是d的变量</p>
+<p>d中新增加的虚函数放在第一个继承基类的虚函数表中了。</p>
+<p><strong>虚继承</strong></p>
+<p>内存分布为：b的变量（虚表指针，a的虚基表指针，b的变量），c的变量（虚表指针，a的虚基表指针，c的变量），d的变量，a的虚函数指针，a的变量</p>
+<p>d的虚函数被合并到b的虚表里面了，a的虚函数没有放在虚表里，而是放在d对象内部，和a的变量作为d的成员变量了。</p>
+<h1 id="STL在堆上"><a href="#STL在堆上" class="headerlink" title="STL在堆上"></a>STL在堆上</h1><h1 id="n个石头，一次只能拿一个或两个，最后一个人没石头拿的输，怎么拿让自己赢"><a href="#n个石头，一次只能拿一个或两个，最后一个人没石头拿的输，怎么拿让自己赢" class="headerlink" title="n个石头，一次只能拿一个或两个，最后一个人没石头拿的输，怎么拿让自己赢"></a>n个石头，一次只能拿一个或两个，最后一个人没石头拿的输，怎么拿让自己赢</h1><ol>
+<li>当游戏开始时，如果石头的数量是3的倍数，你可以选择拿走1个石头。这样无论对方拿走1个还是2个石头，剩下的石头数量仍然是3的倍数。这样你就可以继续按照这个策略进行，最终获胜。</li>
+<li>如果石头的数量不是3的倍数，你可以选择拿走剩下的石头数量对3取余数的个数。例如，如果剩下5个石头，你可以拿走2个，剩下3个石头。这样你就可以按照第一条策略进行，最终获胜。</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/08/25/%E8%85%BE%E8%AE%AF%E5%85%89%E5%AD%90%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91%E4%BA%8C%E9%9D%A2/">http://example.com/2023/08/25/%E8%85%BE%E8%AE%AF%E5%85%89%E5%AD%90%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91%E4%BA%8C%E9%9D%A2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/08/26/%E7%99%BE%E5%BA%A6%E4%B8%80%E9%9D%A2/">百度一面</a>
+            
+            
+            <a class="next" rel="next" href="/2023/08/21/Redis%E7%9B%B8%E5%85%B3/">Redis相关</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

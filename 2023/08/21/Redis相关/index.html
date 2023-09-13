@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>Redis相关 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">ZH&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">ZH&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Redis相关</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 21, 2023&nbsp;&nbsp;14:33:10</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="基本数据结构"><a href="#基本数据结构" class="headerlink" title="基本数据结构"></a>基本数据结构</h1><h2 id="redis核心对象"><a href="#redis核心对象" class="headerlink" title="redis核心对象"></a>redis核心对象</h2><p>在Redis中有一个<strong>「核心的对象」</strong>叫做<code>redisObject</code> ，是用来表示所有的key和value的，用redisObject结构体来表示<code>String、Hash、List、Set、ZSet</code>五种数据类型。</p>
+<p><img src="/v2-fc8e2a11644c48b023e4fa974d9bba04_720w.webp" alt="img"></p>
+<p>在redisObject中<strong>「type表示属于哪种数据类型，encoding表示该数据的存储方式」</strong>，也就是底层的实现的该数据类型的数据结构。</p>
+<p>具体encoding的存储类型表示的含义</p>
+<p><img src="/v2-3ad4e7a09bc900ae0ffde47919546cd3_720w.webp" alt="img"></p>
+<h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><p>String是Redis最基本的数据类型。</p>
+<p>String类型的数据结构存储方式有三种<code>int、raw、embstr</code>。那么这三种存储方式有什么区别呢？</p>
+<h3 id="int"><a href="#int" class="headerlink" title="int"></a>int</h3><p>Redis中规定假如存储的是<strong>「整数型值」</strong>，比如<code>set num 123</code>这样的类型，就会使用 int的存储方式进行存储，在redisObject的<strong>「ptr属性」</strong>中就会保存该值。</p>
+<h3 id="embstr"><a href="#embstr" class="headerlink" title="embstr"></a>embstr</h3><p>若是<strong>「字符串长度小于等于32个字节」</strong>就会将encoding设置为embstr来保存字符串。</p>
+<p>embstr存储的字符串和长度都存储在一个连续的空间中，修改要重新分配，但占内存较少。</p>
+<h3 id="raw"><a href="#raw" class="headerlink" title="raw"></a>raw</h3><p>存储的<strong>「字符串是一个字符串值并且长度大于32个字节」</strong>就会使用<strong>SDS（simple dynamic string）</strong>方式进行存储，并且encoding设置为raw；</p>
+<p><strong>redisObject数据指针字段指向SDS。</strong></p>
+<p>SDS称为<strong>「简单动态字符串」</strong>，对于SDS中的定义在Redis的源码中有的三个属性<code>int len、int free、char buf[]</code>。<code>len</code>保存字符串的长度，<code>free</code>记录字符串末尾空余的空间，等待后面使用的时候再释放，<code>buf</code>是字符串指针。</p>
+<p><strong>SDS与c语言字符串对比</strong></p>
+<p>（1）c语言中的字符串并不会记录自己的长度，因此<strong>「每次获取字符串的长度都会遍历得到，时间的复杂度是O(n)」</strong>，而Redis中获取字符串只要读取len的值就可，时间复杂度变为O(1)。</p>
+<p>（2）<strong>「c语言」</strong>中两个字符串拼接，若是没有分配足够长度的内存空间就<strong>「会出现缓冲区溢出的情况」</strong>；而<strong>「SDS」</strong>会先根据len属性判断空间是否满足要求，若是空间不够，就会进行相应的空间扩展，所以<strong>「不会出现缓冲区溢出的情况」</strong>。</p>
+<p>（3）SDS还提供<strong>「空间预分配」</strong>和<strong>「惰性空间释放」</strong>两种策略。在为字符串分配空间时，分配的空间比实际要多，这样就能<strong>「减少连续的执行字符串增长带来内存重新分配的次数」</strong>。</p>
+<p>当字符串被缩短的时候，SDS也不会立即回收不适用的空间，而是通过<code>free</code>属性将不使用的空间记录下来，等后面使用的时候再释放。</p>
+<p>具体的空间预分配原则是：<strong>「当修改字符串后的长度len小于1MB，就会预分配和len一样长度的空间，即len&#x3D;free；若是len大于1MB，free分配的空间大小就为1MB」</strong>。</p>
+<p>（4）SDS是<strong>二进制安全</strong>的，除了可以储存字符串以外还可以储存二进制文件（如图片、音频，视频等文件的二进制数据，<strong>能存储对象</strong>）；而c语言中的字符串是以空字符串作为结束符，一些图片中含有结束符，因此不是二进制安全的。</p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p>embstr与raw都使用redisObject和sds保存数据，区别在于，embstr的使用只分配一次内存空间（因此redisObject和sds是连续的），而raw需要分配两次内存空间（分别为redisObject和sds分配空间）。因此与raw相比，embstr的好处在于创建时少分配一次空间，删除时少释放一次空间，以及对象的所有数据连在一起，寻找方便。而embstr的坏处也很明显，如果字符串的长度增加需要重新分配内存时，整个redisObject和sds都需要重新分配空间，因此redis中的embstr实现为只读。</p>
+<h3 id="编码转换"><a href="#编码转换" class="headerlink" title="编码转换"></a>编码转换</h3><ul>
+<li>当 int 编码保存的值不再是整数，或大小超过了long的范围时，自动转化为raw。</li>
+<li>对于 embstr 编码，由于 Redis 没有对其编写任何的修改程序（embstr 是只读的），在对embstr对象进行修改时，都会先转化为raw再进行修改，因此，只要是修改embstr对象，修改后的对象一定是raw的，无论是否达到了44个字节。</li>
+</ul>
+<h2 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h2><p>Hash对象的实现方式有两种：hashtable，ziplist。</p>
+<h3 id="hashtable"><a href="#hashtable" class="headerlink" title="hashtable"></a>hashtable</h3><p>通过key计算出hash值后，然后将hash值与sizemask进行与操作，得到存储位置。</p>
+<p>sizemask是一个掩码，用于限制hash值的范围，使其符合hash表的大小。</p>
+<p>解决冲突的方式是开链法。</p>
+<p><img src="/v2-dd8e346e267fd00c6e8d47f32d15ce1d_720w.webp" alt="img"></p>
+<h4 id="rehash"><a href="#rehash" class="headerlink" title="rehash"></a>rehash</h4><p>hash表结构中有table指向哈希表数组，size记录哈希表数组大小，sizemask，used记录存储的数量。</p>
+<p>有两个hash表：ht0和ht1，ht0是最开始存储数据的，当需要进行rehash时，ht0的大小决定了ht1的大小，ht0中所有的键值对就会重新散列到ht1中。</p>
+<p><strong>扩展操作</strong>：ht1扩展的大小是比当前ht0中used值的二倍大的第一个2的整数幂。</p>
+<p><strong>收缩操作</strong>：ht1的大小是ht0中used的第一个大于等于2的整数幂。</p>
+<p>当ht[0]上的所有的键值对都rehash到ht[1]中，会重新计算所有的数组下标值，当数据迁移完后ht[0]就会被释放，然后将ht[1]改为ht[0]，并新创建ht[1]，为下一次的扩展和收缩做准备。</p>
+<h4 id="渐进式rehash"><a href="#渐进式rehash" class="headerlink" title="渐进式rehash"></a>渐进式rehash</h4><p>假如在rehash的过程中数据量非常大，Redis不是一次性把全部数据rehash成功，这样会导致Redis对外服务停止，Redis内部为了处理这种情况采用<strong>「渐进式的rehash」</strong>。</p>
+<p>Redis将所有的rehash的操作分成多步进行，直到都rehash完成，具体的实现与对象中的<code>rehashindex</code>属性相关，<strong>「若是rehashindex 表示为-1表示没有rehash操作」</strong>。</p>
+<p>当rehash操作开始时会将该值改成0，在渐进式rehash的过程<strong>「更新、删除、查询会在ht[0]和ht[1]中都进行」</strong>，比如更新一个值先更新ht[0]，然后再更新ht[1]。</p>
+<p>而新增操作直接就新增到ht[1]表中，ht[0]不会新增任何的数据，这样保证<strong>「ht[0]只减不增，直到最后的某一个时刻变成空表」</strong>，这样rehash操作完成。</p>
+<h3 id="ziplist"><a href="#ziplist" class="headerlink" title="ziplist"></a>ziplist</h3><p>压缩列表<code>（ziplist）</code>是一组<strong>连续内存块</strong>组成的顺序的数据结构，压缩列表能够节省空间，压缩列表中使用多个节点来存储数据。</p>
+<p><strong>「压缩列表并不是以某种压缩算法进行压缩存储数据，而是它表示一组连续的内存空间的使用，节省空间」</strong></p>
+<p><img src="/v2-6a84f8a661df7996fbcd4ca65c1a40b6_720w.webp" alt="img"></p>
+<p>压缩列表中每一个节点表示的含义如下所示：</p>
+<ol>
+<li><code>zlbytes</code>：4个字节的大小，记录压缩列表占用内存的字节数。</li>
+<li><code>zltail</code>：4个字节大小，记录表尾节点距离起始地址的偏移量，用于快速定位到尾节点的地址。</li>
+<li><code>zllen</code>：2个字节的大小，记录压缩列表中的节点数。</li>
+<li><code>entry</code>：表示列表中的每一个节点。</li>
+<li><code>zlend</code>：表示压缩列表的特殊结束符号<code>&#39;0xFF&#39;</code>。</li>
+</ol>
+<p>再压缩列表中每一个entry节点又有三部分组成，包括<code>previous_entry_ength、encoding、content</code>。</p>
+<ol>
+<li><code>previous_entry_ength</code>表示前一个节点entry的长度，可用于计算前一个节点的其实地址，因为他们的地址是连续的。</li>
+<li>encoding：这里保存的是content的内容类型和长度。</li>
+<li>content：content保存的是每一个节点的内容。</li>
+</ol>
+<p><img src="/v2-8fd5104994d92443af483d747d631390_720w.webp" alt="img"></p>
+<h3 id="什么时候使用什么底层实现"><a href="#什么时候使用什么底层实现" class="headerlink" title="什么时候使用什么底层实现"></a>什么时候使用什么底层实现</h3><p>redis自动选择hash的底层实现，默认条件<strong>属性个数 &lt;&#x3D; 512 &amp;&amp; 每个属性的字符长度 &lt;&#x3D; 64</strong> 时，使用 <strong>ziplist</strong>编码格式进行存储，否则使用 hashtable进行存储。而且ziplist插入导致不满足这个条件时，会转换成hashtable格式存储，并且不会再转换回去。</p>
+<h3 id="存储对象"><a href="#存储对象" class="headerlink" title="存储对象"></a>存储对象</h3><p>一种办法是将对象的属性序列化存储为值，但如果需要修改或者查看就要逆序列化，开销较大。</p>
+<p>可以将值的类型也设置为hash结构，里面的键为属性名称，值为属性的值。</p>
+<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><p>Redis中的列表在3.2之前的版本是使用<code>ziplist</code>和<code>linkedlist</code>进行实现的。在3.2之后的版本就是引入了<code>quicklist</code>。</p>
+<p>linkedlist是一个双向链表。</p>
+<p><img src="/v2-102238a40860c08faf37c492f61f6d94_720w.webp" alt="img"></p>
+<p>可以用来实现阻塞队列。</p>
+<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><p>Redis中列表和集合都可以用来存储字符串，但是<strong>「Set是不可重复的集合，而List列表可以存储相同的字符串」</strong>，Set集合是无序的这个和后面讲的ZSet有序集合相对。</p>
+<p>Set的底层实现是<strong>「ht和intset」</strong>，ht（哈希表）前面已经详细了解过，下面我们来看看inset类型的存储结构。</p>
+<p>inset也叫做整数集合，用于保存整数值的数据结构类型，它可以保存<code>int16_t</code>、<code>int32_t</code> 或者<code>int64_t</code> 的整数值。</p>
+<p>在整数集合中，有三个属性值<code>encoding、length、contents[]</code>，分别表示编码方式、整数集合的长度、以及元素内容，length就是记录contents里面的大小。</p>
+<p>在整数集合新增元素的时候，若是超出了原集合的长度大小，就会对集合进行升级，具体的升级过程如下：</p>
+<ol>
+<li>首先扩展底层数组的大小，并且数组的类型为新元素的类型。</li>
+<li>然后将原来的数组中的元素转为新元素的类型，并放到扩展后数组对应的位置。</li>
+<li>整数集合升级后就不会再降级，编码会一直保持升级后的状态</li>
+</ol>
+<p>可以实现去重，抽奖，共同好友等业务。</p>
+<h2 id="Zset"><a href="#Zset" class="headerlink" title="Zset"></a>Zset</h2><p>ZSet是有序集合，从上面的图中可以看到ZSet的底层实现是<code>ziplist</code>和<code>skiplist</code>实现的，ziplist上面已经详细讲过，这里来讲解skiplist的结构实现。</p>
+<p><code>skiplist</code>也叫做<strong>「跳跃表」</strong>，跳跃表是一种有序的数据结构，它通过每一个节点维持多个指向其它节点的指针，从而达到快速访问的目的。</p>
+<p>skiplist由如下几个特点：</p>
+<ol>
+<li>有很多层组成，由上到下节点数逐渐密集，最上层的节点最稀疏，跨度也最大。</li>
+<li>每一层都是一个有序链表，只扫包含两个节点，头节点和尾节点。</li>
+<li>每一层的每一个每一个节点都含有指向同一层下一个节点和下一层同一个位置节点的指针。</li>
+<li>如果一个节点在某一层出现，那么该以下的所有链表同一个位置都会出现该节点。</li>
+</ol>
+<p><img src="/v2-2ae62e4f384bfe7104a4450f72c2f18c_720w.webp" alt="img"></p>
+<p>跳跃表的上面层就相当于索引层，都是为了找到最后的数据而服务的，数据量越大，条表所体现的查询的效率就越高，和平衡树的查询效率相差无几。</p>
+<h1 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h1><p>redis是单线程模型，这里的单线程指的是命令的处理、执行方面是单线程的，其他方面仍然有多线程。</p>
+<p>redis2.6：启动两个后台线程负责关闭文件和AOF刷盘。</p>
+<p>redis4.0：开启新的后台线程lazyfree，用于释放redis的内存，unlink key,flushdb,flushall async这些命令交给lazyfree异步处理。</p>
+<h2 id="redis-6-0之前"><a href="#redis-6-0之前" class="headerlink" title="redis 6.0之前"></a>redis 6.0之前</h2><p>主线程只有一个worker线程，处理一条命令的流程：</p>
+<p>读取命令，解析请求参数，执行命令，返还结果</p>
+<p><strong>注意</strong>：redis服务端与客户端是通过tcp通信的，连接的持久的。</p>
+<h2 id="redis-6-0及之后"><a href="#redis-6-0及之后" class="headerlink" title="redis 6.0及之后"></a>redis 6.0及之后</h2><p>主线程监听到客户端请求后，将socket的fd发送给IO线程组，有IO线程组进行IO并解析，然后将任务放入任务队列，有主线程去消费执行计算，最后将结果返还给IO线程组，由IO线程组写入fd。</p>
+<p><strong>需要手动开启多线程模式。</strong></p>
+<h1 id="过期策略和内存淘汰策略"><a href="#过期策略和内存淘汰策略" class="headerlink" title="过期策略和内存淘汰策略"></a>过期策略和内存淘汰策略</h1><p>redis的过期策略是<strong>定期删除</strong> + <strong>惰性删除</strong></p>
+<p><strong>定期删除</strong>：redis默认每隔100ms就<strong>随机抽取</strong>一些设置了过期时间的key，检查是否过期，如果过期就删除。无法全部删除，cpu负载太高。可能会导致很多过期的key并没有被删除</p>
+<p><strong>惰性删除</strong>：获取某个key时检查过期时间，如果已经过期就会删除。如果没有及时查的话会在内存中堆积大量过期的key，导致内存耗尽。</p>
+<p><strong>内存淘汰机制</strong></p>
+<ol>
+<li><strong>noeviction</strong>：当内存不足以容纳新写入数据时，新写入操作会报错。这个一般很少用。</li>
+<li><strong>allkeys-lru</strong>：当内存不足以容纳新写入数据时，在<strong>键空间</strong>中，移除最近最少使用的key，这个是最常用的。</li>
+<li><strong>allkeys-random</strong>：当内存不足以容纳新写入数据时，在<strong>键空间</strong>中，随机移除某个key。</li>
+<li><strong>volatile-lru</strong>：当内存不足以容纳新写入数据时，在<strong>设置了过期时间的键空间</strong>中，移除最近最少使用的key。</li>
+<li><strong>volatile-random</strong>：当内存不足以容纳新写入数据时，在<strong>设置了过期时间的键空间</strong>中，随机移除某个key。</li>
+<li><strong>volatile-ttl</strong>：当内存不足以容纳新写入数据时，在<strong>设置了过期时间的键空间</strong>中，有更早过期时间的key优先移除。</li>
+</ol>
+<h1 id="持久化方式"><a href="#持久化方式" class="headerlink" title="持久化方式"></a>持久化方式</h1><h2 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h2><p>RDB（Redis DataBase），是redis默认的存储方式，RDB方式是通过快照（ snapshotting ）完成的。它保存的是某一时刻的数据并不关注过程。<strong>RDB保存redis某一时刻的数据的快照</strong></p>
+<p><strong>触发快照的方式</strong></p>
+<ol>
+<li>符合自定义配置的快照规则；</li>
+<li>执行save或者bgsave命令；</li>
+<li>执行flushall命令；</li>
+<li>执行主从复制操作 (第一次)。</li>
+</ol>
+<p>redis.conf中配置save，配置多长时间内至少多少键被更改则快照。</p>
+<p>保存快照的操作是主进程fork子进程完成的，fork过程中主进程阻塞。子进程根据父进程内存快照生成临时快照文件，完成后对原有文件进行原子替换。</p>
+<p><strong>优点</strong></p>
+<ol>
+<li>RDB是二进制压缩文件，占用空间小，便于传输（传给slaver）</li>
+<li>主进程fork子进程，可以最大化Redis性能；</li>
+<li>使用RDB文件来恢复数据较快。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>不保证数据完整性，会丢失最后一次快照以后更改的所有数据；</li>
+<li>父进程在fork子进程的时候如果主进程比较大会阻塞；</li>
+</ol>
+<h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><p>AOF（append only file）是Redis的另一种持久化方式。<strong>Redis默认情况下是不开启的</strong>。开启AOF持久化后Redis 将所有对数据库进行过<strong>写入的命令（及其参数）（RESP）记录到 AOF 文件</strong>， 以此达到记录数据库状态的目的，这样当Redis重启后只要按顺序回放这些命令就会恢复到原始状态了。<strong>AOF会记录过程，RDB只管结果</strong></p>
+<p>流程：</p>
+<ol>
+<li><strong>命令传播</strong>：每当修改的命令函数成功执行之后， 命令参数都会被传播到AOF 程序。</li>
+<li><strong>缓存追加</strong>：追加到 redis.h&#x2F;redisServer 结构的 aof_buf 末尾。</li>
+<li><strong>文件写入和保存</strong>：AOF 缓存中的内容被写入到 AOF 文件末尾，如果设定的 AOF 保存条件被满足的话，fsync 函数或者 fdatasync 函数会被调用，将写入的内容真正地保存到磁盘中。执行以下两个工作<br><strong>WRITE</strong>：根据条件，将aof_buf中的缓存写入aof文件。<strong>由Redis主进程执行，在这期间主进程会被阻塞。</strong><br><strong>SAVE</strong>：根据条件，调用fsync或fdatasync函数，将aof文件保存到磁盘。</li>
+</ol>
+<p>aof保存模式默认为<strong>每一秒中异步保存一次</strong>。能更改为每执行一个命令保存一次，或不保存缓存满或redis被关闭或aof被关闭才刷新。</p>
+<h3 id="AOF重写"><a href="#AOF重写" class="headerlink" title="AOF重写"></a>AOF重写</h3><p>Redis可以在 AOF体积变得过大时，自动地在后台（<strong>Fork子进程</strong>）对 AOF进行重写。<strong>重写后的新 AOF文件包含了恢复当前数据集所需的最小命令集合</strong>。 AOF 重写并不需要对原有的 AOF 文件进行任何写入和读取， 它针对的是数据库中键的当前值。</p>
+<p>因为子进程在进行 AOF 重写期间， 主进程还需要继续处理命令， 而新的命令可能对现有的数据进行修改， 这会让当前数据库的数据和重写后的 AOF 文件中的<strong>数据不一致</strong>。</p>
+<p>为了解决这个问题， Redis 增加了一个 <strong>AOF 重写缓存</strong>， 这个缓存在 fork 出子进程之后开始启用，<strong>Redis 主进程在接到新的写命令之后， 除了会将这个写命令的协议内容追加到现有的 AOF 文件之外，还会追加到这个缓存中</strong>。</p>
+<p>Redis 在创建新 AOF 文件的过程中，会继续将命令追加到现有的 AOF 文件里面，即使重写过程中发生停机，现有的 AOF 文件也不会丢失。 而一旦新 AOF 文件创建完毕，Redis 就会从旧 AOF 文件切换到新 AOF 文件，并开始对新 AOF 文件进行追加操作。</p>
+<p>当子进程在执行 AOF 重写时， 主进程需要执行以下三个工作：<br>1.处理命令请求；<br>2.将写命令追加到现有的 AOF 文件中；<br>3.将写命令追加到 AOF 重写缓存中。</p>
+<p>当子进程完成 AOF 重写之后， 它会向父进程发送一个完成信号， 父进程在接到完成信号之后， 会调用一个信号处理函数， 并完成以下工作：<br>1、 将 AOF 重写缓存中的内容全部写入到新 AOF 文件中；<br>2、 对新的 AOF 文件进行改名，覆盖原有的 AOF 文件；</p>
+<p>在整个 AOF 后台重写过程中，<strong>只有最后的写入缓存和改名操作会造成主进程阻塞</strong>， 在其他时候， AOF 后台重写都不会对主进程造成阻塞， 这将 AOF 重写对性能造成的影响降到了最低。</p>
+<p>以上就是 AOF 后台重写， 也即是 <strong>BGREWRITEAOF 命令(AOF重写)的工作原理</strong>。</p>
+<h2 id="混合"><a href="#混合" class="headerlink" title="混合"></a>混合</h2><p>RDB和AOF各有优缺点，Redis 4.0 开始支持 rdb 和 aof 的混合持久化。如果把混合持久化打开，aofrewrite 的时候就直接把 rdb 的内容写到 aof 文件开头。在加载时，首先会识别AOF文件是否以REDIS字符串开头，如果是就按RDB格式加载，加载完RDB后继续按AOF格式加载剩余部分(一个文件中既有rdb的数据也有aof的日志)。</p>
+<h2 id="AOF文件的载入与数据还原"><a href="#AOF文件的载入与数据还原" class="headerlink" title="AOF文件的载入与数据还原"></a>AOF文件的载入与数据还原</h2><p>因为<strong>AOF文件里</strong>面包含了重建数据库状态所需的<strong>所有写命令</strong>，所以服务器只要读入并重新执行一遍AOF文件里面保存的写命令，就可以还原服务器关闭之前的数据库状态</p>
+<p>Redis读取AOF文件并还原数据库状态的详细步骤如下：<br>1、创建一个不带网络连接的伪客户端（fake client）：因为Redis的命令只能在客户端上下文中执行，而载入AOF文件时所使用的命令直接来源于AOF文件而不是网络连接，所以服 务器使用了一个没有网络连接的伪客户端来执行AOF文件保存的写命令，伪客户端执行命令 的效果和带网络连接的客户端执行命令的效果完全一样；<br>2、从AOF文件中分析并读取出一条写命令；<br>3、使用伪客户端执行被读出的写命令；<br>4、一直执行步骤2和步骤3，直到AOF文件中的所有写命令都被处理完毕为止。</p>
+<h2 id="RDB和AOF的对比"><a href="#RDB和AOF的对比" class="headerlink" title="RDB和AOF的对比"></a>RDB和AOF的对比</h2><p>1、RDB存某个时刻的数据快照，采用二进制压缩存储，AOF存操作命令，采用文本存储(混合);</p>
+<p>2、RDB性能高、AOF性能较低;</p>
+<p>3、RDB在配置触发状态会丢失最后一次快照以后更改的所有数据，AOF设置为每秒保存一次，则最多丢2秒的数据;</p>
+<p>4、Redis以主服务器模式运行，RDB不会保存过期键值对数据，Redis以从服务器模式运行，RDB会保存过期键值对，当主服务器向从服务器同步时，再清空过期键值对;</p>
+<p>5、AOF写入文件时，对过期的key会追加一条del命令，当执行AOF重写时，会忽略过期key和del命令。</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>内存数据库 rdb+aof 数据不容易丢</p>
+<p>缓存服务器 rdb 性能高</p>
+<p>不建议 只使用 aof (性能差)</p>
+<p>在数据还原时</p>
+<p>有rdb+aof 则还原aof，因为RDB会造成文件的丢失，AOF相对数据要完整。</p>
+<p>只有rdb，则还原rdb</p>
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><ul>
+<li><p><strong>缓存穿透</strong></p>
+<p>一般的缓存系统，都是按照key去缓存查询，如果不存在对用的value，就应该去后端系统查找（比如DB数据库）。<br>热点数据过期时大量请求直接打在DB层上。（缓存击穿）</p>
+<p>一些恶意的请求会故意查询不存在的key，请求量很大，就会对后端系统造成很大的压力。<br>这就叫做缓存穿透。<br>解决办法：</p>
+<ul>
+<li><p>设置好续期处理或者直接不过期</p>
+</li>
+<li><p>二级缓存，第二级缓存过期时间长一点</p>
+</li>
+<li><p>加锁排队</p>
+</li>
+<li><p>对查询结果为空的情况也进行缓存，缓存时间设置短一点，或者该key对应的数据insert之后清理缓存。</p>
+</li>
+<li><p>对一定不存在的key进行过滤。可以把所有的可能存在的key放到一个大的Bitmap中，查询时通过该Bitmap过滤。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>缓存雪崩</strong><br>当缓存服务器重启或者大量缓存集中在某一时间段失效，这样在失效的时候，会给后端系统带来很大的压力，导致系统崩溃。<br>解决办法</p>
+<ul>
+<li>在缓存失效后，通过加锁或者队列来控制读数据库写缓存的线程数量。比如对某个key只允许一个线程查询数据和写缓存，其它线程等待；</li>
+<li>做二级缓存；</li>
+<li>不同的key，设置不同的过期时间，让缓存失效的时间尽量均匀；</li>
+</ul>
+</li>
+<li><p><strong>怎么保证缓存和数据库的数据一致性</strong></p>
+<ul>
+<li>对于简单的缓存，先删掉再操作数据库，但是在并发下可能(在删掉操作数据库之前，其他请求发现没有，然后从数据库去取旧值放进缓存，最后才把正确的值写进数据库)，解决办法是不删除而置为一个标记，证明要修改</li>
+<li>进行缓存淘汰。但是要先淘汰缓存再更新数据库，否则如果淘汰失败后面的请求都会得到脏数据直至缓存过期。</li>
+<li>延时双删。先删除，再写，睡眠很小的时间，再删除一次。</li>
+</ul>
+</li>
+<li><p><strong>redis的数据类型和使用场景</strong><br>string：做缓存，计数器，分布式锁<br>list：消息队列，任务队列<br>hash：存储对象、用户信息<br>set：存储唯一值，好友列表<br>zset：排行榜，热门文章</p>
+</li>
+<li><p><strong>redis怎么设置过期时间</strong></p>
+</li>
+<li><p><strong>redis崩了怎么处理</strong></p>
+</li>
+<li><p><strong>redis有多少个数据库?如何切换数据库?</strong></p>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/08/21/Redis%E7%9B%B8%E5%85%B3/">http://example.com/2023/08/21/Redis%E7%9B%B8%E5%85%B3/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/08/25/%E8%85%BE%E8%AE%AF%E5%85%89%E5%AD%90%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91%E4%BA%8C%E9%9D%A2/">腾讯光子后端开发二面</a>
+            
+            
+            <a class="next" rel="next" href="/2023/08/20/%E5%9B%B0%E9%9A%BE%E5%8F%8C%E6%8C%87%E9%92%88-%E6%8C%89%E5%AD%97%E5%85%B8%E5%BA%8F%E6%8E%92%E5%9C%A8%E6%9C%80%E5%90%8E%E7%9A%84%E5%AD%97%E4%B8%B2-%E5%8A%9B%E6%89%A31163/">困难双指针-按字典序排在最后的字串-力扣1163</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

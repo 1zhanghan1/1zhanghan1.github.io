@@ -270,7 +270,7 @@
 <li>适用并发量较小、且不需要及时响应的网络应用开发；</li>
 </ul>
 <p>我的理解：需要轮询进行系统调用，cpu开销大。</p>
-<h3 id="信号驱动IO"><a href="#信号驱动IO" class="headerlink" title="信号驱动IO"></a>信号驱动IO</h3><p><img src="/v2-4c502410a82ee33a30e1698589f8d88b_720w.webp" alt="img"></p>
+<h3 id="同步IO"><a href="#同步IO" class="headerlink" title="同步IO"></a>同步IO</h3><p><img src="/v2-4c502410a82ee33a30e1698589f8d88b_720w.webp" alt="img"></p>
 <p>当进程发起一个IO操作，会向内核注册一个信号处理函数，然后进程返回不阻塞；当内核数据就绪时会发送一个信号给进程，进程便在信号处理函数中调用IO读取数据。</p>
 <p>特点：回调机制，实现、开发应用难度大；</p>
 <p>我的理解：由内核进程进行IO，用户进程只需告诉内核进程需要IO，IO结束后内核进程发送数据IO完毕的信号通知用户进程，用户进程用回调函数将数据拷贝到进程空间。</p>
@@ -306,7 +306,7 @@
 <h2 id="Poll"><a href="#Poll" class="headerlink" title="Poll"></a>Poll</h2><p>poll的实现和select非常相似，只是<strong>描述fd集合</strong>的方式不同。针对select遗留的三个问题中（问题(2)是fd限制问题，问题(1)和(3)则是性能问题），poll只是使用pollfd结构而不是select的fd_set结构，这就解决了select的问题(2)fds集合大小1024限制问题。但poll和select同样存在一个性能缺点就是包含大量文件描述符的数组被整体复制于用户态和内核的地址空间之间，而不论这些文件描述符是否就绪，它的开销随着文件描述符数量的增加而线性增大。</p>
 <p>poll改变了fds集合的描述方式，使用了pollfd结构而不是select的fd_set结构，使得poll支持的fds集合限制远大于select的1024。poll虽然解决了fds集合大小1024的限制问题，从实现来看。很明显它并没优化大量描述符数组被整体复制于用户态和内核态的地址空间之间，以及个别描述符就绪触发整体描述符集合的遍历的低效问题。poll随着监控的socket集合的增加性能线性下降，使得poll也并不适合用于大并发场景。</p>
 <h2 id="Epoll"><a href="#Epoll" class="headerlink" title="Epoll"></a>Epoll</h2><p>epoll最大的好处在于它不会随着监听fd数目的增长而降低效率。</p>
-<p>回调会将当前socket加入ready_list然后唤醒epoll。同时收集到的可读的 fd 按理是要拷贝到用户空间的，这里又做了个优化，利用了 mmp，让用户空间和内核空间映射到同一块内存中，这样就避免了拷贝。</p>
+<p>回调会将当前socket加入ready_list然后唤醒epoll。同时收集到的可读的 fd 按理是要拷贝到用户空间的，这里又做了个优化，利用了 mmp()，让用户空间和内核空间映射到同一块内存中，这样就避免了拷贝。</p>
 <p>创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大。epoll句柄会占用一个fd值，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。</p>
 <p>epoll接口：</p>
 <ul>
